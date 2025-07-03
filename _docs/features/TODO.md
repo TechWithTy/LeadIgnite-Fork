@@ -14,6 +14,7 @@
 #🖥️ Dashboard > Lead Search > Property List > Update maps and enable 3D / Street View
 #🖥️ Set up user onbaording with https://www.npmjs.com/package/@frigade/react
 #🖥️ Dashboard > Map Component >  Edit the map componnet to take in area and pass to fetch data with drawing
+#🖥️ Dashboard > Profile > Ai Context > Implement Background Noise Uploader
 
 # ⁉️ optimize load speeds
 
