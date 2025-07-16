@@ -76,6 +76,7 @@
 		"embla-carousel-react": "^8.2.0",
 		"exceljs": "^4.4.0",
 		"file-saver": "^2.0.5",
+		"immer": "^10.1.1",
 		"jszip": "^3.10.1",
 		"lottie-react": "^2.4.0",
 		"lucide-react": "^0.291.0",

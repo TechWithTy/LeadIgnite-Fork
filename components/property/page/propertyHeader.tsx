@@ -26,7 +26,7 @@ import {
 	HelpCircle,
 	InfoIcon,
 } from "lucide-react";
-import { Bookmark } from "lucide-react";
+import { Bookmark, BookmarkCheck } from "lucide-react";
 import SaveToListModal from "@/components/property/modals/SaveToListModal";
 import { useState } from "react";
 
@@ -57,15 +57,21 @@ export default function PropertyHeader({
 	const [isTourOpen, setIsTourOpen] = useState(false);
 
 	const [isHelpModalOpen, setHelpModalOpen] = useState(false);
-	const [isSaveModalOpen, setSaveModalOpen] = useState(false);
+	const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+	const [isSaved, setIsSaved] = useState(false);
+
 	const handleStartTour = () => setIsTourOpen(true);
 	const handleCloseTour = () => setIsTourOpen(false);
 
 	const openHelpModal = () => setHelpModalOpen(true);
 	const closeHelpModal = () => setHelpModalOpen(false);
 
-	const openSaveModal = () => setSaveModalOpen(true);
-	const closeSaveModal = () => setSaveModalOpen(false);
+	const openSaveModal = () => setIsSaveModalOpen(true);
+	const closeSaveModal = () => setIsSaveModalOpen(false);
+
+	const handleSave = () => {
+		setIsSaved(true);
+	};
 
 	const handleDateChange = (selectedDate: Date | undefined) => {
 		if (selectedDate) {
@@ -188,12 +194,19 @@ export default function PropertyHeader({
 						{/* Save Property Button */}
 						<Button
 							variant="outline"
-							className="flex items-center gap-2 border-blue-400 text-blue-600 hover:bg-blue-50 dark:border-blue-600 dark:text-blue-300 dark:hover:bg-blue-900"
+							className={`flex items-center gap-2 ${isSaved ? "border-green-400 text-green-600" : "border-blue-400 text-blue-600"}`}
 							onClick={openSaveModal}
 							aria-label="Save property to lead list"
+							disabled={isSaved}
 						>
-							<Bookmark className="h-5 w-5" />
-							<span className="hidden sm:inline">Save</span>
+							{isSaved ? (
+								<BookmarkCheck className="h-5 w-5" />
+							) : (
+								<Bookmark className="h-5 w-5" />
+							)}
+							<span className="hidden sm:inline">
+								{isSaved ? "Saved" : "Save"}
+							</span>
 						</Button>
 
 						{/* Lead Activity Button */}
@@ -224,6 +237,7 @@ export default function PropertyHeader({
 				isOpen={isSaveModalOpen}
 				onClose={closeSaveModal}
 				property={property}
+				onSave={handleSave}
 			/>
 			{/* Sidebar */}
 			{isSidebarOpen && (

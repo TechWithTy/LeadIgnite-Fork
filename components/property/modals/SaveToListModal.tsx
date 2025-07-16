@@ -41,12 +41,14 @@ interface SaveToListModalProps {
 	isOpen: boolean;
 	onClose: () => void;
 	property: Property;
+	onSave: (listId: string) => void;
 }
 
 export default function SaveToListModal({
 	isOpen,
 	onClose,
 	property,
+	onSave,
 }: SaveToListModalProps) {
 	const { userProfile, addLeadList, addLeadToList } = useUserProfileStore();
 	const { toast } = useToast();
@@ -56,11 +58,18 @@ export default function SaveToListModal({
 
 	const handleCreateList = () => {
 		if (newListName.trim() !== "") {
-			addLeadList(newListName.trim());
-			toast({
-				title: "Success",
-				description: `List "${newListName}" created.`,
-			});
+			const newId = addLeadList(newListName.trim());
+			if (newId) {
+				setSelectedListId(newId);
+				try {
+					toast({
+						title: "Success",
+						description: `List "${newListName}" created.`,
+					});
+				} catch (error) {
+					console.error(error);
+				}
+			}
 			setNewListName("");
 		}
 	};
@@ -72,10 +81,16 @@ export default function SaveToListModal({
 			const listName = userProfile?.companyInfo?.leadLists.find(
 				(list: LeadList) => list.id === selectedListId,
 			)?.listName;
-			toast({
-				title: "Success",
-				description: `Property saved to "${listName || "list"}".`,
-			});
+			try {
+				toast({
+					title: "Success",
+					description: `Property saved to "${listName || "list"}`,
+				});
+			} catch (error) {
+				console.error(error);
+			}
+
+			onSave(selectedListId);
 			onClose();
 		}
 	};
