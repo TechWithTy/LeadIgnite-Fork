@@ -129,7 +129,7 @@ export const enrichmentOptions: EnrichmentOption[] = [
 			bgColor: "bg-blue-100",
 			textColor: "text-blue-800",
 		},
-		requiredFields: [["phone"], ["address"], ["firstName", "lastName"]],
-		optionalFields: [],
+		requiredFields: [["address"]],
+		optionalFields: ["phone", "firstName", "lastName"],
 	},
 ];

@@ -14,6 +14,7 @@ interface EnrichmentCardProps {
 	isSelected: boolean;
 	onToggle: (id: string) => void;
 	isDisabled: boolean;
+	missingFields?: string[];
 }
 
 export function EnrichmentCard({
@@ -21,6 +22,7 @@ export function EnrichmentCard({
 	isSelected,
 	onToggle,
 	isDisabled,
+	missingFields,
 }: EnrichmentCardProps) {
 	const { id, title, description, cost, features, isFree, badge } = enrichment;
 
@@ -112,10 +114,23 @@ export function EnrichmentCard({
 			<TooltipProvider>
 				<Tooltip>
 					<TooltipTrigger asChild>
-						<div className="h-full w-full">{cardContent}</div>
+						<div className="h-full w-full cursor-not-allowed">
+							{cardContent}
+						</div>
 					</TooltipTrigger>
 					<TooltipContent>
-						<p>Please enter the required field(s) to enable this option.</p>
+						{missingFields && missingFields.length > 0 ? (
+							<div className="space-y-1">
+								<p className="font-semibold">This option requires:</p>
+								<ul className="list-disc pl-4">
+									{missingFields.map((field) => (
+										<li key={field}>{field}</li>
+									))}
+								</ul>
+							</div>
+						) : (
+							<p>Please enter the required field(s) to enable this option.</p>
+						)}
 					</TooltipContent>
 				</Tooltip>
 			</TooltipProvider>

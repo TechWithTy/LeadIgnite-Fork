@@ -7,6 +7,7 @@ import type {
 	InputField,
 } from "@/types/skip-trace/enrichment";
 import { enrichmentOptions } from "@/constants/skip-trace/enrichmentOptions";
+import { fieldLabels } from "@/constants/skip-trace/fieldLabels";
 import { useUserProfileStore } from "@/lib/stores/user/userProfile";
 import { EnrichmentCard } from "./enrichment/EnrichmentCard";
 
@@ -20,6 +21,24 @@ const isEnrichmentDisabled = (
 		// * A field group is met if all of its fields have a value
 		fieldGroup.every((field) => userInput[field]),
 	);
+};
+
+const getMissingFields = (
+	option: EnrichmentOption,
+	userInput: Record<string, string>,
+) => {
+	const missingFields: string[] = [];
+	for (const fieldGroup of option.requiredFields) {
+		const isGroupSatisfied = fieldGroup.some((field) => userInput[field]);
+		if (!isGroupSatisfied) {
+			for (const field of fieldGroup) {
+				if (!userInput[field]) {
+					missingFields.push(fieldLabels[field] || field);
+				}
+			}
+		}
+	}
+	return missingFields;
 };
 
 interface EnrichmentStepProps {
@@ -74,6 +93,10 @@ export function EnrichmentStep({
 					<div className="grid grid-cols-2 gap-4 p-2">
 						{enrichmentOptions.map((enrichment) => {
 							const isDisabled = isEnrichmentDisabled(enrichment, userInput);
+							const missingFields = isDisabled
+								? getMissingFields(enrichment, userInput)
+								: [];
+
 							return (
 								<EnrichmentCard
 									key={enrichment.id}
@@ -81,6 +104,7 @@ export function EnrichmentStep({
 									isSelected={selectedOptions.includes(enrichment.id)}
 									onToggle={() => handleSelectOption(enrichment.id)}
 									isDisabled={isDisabled}
+									missingFields={missingFields}
 								/>
 							);
 						})}
