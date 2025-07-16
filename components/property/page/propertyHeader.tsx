@@ -48,7 +48,7 @@ export default function PropertyHeader({
 	initialStatus = "New Lead", // Default to 'New Lead' if no status is provided
 	onLeadActivity,
 }: PropertyHeaderProps) {
-	const [date, setDate] = useState<Date | undefined>(initialDate);
+	const [date, setDate] = useState<Date | undefined>(initialDate ?? new Date());
 	const [status, setStatus] = useState<string>(initialStatus);
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Manage sidebar visibility
 	const [showAdvanced, setShowAdvanced] = useState(false);

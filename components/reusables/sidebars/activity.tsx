@@ -25,9 +25,11 @@ const ActivitySidebar: React.FC<ActivitySidebarProps> = ({
 	const [notes, setNotes] = useState<ActivityNote[]>([]);
 	const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
 	const [isMounted, setIsMounted] = useState(false);
+	const [portalNode, setPortalNode] = useState<Element | null>(null);
 
 	useEffect(() => {
 		setIsMounted(true);
+		setPortalNode(document.getElementById("sidebar-portal"));
 	}, []);
 
 	const handlePost = () => {
@@ -130,11 +132,11 @@ const ActivitySidebar: React.FC<ActivitySidebarProps> = ({
 		</div>
 	);
 
-	if (!isMounted) {
+	if (!isMounted || !portalNode) {
 		return null;
 	}
 
-	return createPortal(sidebarContent, document.body);
+	return createPortal(sidebarContent, portalNode);
 };
 
 export default ActivitySidebar;

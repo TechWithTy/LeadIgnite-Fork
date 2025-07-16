@@ -25,6 +25,7 @@ export default async function RootLayout({
 			<body className={`${inter.className}  `} suppressHydrationWarning={true}>
 				<NextTopLoader showSpinner={false} />
 				<Providers session={session}>{children}</Providers>
+				<div id="sidebar-portal" />
 			</body>
 		</html>
 	);

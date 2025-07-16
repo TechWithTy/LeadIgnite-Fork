@@ -159,7 +159,7 @@ const UploadListModal: React.FC<UploadListModalProps> = ({
 				</button>
 
 				<h2 className="mb-4 text-xl font-semibold dark:text-white">
-					Upload a skip-traced list
+					Upload sssa skip-traced list
 				</h2>
 				<p className="mb-4 text-gray-500 dark:text-gray-400">
 					The list you select must be skip-traced.

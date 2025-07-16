@@ -1,97 +1,71 @@
-import { Button } from "@/components/ui/button";
-import type { FC } from "react";
+"use client";
+
+import type { Header } from "@/types/skip-trace";
+import type React from "react";
 
 interface ReviewAndSubmitStepProps {
 	listName: string;
 	uploadedFile: File | null;
-	selectedHeaders: Record<string, string | undefined>;
+	selectedHeaders: Header[];
 	onSubmit: () => void;
 	onBack: () => void;
 	submitting: boolean;
+	availableCredits: number;
 }
 
-const ReviewAndSubmitStep: FC<ReviewAndSubmitStepProps> = ({
+const ReviewAndSubmitStep: React.FC<ReviewAndSubmitStepProps> = ({
 	listName,
 	uploadedFile,
 	selectedHeaders,
 	onSubmit,
 	onBack,
 	submitting,
+	availableCredits,
 }) => {
 	return (
-		<div className="space-y-6">
-			<h3 className="font-semibold text-lg">Review & Submit</h3>
-			<div>
-				<div className="mb-2">
-					<span className="font-medium">List Name:</span> {listName}
-				</div>
-				<div className="mb-2">
-					<span className="font-medium">File:</span>{" "}
-					{uploadedFile?.name || "No file uploaded"}
+		<div className="space-y-4 p-4">
+			<h3 className="text-lg font-medium">Review and Submit</h3>
+			<div className="rounded-md border border-blue-200 bg-blue-50 p-3 text-center dark:border-blue-800 dark:bg-blue-900/50">
+				<p className="text-sm text-blue-800 dark:text-blue-200">
+					You have{" "}
+					<span className="font-bold">{availableCredits.toLocaleString()}</span>{" "}
+					available credits.
+				</p>
+			</div>
+			<div className="space-y-2 rounded-md border p-4 dark:border-gray-700">
+				<div>
+					<span className="font-semibold">List Name:</span> {listName}
 				</div>
 				<div>
-					<span className="mb-1 block font-medium">Field Mappings:</span>
-					<div className="overflow-x-auto rounded border border-gray-200 bg-gray-50 dark:bg-gray-800">
-						<table className="min-w-full text-sm">
-							<thead>
-								<tr className="bg-gray-100 dark:bg-gray-700">
-									<th className="px-4 py-2 text-left font-semibold">Field</th>
-									<th className="px-4 py-2 text-left font-semibold">
-										Mapped Header
-									</th>
-								</tr>
-							</thead>
-							<tbody>
-								{Object.entries(selectedHeaders).map(([field, header]) => (
-									<tr
-										key={field}
-										className="border-gray-200 border-t dark:border-gray-700"
-									>
-										<td className="px-4 py-2 font-medium text-gray-800 dark:text-gray-100">
-											{field}
-										</td>
-										<td className="px-4 py-2">
-											{header ? (
-												<span className="text-green-700 dark:text-green-400">
-													{header}
-												</span>
-											) : (
-												<span className="text-red-500">Not mapped</span>
-											)}
-										</td>
-									</tr>
-								))}
-							</tbody>
-						</table>
-					</div>
+					<span className="font-semibold">File:</span> {uploadedFile?.name}
+				</div>
+				<div>
+					<h4 className="font-semibold">Mapped Headers:</h4>
+					<ul className="list-inside list-disc pl-4">
+						{selectedHeaders.map((h) => (
+							<li key={h.csvHeader}>
+								{h.csvHeader} &rarr; {h.type.replace(/_/g, " ")}
+							</li>
+						))}
+					</ul>
 				</div>
 			</div>
-			{/*
-			 * UI/UX: Button group for navigation
-			 * "Back" is always on the left, "Confirm" on the right
-			 * Both use loading/disabled state for submitting
-			 * ! Prevent navigation during submission
-			 */}
-			<div className="mt-6 flex items-center justify-between gap-4">
-				<Button
+			<div className="flex justify-between">
+				<button
 					type="button"
-					variant="outline"
 					onClick={onBack}
-					disabled={submitting}
-					aria-label="Go back to previous step"
+					className="rounded-md border bg-white px-4 py-2 font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
 				>
 					Back
-				</Button>
-				<Button
+				</button>
+				<button
 					type="button"
-					variant="default"
-					className="rounded-md bg-primary px-4 py-2 font-medium text-white transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 					onClick={onSubmit}
 					disabled={submitting}
-					aria-label="Confirm and upload list"
+					className="rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 				>
-					{submitting ? "Uploading..." : "Confirm"}
-				</Button>
+					{submitting ? "Submitting..." : "Submit"}
+				</button>
 			</div>
 		</div>
 	);

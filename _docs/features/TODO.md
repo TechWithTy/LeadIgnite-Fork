@@ -7,7 +7,8 @@
 
 💾 Dashboard > Property > Lead Activity, add CRUD For Lead Activity for a lead
 💾 Dashboard > Property > Add Fetching of on market and on amrket proeprty Data
-💾 Dashboard > Property > 
+💾 Dashboard > Property > Add CRUD Lead Functionality   
+💾 Dashboard > Property > Add Skip Trace Logic 
 
 #🖥️ Dashboard > Lead Search > Implement  save search use to update the current search state
 #🖥️ Dashboard > Lead Search > Update Property Card to link to property overview page
