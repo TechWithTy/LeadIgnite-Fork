@@ -8,7 +8,7 @@ export function LeadNameCell({ row }: CellContext<LeadTypeGlobal, unknown>) {
 				{row.original.contactInfo.firstName} {row.original.contactInfo.lastName}
 			</strong>
 			<div className="text-muted-foreground text-sm">
-				{row.original.address1}
+				{row.original.contactInfo.address}
 			</div>
 		</div>
 	);

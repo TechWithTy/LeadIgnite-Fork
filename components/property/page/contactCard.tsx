@@ -4,9 +4,11 @@ import { AddContactInfoModal } from "@/components/reusables/modals/addContactInf
 import SkipTraceModalMain from "@/components/reusables/modals/user/skipTrace/SkipTraceModalMain";
 import { Button } from "@/components/ui/button";
 import searchAnimation from "@/public/lottie/SearchPing.json";
+import type { ContactField } from "@/types/contact";
 import type { Property, RealtorProperty } from "@/types/_dashboard/property";
 import { isRealtorProperty } from "@/types/_dashboard/property";
 import Lottie from "lottie-react";
+import { useSearchParams } from "next/navigation";
 import type React from "react";
 import { useState } from "react";
 
@@ -30,6 +32,7 @@ export const ContactCard: React.FC<ContactCardProps> = ({ property }) => {
 	};
 
 	const { name, email, phones } = getContactInfo();
+	const searchParams = useSearchParams();
 
 	// State to handle modal visibility for both AddContact and SkipTrace
 	const [isAddContactModalOpen, setIsAddContactModalOpen] = useState(false);
@@ -46,11 +49,26 @@ export const ContactCard: React.FC<ContactCardProps> = ({ property }) => {
 	const closeSkipTraceModal = () => setIsSkipTraceModalOpen(false);
 
 	// Submit handler for adding contact info
-	const handleAddContactInfo = (
-		contactType: "phone" | "email",
-		contactInfo: string,
-	) => {
+	const handleAddContactInfo = (fields: ContactField[]) => {
+		// TODO: Implement logic to save the new contact fields
+		console.log("New contact fields:", fields);
 		closeAddContactModal(); // Close modal after submitting
+	};
+
+	// Prepare initial data for the skip trace modal, prioritizing URL params
+	const nameParts = name?.split(" ") ?? [];
+	const propFirstName = nameParts[0] ?? "";
+	const propLastName = nameParts.slice(1).join(" ") ?? "";
+
+	const skipTraceInitialData = {
+		type: "single" as const,
+		firstName: searchParams.get("firstName") || propFirstName,
+		lastName: searchParams.get("lastName") || propLastName,
+		address: searchParams.get("address") || property.address.fullStreetLine,
+		email: searchParams.get("email") || email || "",
+		phone: searchParams.get("phone") || phones?.[0]?.number || "",
+		socialMedia: searchParams.get("social") || "",
+		domain: searchParams.get("domain") || "",
 	};
 
 	return (
@@ -137,13 +155,14 @@ export const ContactCard: React.FC<ContactCardProps> = ({ property }) => {
 			<AddContactInfoModal
 				isOpen={isAddContactModalOpen}
 				onClose={closeAddContactModal}
-				onSubmit={handleAddContactInfo}
+				onSave={handleAddContactInfo}
 			/>
 
 			{/* Modal for Skip Trace */}
 			<SkipTraceModalMain
 				isOpen={isSkipTraceModalOpen}
 				onClose={closeSkipTraceModal}
+				initialData={skipTraceInitialData}
 			/>
 		</div>
 	);

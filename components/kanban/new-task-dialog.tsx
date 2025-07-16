@@ -161,7 +161,7 @@ export default function NewTaskDialog() {
 														(l) => String(l.id) === String(selectedLeadId),
 													);
 													return lead
-														? `${lead.firstName} ${lead.lastName}`
+														? `${lead.contactInfo.firstName} ${lead.contactInfo.lastName}`
 														: "Select Lead";
 												})()
 											: "Select Lead"}
@@ -173,7 +173,7 @@ export default function NewTaskDialog() {
 											key={lead.id}
 											onSelect={() => setSelectedLeadId(Number(lead.id))}
 										>
-											{lead.firstName} {lead.lastName}
+											{lead.contactInfo.firstName} {lead.contactInfo.lastName}
 										</DropdownMenuItem>
 									))}
 								</DropdownMenuContent>
