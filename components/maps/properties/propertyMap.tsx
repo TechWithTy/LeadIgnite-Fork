@@ -1,10 +1,5 @@
 "use client";
-import {
-	GoogleMap,
-	InfoWindow,
-	LoadScript,
-	Marker,
-} from "@react-google-maps/api";
+import { GoogleMap, InfoWindow, LoadScript } from "@react-google-maps/api";
 import Lottie from "lottie-react";
 import type React from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -115,6 +110,7 @@ const PropertyMap: React.FC<PropertyMapProps> = ({
 	}, [center, isStreetView]);
 
 	const mapOptions = {
+		mapId: process.env.NEXT_PUBLIC_GMAPS_MAP_ID,
 		mapTypeId,
 		disableDefaultUI: true,
 		zoomControl: true,
