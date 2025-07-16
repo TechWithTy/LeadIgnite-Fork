@@ -56,12 +56,16 @@ export default function PropertyHeader({
 	const [showAdvanced, setShowAdvanced] = useState(false);
 	const [isTourOpen, setIsTourOpen] = useState(false);
 
-	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isHelpModalOpen, setHelpModalOpen] = useState(false);
+	const [isSaveModalOpen, setSaveModalOpen] = useState(false);
 	const handleStartTour = () => setIsTourOpen(true);
 	const handleCloseTour = () => setIsTourOpen(false);
 
-	const handleOpenModal = () => setIsModalOpen(true);
-	const handleCloseModal = () => setIsModalOpen(false);
+	const openHelpModal = () => setHelpModalOpen(true);
+	const closeHelpModal = () => setHelpModalOpen(false);
+
+	const openSaveModal = () => setSaveModalOpen(true);
+	const closeSaveModal = () => setSaveModalOpen(false);
 
 	const handleDateChange = (selectedDate: Date | undefined) => {
 		if (selectedDate) {
@@ -91,7 +95,7 @@ export default function PropertyHeader({
 						</h1>
 						<button
 							type="button"
-							onClick={handleOpenModal}
+							onClick={openHelpModal}
 							title="Get More help"
 							className="animate-bounce rounded-full bg-blue-500 p-2 text-white hover:animate-none dark:bg-green-700 dark:text-gray-300"
 						>
@@ -185,7 +189,7 @@ export default function PropertyHeader({
 						<Button
 							variant="outline"
 							className="flex items-center gap-2 border-blue-400 text-blue-600 hover:bg-blue-50 dark:border-blue-600 dark:text-blue-300 dark:hover:bg-blue-900"
-							onClick={() => setIsModalOpen(true)}
+							onClick={openSaveModal}
 							aria-label="Save property to lead list"
 						>
 							<Bookmark className="h-5 w-5" />
@@ -203,8 +207,8 @@ export default function PropertyHeader({
 				</div>
 			</div>
 			<WalkThroughModal
-				isOpen={isModalOpen}
-				onClose={handleCloseModal}
+				isOpen={isHelpModalOpen}
+				onClose={closeHelpModal}
 				videoUrl="https://www.youtube.com/watch?v=hyosynoNbSU" // Example YouTube video URL
 				title="Welcome To Your Lead Search"
 				subtitle="Get help searching and sorting through your properties."
@@ -217,8 +221,8 @@ export default function PropertyHeader({
 
 			{/* Save To List Modal */}
 			<SaveToListModal
-				isOpen={isModalOpen}
-				onClose={() => setIsModalOpen(false)}
+				isOpen={isSaveModalOpen}
+				onClose={closeSaveModal}
 				property={property}
 			/>
 			{/* Sidebar */}
