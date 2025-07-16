@@ -63,15 +63,15 @@ const ActivitySidebar: React.FC<ActivitySidebarProps> = ({
 	};
 
 	const sidebarContent = (
-		<div className="bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 fixed top-0 right-0 z-50 flex h-screen w-80 flex-col shadow-lg">
+		<div className="fixed top-0 right-0 z-50 flex h-screen w-80 flex-col border-gray-200 border-l bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
 			{/* Header */}
-			<div className="border-b border-gray-200 dark:border-gray-700 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700 p-4">
-				<h2 className="dark:text-white text-lg font-semibold">
+			<div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-gray-200 border-b bg-slate-100 p-4 dark:border-gray-700 dark:bg-slate-700">
+				<h2 className="font-semibold text-lg dark:text-white">
 					{leadData.firstName} Activity
 				</h2>
 				<button
 					type="button"
-					className="dark:text-gray-200 dark:hover:text-gray-100 hover:text-gray-700 text-gray-500"
+					className="text-gray-500 hover:text-gray-700 dark:text-gray-200 dark:hover:text-gray-100"
 					onClick={onClose}
 				>
 					<X className="h-6 w-6" />
@@ -84,7 +84,7 @@ const ActivitySidebar: React.FC<ActivitySidebarProps> = ({
 					<div key={note.id} className="group relative mb-4">
 						<div className="mb-2 flex items-center justify-between">
 							<span className="font-bold dark:text-gray-100">You</span>
-							<span className="text-sm text-gray-500 dark:text-gray-400">
+							<span className="text-gray-500 text-sm dark:text-gray-400">
 								{note.timestamp}
 							</span>
 						</div>
@@ -112,7 +112,7 @@ const ActivitySidebar: React.FC<ActivitySidebarProps> = ({
 			</div>
 
 			{/* Input Area */}
-			<div className="border-t border-gray-200 p-4 dark:border-gray-700">
+			<div className="border-gray-200 border-t p-4 dark:border-gray-700">
 				<textarea
 					className="h-24 w-full resize-none rounded border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
 					placeholder="Write an update..."

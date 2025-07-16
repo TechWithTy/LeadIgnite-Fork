@@ -45,6 +45,9 @@ const PropertyMap: React.FC<PropertyMapProps> = ({
 	);
 	const [panoId, setPanoId] = useState<string | null>(null);
 	const mapRef = useRef<google.maps.Map | null>(null);
+	const markerRef = useRef<google.maps.marker.AdvancedMarkerElement | null>(
+		null,
+	);
 
 	const center = useMemo(
 		() => ({ lat: latitude, lng: longitude }),
@@ -79,6 +82,38 @@ const PropertyMap: React.FC<PropertyMapProps> = ({
 		[center],
 	);
 
+	useEffect(() => {
+		if (!mapRef.current) return;
+
+		// Clean up previous marker
+		if (markerRef.current) {
+			markerRef.current.map = null;
+		}
+
+		// Create new AdvancedMarkerElement if not in street view
+		if (!isStreetView) {
+			const newMarker = new google.maps.marker.AdvancedMarkerElement({
+				map: mapRef.current,
+				position: center,
+			});
+
+			newMarker.addListener("click", () => {
+				setSelected(center);
+			});
+
+			markerRef.current = newMarker;
+		} else {
+			markerRef.current = null;
+		}
+
+		// Cleanup function to run when component unmounts or dependencies change
+		return () => {
+			if (markerRef.current) {
+				markerRef.current.map = null;
+			}
+		};
+	}, [center, isStreetView]);
+
 	const mapOptions = {
 		mapTypeId,
 		disableDefaultUI: true,
@@ -105,7 +140,10 @@ const PropertyMap: React.FC<PropertyMapProps> = ({
 	};
 
 	return (
-		<LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GMAPS_KEY ?? ""}>
+		<LoadScript
+			googleMapsApiKey={process.env.NEXT_PUBLIC_GMAPS_KEY ?? ""}
+			libraries={["marker", "streetView"]}
+		>
 			<div style={mapContainerStyle}>
 				<GoogleMap
 					mapContainerStyle={{ width: "100%", height: "100%" }}
@@ -114,42 +152,38 @@ const PropertyMap: React.FC<PropertyMapProps> = ({
 					options={mapOptions}
 					onLoad={onLoad}
 				>
-					{!isStreetView && (
-						<>
-							<Marker position={center} onClick={() => setSelected(center)} />
-							{selected && (
-								<InfoWindow
-									position={selected}
-									onCloseClick={() => setSelected(null)}
-								>
-									<div
-										style={{
-											color: "black",
-											display: "flex",
-											alignItems: "center",
-										}}
+					{!isStreetView && selected && (
+						<InfoWindow
+							position={selected}
+							onCloseClick={() => setSelected(null)}
+						>
+							<div
+								style={{
+									color: "black",
+									display: "flex",
+									alignItems: "center",
+								}}
+							>
+								{homeAnimation && (
+									<Lottie
+										animationData={homeAnimation}
+										style={{ height: 30, width: 30, marginRight: 10 }}
+									/>
+								)}
+								<div style={{ flex: 1 }}>
+									<h2
+										className="font-bold"
+										style={{ fontSize: "1rem", margin: 0 }}
 									>
-										{homeAnimation && (
-											<Lottie
-												animationData={homeAnimation}
-												style={{ height: 30, width: 30, marginRight: 10 }}
-											/>
-										)}
-										<div style={{ flex: 1 }}>
-											<h2
-												className="font-bold"
-												style={{ fontSize: "1rem", margin: 0 }}
-											>
-												{address}
-											</h2>
-											<p style={{ fontSize: "0.875rem", margin: 0 }}>
-												{details}
-											</p>
-										</div>
-									</div>
-								</InfoWindow>
-							)}
-						</>
+										{address}
+									</h2>
+									<p style={{ fontSize: "0.875rem", margin: 0 }}>{details}</p>
+								</div>
+							</div>
+						</InfoWindow>
+					)}
+					{!isStreetView && (
+						<Marker position={center} onClick={() => setSelected(center)} />
 					)}
 				</GoogleMap>
 

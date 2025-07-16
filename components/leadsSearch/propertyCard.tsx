@@ -83,7 +83,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
 
 	return (
 		<Card
-			className={`dark:border-gray-700 dark:bg-gray-900 group relative mx-auto max-w-lg overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md ${
+			className={`group relative mx-auto max-w-lg overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-900 ${
 				selected ? "ring-2 ring-orange-500 ring-offset-2" : ""
 			}`}
 			aria-selected={selected}
@@ -92,10 +92,10 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
 				{/* Checkbox for selection */}
 				<button
 					type="button"
-					className={`absolute border-gray-200 border-orange-500 border-2 dark:border-gray-700 flex focus:outline-none focus:ring-2 focus:ring-orange-500 h-8 hover:border-orange-500 items-center justify-center rounded-full shadow-md text-transparent transition-colors w-8 z-10 ${
+					className={`absolute z-10 flex h-8 w-8 items-center justify-center rounded-full border-2 border-gray-200 border-orange-500 text-transparent shadow-md transition-colors hover:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:border-gray-700 ${
 						selected
 							? "bg-orange-500 text-white"
-							: "bg-white/80 dark:bg-gray-800/80 group-hover:text-gray-400"
+							: "bg-white/80 group-hover:text-gray-400 dark:bg-gray-800/80"
 					}`}
 					onClick={(e) => {
 						e.stopPropagation();
@@ -159,7 +159,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
 				<div className="p-4 text-center">
 					<div className="mb-2">
 						<Link href={`/dashboard/properties/${property.id}`}>
-							<h3 className="text-lg font-semibold text-gray-900 hover:text-orange-600 dark:text-white dark:hover:text-orange-400">
+							<h3 className="font-semibold text-gray-900 text-lg hover:text-orange-600 dark:text-white dark:hover:text-orange-400">
 								{address.street}, {address.city}, {address.state}{" "}
 								{address.zipCode}
 							</h3>
@@ -169,7 +169,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
 					{/* Price */}
 					<div className="mb-3 flex items-center justify-center">
 						<DollarSign className="mr-1 h-4 w-4 text-gray-500" />
-						<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+						<span className="font-medium text-gray-700 text-sm dark:text-gray-300">
 							{listPrice ? formatPrice(listPrice) : "Price not available"}
 						</span>
 					</div>
@@ -178,7 +178,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
 					{(lastSoldDate || soldPrice) && (
 						<div className="mb-3 flex items-center justify-center">
 							<Calendar className="mr-1 h-4 w-4 text-gray-500" />
-							<span className="text-sm text-gray-600 dark:text-gray-400">
+							<span className="text-gray-600 text-sm dark:text-gray-400">
 								{lastSoldDate && `Last sold: ${formatDate(lastSoldDate)}`}
 								{soldPrice && ` for ${formatPrice(soldPrice)}`}
 							</span>
@@ -186,17 +186,17 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
 					)}
 
 					{/* Property Features */}
-					<div className="grid grid-cols-3 gap-2 border-t border-gray-200 pt-3 dark:border-gray-700">
+					<div className="grid grid-cols-3 gap-2 border-gray-200 border-t pt-3 dark:border-gray-700">
 						<div className="flex items-center justify-center">
 							<Bed className="mr-1 h-4 w-4 text-gray-500" />
-							<span className="text-sm text-gray-700 dark:text-gray-300">
+							<span className="text-gray-700 text-sm dark:text-gray-300">
 								{details.beds} {details.beds === 1 ? "bed" : "beds"}
 							</span>
 						</div>
 
 						<div className="flex items-center justify-center">
 							<Bath className="mr-1 h-4 w-4 text-gray-500" />
-							<span className="text-sm text-gray-700 dark:text-gray-300">
+							<span className="text-gray-700 text-sm dark:text-gray-300">
 								{details.fullBaths} {details.fullBaths === 1 ? "bath" : "baths"}
 								{details.halfBaths ? `, ${details.halfBaths} half` : ""}
 							</span>
@@ -204,7 +204,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
 
 						<div className="flex items-center justify-center">
 							<Ruler className="mr-1 h-4 w-4 text-gray-500" />
-							<span className="text-sm text-gray-700 dark:text-gray-300">
+							<span className="text-gray-700 text-sm dark:text-gray-300">
 								{details.sqft?.toLocaleString() || "N/A"} sqft
 							</span>
 						</div>
