@@ -16,6 +16,7 @@ import type {
 	RentCastProperty,
 } from "@/types/_dashboard/property";
 import Image from "next/image";
+import Link from "next/link";
 import type React from "react";
 
 interface PropertyCardProps {
@@ -135,36 +136,38 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
 				</button>
 
 				{/* Property Image */}
-				<div className="relative h-48 w-full overflow-hidden rounded-t-lg bg-gray-100 dark:bg-gray-800">
-					{primaryImage ? (
-						<Image
-							src={primaryImage}
-							alt={`${address.street}, ${address.city}, ${address.state} ${address.zipCode}`}
-							fill
-							className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 hover:scale-105"
-							sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-							priority
-						/>
-					) : (
-						<div className="flex flex-wrap items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-							<div className="h-12 w-12 text-gray-400">
-								<MapPin className="h-full w-full" />
+				<Link href={`/dashboard/properties/${property.id}`}>
+					<div className="relative h-48 w-full cursor-pointer overflow-hidden rounded-t-lg bg-gray-100 dark:bg-gray-800">
+						{primaryImage ? (
+							<Image
+								src={primaryImage}
+								alt={`${address.street}, ${address.city}, ${address.state} ${address.zipCode}`}
+								fill
+								className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+								sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+								priority
+							/>
+						) : (
+							<div className="flex h-full w-full items-center justify-center text-gray-400">
+								<Home className="h-16 w-16" />
 							</div>
-						</div>
-					)}
-				</div>
+						)}
+					</div>
+				</Link>
 
 				{/* Property Details */}
-				<div className="p-4">
+				<div className="p-4 text-center">
 					<div className="mb-2">
-						<h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-							{address.street}, {address.city}, {address.state}{" "}
-							{address.zipCode}
-						</h3>
+						<Link href={`/dashboard/properties/${property.id}`}>
+							<h3 className="text-lg font-semibold text-gray-900 hover:text-orange-600 dark:text-white dark:hover:text-orange-400">
+								{address.street}, {address.city}, {address.state}{" "}
+								{address.zipCode}
+							</h3>
+						</Link>
 					</div>
 
 					{/* Price */}
-					<div className="mb-3 flex items-center">
+					<div className="mb-3 flex items-center justify-center">
 						<DollarSign className="mr-1 h-4 w-4 text-gray-500" />
 						<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
 							{listPrice ? formatPrice(listPrice) : "Price not available"}
@@ -173,7 +176,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
 
 					{/* Last Sold */}
 					{(lastSoldDate || soldPrice) && (
-						<div className="mb-3 flex items-center">
+						<div className="mb-3 flex items-center justify-center">
 							<Calendar className="mr-1 h-4 w-4 text-gray-500" />
 							<span className="text-sm text-gray-600 dark:text-gray-400">
 								{lastSoldDate && `Last sold: ${formatDate(lastSoldDate)}`}
@@ -184,14 +187,14 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
 
 					{/* Property Features */}
 					<div className="grid grid-cols-3 gap-2 border-t border-gray-200 pt-3 dark:border-gray-700">
-						<div className="flex items-center">
+						<div className="flex items-center justify-center">
 							<Bed className="mr-1 h-4 w-4 text-gray-500" />
 							<span className="text-sm text-gray-700 dark:text-gray-300">
 								{details.beds} {details.beds === 1 ? "bed" : "beds"}
 							</span>
 						</div>
 
-						<div className="flex items-center">
+						<div className="flex items-center justify-center">
 							<Bath className="mr-1 h-4 w-4 text-gray-500" />
 							<span className="text-sm text-gray-700 dark:text-gray-300">
 								{details.fullBaths} {details.fullBaths === 1 ? "bath" : "baths"}
@@ -199,7 +202,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
 							</span>
 						</div>
 
-						<div className="flex items-center">
+						<div className="flex items-center justify-center">
 							<Ruler className="mr-1 h-4 w-4 text-gray-500" />
 							<span className="text-sm text-gray-700 dark:text-gray-300">
 								{details.sqft?.toLocaleString() || "N/A"} sqft
