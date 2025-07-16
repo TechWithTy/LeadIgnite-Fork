@@ -113,6 +113,11 @@ export function EnrichmentStep({
 			</TooltipProvider>
 
 			<div className="mt-auto pt-4">
+				<div className="mb-2 rounded-md border border-blue-200 bg-blue-50 p-3 text-center dark:border-blue-800 dark:bg-blue-900/50">
+					<p className="font-medium text-sm text-blue-800 dark:text-blue-200">
+						Available Credits: {availableCredits.toLocaleString()}
+					</p>
+				</div>
 				{creditCost > 0 && (
 					<div className="mb-4 rounded-md border border-yellow-200 bg-yellow-50 p-3 text-center dark:border-yellow-800 dark:bg-yellow-900/50">
 						<p className="font-medium text-sm text-yellow-800 dark:text-yellow-200">
