@@ -35,7 +35,7 @@ export function EnrichmentCard({
 		<label
 			htmlFor={id}
 			className={cn(
-				"relative flex h-40 w-full shrink-0 flex-col justify-between rounded-lg border p-4 transition-all duration-200",
+				"relative flex h-28 w-full flex-col justify-between rounded-lg border px-4 py-2 transition-all duration-200",
 				isSelected
 					? "border-blue-500 bg-blue-50 ring-2 ring-blue-500 dark:bg-blue-900/50"
 					: "border-gray-200 bg-white hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600",
@@ -50,23 +50,35 @@ export function EnrichmentCard({
 				onChange={() => onToggle(id)}
 				disabled={isDisabled}
 			/>
-			<div className="flex items-start justify-between">
-				<h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+			<div className="flex items-center justify-between gap-2">
+				<h3 className="line-clamp-2 flex-1 font-semibold text-gray-800 text-sm leading-tight dark:text-gray-200">
 					{title}
 				</h3>
+				{badge && (
+					<span
+						className="ml-2 rounded-full bg-gray-100 px-2 py-0.5 font-semibold text-[10px] text-gray-500 shadow-sm dark:bg-gray-700 dark:text-gray-200"
+						style={{
+							backgroundColor: badge.bgColor,
+							color: badge.textColor,
+							whiteSpace: "nowrap",
+						}}
+					>
+						{badge.text}
+					</span>
+				)}
 				<div
 					className={cn(
-						"flex h-6 w-6 items-center justify-center rounded-full border",
+						"ml-2 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border",
 						isSelected
 							? "border-blue-500 bg-blue-500 text-white"
 							: "border-gray-300 bg-white text-gray-400 dark:border-gray-600 dark:bg-gray-700",
 					)}
 				>
-					{isSelected && <Check className="h-4 w-4" />}
+					{isSelected && <Check className="h-3 w-3" />}
 				</div>
 			</div>
-			<div className="flex items-end justify-between">
-				<div className="text-xs text-gray-500 dark:text-gray-400">
+			<div className="mt-1 flex items-center justify-between">
+				<div className="font-medium text-gray-600 text-xs dark:text-gray-300">
 					{isFree ? (
 						<span className="font-bold text-green-600 dark:text-green-400">
 							Free
@@ -85,7 +97,7 @@ export function EnrichmentCard({
 						<TooltipContent align="end" side="top">
 							<div className="max-w-xs p-2 text-sm">
 								<p className="font-bold">{title}</p>
-								<p className="mb-2 text-xs text-gray-500 dark:text-gray-400">
+								<p className="mb-2 text-gray-500 text-xs dark:text-gray-400">
 									{description}
 								</p>
 								<ul className="list-disc pl-4">
@@ -98,14 +110,6 @@ export function EnrichmentCard({
 					</Tooltip>
 				</TooltipProvider>
 			</div>
-			{badge && (
-				<div
-					className="absolute -right-2 -top-2 rounded-full px-2 py-0.5 text-xs font-semibold"
-					style={{ backgroundColor: badge.bgColor, color: badge.textColor }}
-				>
-					{badge.text}
-				</div>
-			)}
 		</label>
 	);
 
