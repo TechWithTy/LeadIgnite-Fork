@@ -42,9 +42,12 @@ const getMissingFields = (
 };
 
 interface EnrichmentStepProps {
-	leadCount: number;
-	onNext: (selectedOptions: string[]) => void;
+	onNext: (
+		selectedOptions: string[],
+		userInput: Record<InputField, string>,
+	) => void;
 	onBack: () => void;
+	leadCount: number;
 	userInput: Record<InputField, string>;
 }
 
@@ -52,9 +55,11 @@ export function EnrichmentStep({
 	leadCount,
 	onNext,
 	onBack,
-	userInput,
+	userInput: propsUserInput,
 }: EnrichmentStepProps) {
 	const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+	const [userInput, setUserInput] =
+		useState<Record<InputField, string>>(propsUserInput);
 	const { userProfile } = useUserProfileStore();
 
 	const handleSelectOption = (optionId: string) => {
@@ -114,13 +119,13 @@ export function EnrichmentStep({
 
 			<div className="mt-auto pt-4">
 				<div className="mb-2 rounded-md border border-blue-200 bg-blue-50 p-3 text-center dark:border-blue-800 dark:bg-blue-900/50">
-					<p className="font-medium text-sm text-blue-800 dark:text-blue-200">
+					<p className="text-sm font-medium text-blue-800 dark:text-blue-200">
 						Available Credits: {availableCredits.toLocaleString()}
 					</p>
 				</div>
 				{creditCost > 0 && (
 					<div className="mb-4 rounded-md border border-yellow-200 bg-yellow-50 p-3 text-center dark:border-yellow-800 dark:bg-yellow-900/50">
-						<p className="font-medium text-sm text-yellow-800 dark:text-yellow-200">
+						<p className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
 							Estimated Cost: {creditCost.toLocaleString()} credits
 						</p>
 					</div>
@@ -130,7 +135,7 @@ export function EnrichmentStep({
 						Back
 					</Button>
 					<Button
-						onClick={() => onNext(selectedOptions)}
+						onClick={() => onNext(selectedOptions, userInput)}
 						disabled={!hasEnoughCredits || selectedOptions.length === 0}
 					>
 						Next

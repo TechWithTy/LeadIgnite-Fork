@@ -2,6 +2,8 @@
 
 import { enrichmentOptions } from "@/constants/skip-trace/enrichmentOptions";
 import type { Header } from "@/types/skip-trace";
+import type { InputField } from "@/types/skip-trace/enrichment";
+import { fieldLabels } from "@/constants/skip-trace/fieldLabels";
 import type React from "react";
 
 interface ReviewAndSubmitStepProps {
@@ -14,6 +16,7 @@ interface ReviewAndSubmitStepProps {
 	availableCredits: number;
 	selectedEnrichmentOptions: string[];
 	leadCount: number;
+	userInput?: Record<InputField, string>;
 }
 
 const ReviewAndSubmitStep: React.FC<ReviewAndSubmitStepProps> = ({
@@ -26,6 +29,7 @@ const ReviewAndSubmitStep: React.FC<ReviewAndSubmitStepProps> = ({
 	availableCredits,
 	selectedEnrichmentOptions,
 	leadCount,
+	userInput,
 }) => {
 	const selectedOptionsDetails = enrichmentOptions.filter((opt) =>
 		selectedEnrichmentOptions.includes(opt.id),
@@ -63,13 +67,45 @@ const ReviewAndSubmitStep: React.FC<ReviewAndSubmitStepProps> = ({
 					</div>
 				</div>
 			</div>
-			<div className="space-y-2 rounded-md border p-4 dark:border-gray-700">
-				<div>
-					<span className="font-semibold">List Name:</span> {listName}
-				</div>
-				<div>
-					<span className="font-semibold">File:</span> {uploadedFile?.name}
-				</div>
+			<div className="space-y-3 rounded-md border p-4 dark:border-gray-700">
+				{uploadedFile ? (
+					<>
+						<div>
+							<span className="font-semibold">List Name:</span> {listName}
+						</div>
+						<div>
+							<span className="font-semibold">File:</span> {uploadedFile.name}
+						</div>
+						<div>
+							<h4 className="font-semibold">Mapped Headers:</h4>
+							<ul className="list-inside list-disc pl-4">
+								{selectedHeaders.map((h) => (
+									<li key={h.csvHeader}>
+										{h.csvHeader} &rarr; {h.type.replace(/_/g, " ")}
+									</li>
+								))}
+							</ul>
+						</div>
+					</>
+				) : (
+					<div>
+						<h4 className="font-semibold">Contact Details:</h4>
+						<ul className="list-inside list-disc pl-4">
+							{userInput &&
+								Object.entries(userInput)
+									.filter(([, value]) => value)
+									.map(([key, value]) => (
+										<li key={key}>
+											<span className="font-semibold">
+												{fieldLabels[key as InputField] || key}:
+											</span>{" "}
+											{value}
+										</li>
+									))}
+						</ul>
+					</div>
+				)}
+
 				{selectedOptionsDetails.length > 0 && (
 					<div>
 						<h4 className="font-semibold">Selected Enrichments:</h4>
@@ -80,16 +116,6 @@ const ReviewAndSubmitStep: React.FC<ReviewAndSubmitStepProps> = ({
 						</ul>
 					</div>
 				)}
-				<div>
-					<h4 className="font-semibold">Mapped Headers:</h4>
-					<ul className="list-inside list-disc pl-4">
-						{selectedHeaders.map((h) => (
-							<li key={h.csvHeader}>
-								{h.csvHeader} &rarr; {h.type.replace(/_/g, " ")}
-							</li>
-						))}
-					</ul>
-				</div>
 			</div>
 			<div className="flex justify-between">
 				<button

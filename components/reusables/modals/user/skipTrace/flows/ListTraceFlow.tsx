@@ -28,12 +28,12 @@ const ListTraceFlow: React.FC<ListTraceFlowProps> = ({
 	const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 	const [parsedHeaders, setParsedHeaders] = useState<string[]>([]);
 	const [selectedHeaders, setSelectedHeaders] = useState<Header[]>([]);
-	const [submitting, setSubmitting] = useState(false);
 	const [selectedEnrichmentOptions, setSelectedEnrichmentOptions] = useState<
 		string[]
 	>([]);
-	const [leadCount, setLeadCount] = useState(100); // ? todo: Hardcoded for now
-
+	const [userInput, setUserInput] = useState({} as Record<InputField, string>);
+	const [leadCount, setLeadCount] = useState(1);
+	const [submitting, setSubmitting] = useState(false);
 	const { userProfile } = useUserProfileStore();
 
 	const availableCredits = userProfile?.subscription?.aiCredits
@@ -80,8 +80,12 @@ const ListTraceFlow: React.FC<ListTraceFlowProps> = ({
 		nextStep();
 	};
 
-	const handleEnrichmentNext = (options: string[]) => {
+	const handleEnrichmentNext = (
+		options: string[],
+		currentInput: Record<InputField, string>,
+	) => {
 		setSelectedEnrichmentOptions(options);
+		setUserInput(currentInput);
 		nextStep();
 	};
 
@@ -138,7 +142,7 @@ const ListTraceFlow: React.FC<ListTraceFlowProps> = ({
 						onNext={handleEnrichmentNext}
 						onBack={prevStep}
 						leadCount={leadCount}
-						userInput={mappedUserInput}
+						userInput={userInput}
 					/>
 				);
 			case 3:
@@ -153,6 +157,7 @@ const ListTraceFlow: React.FC<ListTraceFlowProps> = ({
 						availableCredits={availableCredits}
 						selectedEnrichmentOptions={selectedEnrichmentOptions}
 						leadCount={leadCount}
+						userInput={userInput}
 					/>
 				);
 			default:
