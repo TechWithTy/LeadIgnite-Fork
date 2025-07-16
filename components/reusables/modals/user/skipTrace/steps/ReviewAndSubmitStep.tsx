@@ -5,32 +5,29 @@ import type { Header } from "@/types/skip-trace";
 import type { InputField } from "@/types/skip-trace/enrichment";
 import { fieldLabels } from "@/constants/skip-trace/fieldLabels";
 import type React from "react";
+import { useSkipTraceStore } from "@/lib/stores/user/skipTraceStore";
 
 interface ReviewAndSubmitStepProps {
-	listName: string;
-	uploadedFile: File | null;
-	selectedHeaders: Header[];
 	onSubmit: () => void;
 	onBack: () => void;
-	submitting: boolean;
 	availableCredits: number;
-	selectedEnrichmentOptions: string[];
-	leadCount: number;
-	userInput?: Record<InputField, string>;
 }
 
 const ReviewAndSubmitStep: React.FC<ReviewAndSubmitStepProps> = ({
-	listName,
-	uploadedFile,
-	selectedHeaders,
 	onSubmit,
 	onBack,
-	submitting,
 	availableCredits,
-	selectedEnrichmentOptions,
-	leadCount,
-	userInput,
 }) => {
+	const {
+		listName,
+		uploadedFile,
+		selectedHeaders,
+		submitting,
+		selectedEnrichmentOptions,
+		leadCount,
+		userInput,
+	} = useSkipTraceStore();
+
 	const selectedOptionsDetails = enrichmentOptions.filter((opt) =>
 		selectedEnrichmentOptions.includes(opt.id),
 	);

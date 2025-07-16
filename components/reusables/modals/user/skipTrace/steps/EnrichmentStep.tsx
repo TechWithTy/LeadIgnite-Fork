@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useSkipTraceStore } from "@/lib/stores/user/skipTraceStore";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -47,27 +47,22 @@ interface EnrichmentStepProps {
 		userInput: Record<InputField, string>,
 	) => void;
 	onBack: () => void;
-	leadCount: number;
-	userInput: Record<InputField, string>;
 }
 
-export function EnrichmentStep({
-	leadCount,
-	onNext,
-	onBack,
-	userInput: propsUserInput,
-}: EnrichmentStepProps) {
-	const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-	const [userInput, setUserInput] =
-		useState<Record<InputField, string>>(propsUserInput);
+export function EnrichmentStep({ onNext, onBack }: EnrichmentStepProps) {
+	const {
+		leadCount,
+		userInput,
+		selectedEnrichmentOptions: selectedOptions,
+		setSelectedEnrichmentOptions: setSelectedOptions,
+	} = useSkipTraceStore();
 	const { userProfile } = useUserProfileStore();
 
 	const handleSelectOption = (optionId: string) => {
-		setSelectedOptions((prev) =>
-			prev.includes(optionId)
-				? prev.filter((id) => id !== optionId)
-				: [...prev, optionId],
-		);
+		const newSelectedOptions = selectedOptions.includes(optionId)
+			? selectedOptions.filter((id) => id !== optionId)
+			: [...selectedOptions, optionId];
+		setSelectedOptions(newSelectedOptions);
 	};
 
 	const creditCost = selectedOptions.reduce((total, optionId) => {

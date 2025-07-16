@@ -1,16 +1,14 @@
 "use client";
 
-import type { Header } from "@/types/skip-trace";
-import type { InputField } from "@/types/skip-trace/enrichment";
-import type { Dispatch, SetStateAction } from "react";
 import type React from "react";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import Papa from "papaparse";
+import { useSkipTraceStore } from "@/lib/stores/user/skipTraceStore";
+import { useUserProfileStore } from "@/lib/stores/user/userProfile";
+import { EnrichmentStep } from "../steps/EnrichmentStep";
 import MapHeadersStep from "../steps/MapHeadersStep";
 import ReviewAndSubmitStep from "../steps/ReviewAndSubmitStep";
 import UploadStep from "../steps/UploadStep";
-import { EnrichmentStep } from "../steps/EnrichmentStep";
-import { useUserProfileStore } from "@/lib/stores/user/userProfile";
 
 interface ListTraceFlowProps {
 	onClose: () => void;
@@ -23,17 +21,24 @@ const ListTraceFlow: React.FC<ListTraceFlowProps> = ({
 	onBack,
 	initialFile,
 }) => {
-	const [step, setStep] = useState(0);
-	const [listName, setListName] = useState("");
-	const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-	const [parsedHeaders, setParsedHeaders] = useState<string[]>([]);
-	const [selectedHeaders, setSelectedHeaders] = useState<Header[]>([]);
-	const [selectedEnrichmentOptions, setSelectedEnrichmentOptions] = useState<
-		string[]
-	>([]);
-	const [userInput, setUserInput] = useState({} as Record<InputField, string>);
-	const [leadCount, setLeadCount] = useState(1);
-	const [submitting, setSubmitting] = useState(false);
+	const {
+		step,
+		listName,
+		uploadedFile,
+		parsedHeaders,
+		selectedHeaders,
+		selectedEnrichmentOptions,
+		userInput,
+		leadCount,
+		submitting,
+		handleFileSelect,
+		handleHeaderSelection,
+		handleEnrichmentNext,
+		setSubmitting,
+		prevStep,
+		reset,
+	} = useSkipTraceStore();
+
 	const { userProfile } = useUserProfileStore();
 
 	const availableCredits = userProfile?.subscription?.aiCredits
@@ -43,61 +48,26 @@ const ListTraceFlow: React.FC<ListTraceFlowProps> = ({
 
 	useEffect(() => {
 		if (initialFile) {
-			setUploadedFile(initialFile);
-			setListName(initialFile.name.replace(/\.csv$/, ""));
 			Papa.parse(initialFile, {
 				header: true,
 				skipEmptyLines: true,
 				complete: (results) => {
 					if (results.meta.fields) {
-						setParsedHeaders(results.meta.fields);
-						setLeadCount(results.data.length);
-						setStep(1); // * Skip to Map Headers step
+						handleFileSelect(
+							initialFile,
+							results.meta.fields,
+							initialFile.name.replace(/\.csv$/, ""),
+							results.data as Record<string, unknown>[],
+						);
 					}
 				},
 			});
 		}
-	}, [initialFile]);
 
-	const nextStep = () => setStep((prev) => prev + 1);
-	const prevStep = () => setStep((prev) => prev - 1);
-
-	const handleFileSelect = (
-		file: File,
-		headers: string[],
-		name: string,
-		data: Record<string, unknown>[],
-	) => {
-		setUploadedFile(file);
-		setParsedHeaders(headers);
-		setListName(name);
-		setLeadCount(data.length);
-		nextStep();
-	};
-
-	const handleHeaderSelection = (headers: Header[]) => {
-		setSelectedHeaders(headers);
-		nextStep();
-	};
-
-	const handleEnrichmentNext = (
-		options: string[],
-		currentInput: Record<InputField, string>,
-	) => {
-		setSelectedEnrichmentOptions(options);
-		setUserInput(currentInput);
-		nextStep();
-	};
-
-	const mappedUserInput = selectedHeaders.reduce(
-		(acc, header) => {
-			if (header.mappedTo) {
-				acc[header.mappedTo as InputField] = "mapped"; // The value doesn't matter, just its presence
-			}
-			return acc;
-		},
-		{} as Record<InputField, string>,
-	);
+		return () => {
+			reset();
+		};
+	}, [initialFile, handleFileSelect, reset]);
 
 	const handleSubmit = async () => {
 		setSubmitting(true);
@@ -105,8 +75,9 @@ const ListTraceFlow: React.FC<ListTraceFlowProps> = ({
 			listName,
 			uploadedFile,
 			selectedHeaders,
+			selectedEnrichmentOptions,
+			userInput,
 		});
-		// ! todo: Add actual submission logic here
 		await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
 		setSubmitting(false);
 		onClose();
@@ -115,19 +86,7 @@ const ListTraceFlow: React.FC<ListTraceFlowProps> = ({
 	const renderStep = () => {
 		switch (step) {
 			case 0:
-				return (
-					<UploadStep
-						onFileSelect={(file, headers, name, data) =>
-							handleFileSelect(
-								file,
-								headers,
-								name,
-								data as Record<string, unknown>[],
-							)
-						}
-						onBack={onBack}
-					/>
-				);
+				return <UploadStep onFileSelect={handleFileSelect} onBack={onBack} />;
 			case 1:
 				return (
 					<MapHeadersStep
