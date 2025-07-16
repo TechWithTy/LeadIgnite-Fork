@@ -31,6 +31,7 @@ interface SkipTraceActions {
 		currentInput: Record<InputField, string>,
 	) => void;
 	setSelectedEnrichmentOptions: (options: string[]) => void;
+	setUserInput: (userInput: Record<InputField, string>) => void;
 	setSubmitting: (isSubmitting: boolean) => void;
 	reset: () => void;
 }
@@ -74,6 +75,7 @@ export const useSkipTraceStore = create<SkipTraceState & SkipTraceActions>()(
 		},
 		setSelectedEnrichmentOptions: (options) =>
 			set({ selectedEnrichmentOptions: options }),
+		setUserInput: (userInput) => set({ userInput }),
 		setSubmitting: (isSubmitting) => set({ submitting: isSubmitting }),
 		reset: () => set(initialState),
 	}),

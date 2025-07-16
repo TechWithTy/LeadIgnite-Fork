@@ -15,30 +15,16 @@ import { EnrichmentCard } from "./enrichment/EnrichmentCard";
 const isEnrichmentDisabled = (
 	option: EnrichmentOption,
 	userInput: Record<InputField, string>,
-) => {
-	// * An option is disabled if none of its required field groups are met
-	return !option.requiredFields.some((fieldGroup) =>
-		// * A field group is met if all of its fields have a value
-		fieldGroup.every((field) => userInput[field]),
-	);
+): boolean => {
+	// * An option is disabled if any required field is missing
+	return option.requiredFields.some((field: InputField) => !userInput[field]);
 };
 
 const getMissingFields = (
 	option: EnrichmentOption,
-	userInput: Record<string, string>,
-) => {
-	const missingFields: string[] = [];
-	for (const fieldGroup of option.requiredFields) {
-		const isGroupSatisfied = fieldGroup.some((field) => userInput[field]);
-		if (!isGroupSatisfied) {
-			for (const field of fieldGroup) {
-				if (!userInput[field]) {
-					missingFields.push(fieldLabels[field] || field);
-				}
-			}
-		}
-	}
-	return missingFields;
+	userInput: Record<InputField, string>,
+): InputField[] => {
+	return option.requiredFields.filter((field: InputField) => !userInput[field]);
 };
 
 interface EnrichmentStepProps {
@@ -53,17 +39,25 @@ export function EnrichmentStep({ onNext, onBack }: EnrichmentStepProps) {
 	const {
 		leadCount,
 		userInput,
+		setUserInput,
 		selectedEnrichmentOptions: selectedOptions,
-		setSelectedEnrichmentOptions: setSelectedOptions,
+		setSelectedEnrichmentOptions,
 	} = useSkipTraceStore();
 	const { userProfile } = useUserProfileStore();
+
+	const handleInputChange = (field: InputField, value: string) => {
+		const newUserInput = { ...userInput, [field]: value };
+		setUserInput(newUserInput);
+	};
 
 	const handleSelectOption = (optionId: string) => {
 		const newSelectedOptions = selectedOptions.includes(optionId)
 			? selectedOptions.filter((id) => id !== optionId)
 			: [...selectedOptions, optionId];
-		setSelectedOptions(newSelectedOptions);
+		setSelectedEnrichmentOptions(newSelectedOptions);
 	};
+
+	console.log("[Debug EnrichmentStep] User Input State:", userInput);
 
 	const creditCost = selectedOptions.reduce((total, optionId) => {
 		const option = enrichmentOptions.find((opt) => opt.id === optionId);
@@ -103,8 +97,7 @@ export function EnrichmentStep({ onNext, onBack }: EnrichmentStepProps) {
 									enrichment={enrichment}
 									isSelected={selectedOptions.includes(enrichment.id)}
 									onToggle={() => handleSelectOption(enrichment.id)}
-									isDisabled={isDisabled}
-									missingFields={missingFields}
+									userInput={userInput}
 								/>
 							);
 						})}
@@ -114,13 +107,13 @@ export function EnrichmentStep({ onNext, onBack }: EnrichmentStepProps) {
 
 			<div className="mt-auto pt-4">
 				<div className="mb-2 rounded-md border border-blue-200 bg-blue-50 p-3 text-center dark:border-blue-800 dark:bg-blue-900/50">
-					<p className="text-sm font-medium text-blue-800 dark:text-blue-200">
+					<p className="font-medium text-blue-800 text-sm dark:text-blue-200">
 						Available Credits: {availableCredits.toLocaleString()}
 					</p>
 				</div>
 				{creditCost > 0 && (
 					<div className="mb-4 rounded-md border border-yellow-200 bg-yellow-50 p-3 text-center dark:border-yellow-800 dark:bg-yellow-900/50">
-						<p className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+						<p className="font-medium text-sm text-yellow-800 dark:text-yellow-200">
 							Estimated Cost: {creditCost.toLocaleString()} credits
 						</p>
 					</div>

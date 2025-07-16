@@ -21,7 +21,7 @@ export const enrichmentOptions: EnrichmentOption[] = [
 			bgColor: "bg-green-100",
 			textColor: "text-green-800",
 		},
-		requiredFields: [["phone"]],
+		requiredFields: ["phone"],
 		optionalFields: [],
 	},
 	{
@@ -41,7 +41,7 @@ export const enrichmentOptions: EnrichmentOption[] = [
 			bgColor: "bg-green-100",
 			textColor: "text-green-800",
 		},
-		requiredFields: [["email"]],
+		requiredFields: ["email"],
 		optionalFields: [],
 	},
 	{
@@ -62,7 +62,7 @@ export const enrichmentOptions: EnrichmentOption[] = [
 			bgColor: "bg-blue-100",
 			textColor: "text-blue-800",
 		},
-		requiredFields: [["domain"]],
+		requiredFields: ["domain"],
 		optionalFields: ["email"],
 	},
 	{
@@ -83,7 +83,7 @@ export const enrichmentOptions: EnrichmentOption[] = [
 			textColor: "text-green-800",
 		},
 		cost: 0,
-		requiredFields: [["email"], ["socialTag"]],
+		requiredFields: ["email", "socialTag"],
 		optionalFields: ["firstName", "lastName"],
 	},
 	// ! Lead Dossier Generator: Requires a social media handle (username) to start a deep recursive search.
@@ -106,7 +106,7 @@ export const enrichmentOptions: EnrichmentOption[] = [
 			textColor: "text-green-800",
 		},
 		cost: 1,
-		requiredFields: [["socialTag"]],
+		requiredFields: ["socialTag"],
 		optionalFields: ["email", "phone", "firstName", "lastName"],
 	},
 	// ! Data Enrichment Suite: A versatile suite that can use a name, address, or phone number.
@@ -129,7 +129,7 @@ export const enrichmentOptions: EnrichmentOption[] = [
 			bgColor: "bg-blue-100",
 			textColor: "text-blue-800",
 		},
-		requiredFields: [["address"]],
+		requiredFields: ["address"],
 		optionalFields: ["phone", "firstName", "lastName"],
 	},
 ];

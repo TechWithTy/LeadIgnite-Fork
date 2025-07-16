@@ -8,9 +8,9 @@ export type InputField =
 	| "domain"
 	| "socialTag";
 
-// * Represents required field groups. At least one inner array's conditions must be met.
-// * e.g., [['firstName', 'lastName'], ['address']] means (firstName AND lastName) OR (address)
-export type RequiredFields = InputField[][];
+// * Represents required fields as a flat array. All listed fields must be present.
+// * e.g., ['firstName', 'lastName'] means firstName AND lastName are required.
+export type RequiredFields = InputField[];
 
 export interface EnrichmentOption {
 	id: string;

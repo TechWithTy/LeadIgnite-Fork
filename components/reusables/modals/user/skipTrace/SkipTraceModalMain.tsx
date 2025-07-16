@@ -53,10 +53,10 @@ const SkipTraceModalMain: React.FC<SkipTraceModalMainProps> = ({
 
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
-			<div className="relative flex w-full max-w-2xl flex-col overflow-hidden rounded-lg bg-white p-6 shadow-lg max-h-[90vh] dark:bg-gray-900">
+			<div className="relative flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-lg bg-white p-6 shadow-lg dark:bg-gray-900">
 				<button
 					type="button"
-					className="absolute right-2 top-2 text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100"
+					className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100"
 					onClick={handleClose}
 				>
 					&times;
@@ -64,7 +64,7 @@ const SkipTraceModalMain: React.FC<SkipTraceModalMainProps> = ({
 
 				{!currentFlow && (
 					<>
-						<h2 className="mb-4 text-xl font-semibold dark:text-white">
+						<h2 className="mb-4 font-semibold text-xl dark:text-white">
 							Skip Trace
 						</h2>
 						<p className="mb-6 text-gray-600 dark:text-gray-300">

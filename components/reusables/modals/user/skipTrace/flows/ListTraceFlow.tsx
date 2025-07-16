@@ -97,26 +97,14 @@ const ListTraceFlow: React.FC<ListTraceFlowProps> = ({
 				);
 			case 2:
 				return (
-					<EnrichmentStep
-						onNext={handleEnrichmentNext}
-						onBack={prevStep}
-						leadCount={leadCount}
-						userInput={userInput}
-					/>
+					<EnrichmentStep onNext={handleEnrichmentNext} onBack={prevStep} />
 				);
 			case 3:
 				return (
 					<ReviewAndSubmitStep
-						listName={listName}
-						uploadedFile={uploadedFile}
-						selectedHeaders={selectedHeaders}
 						onSubmit={handleSubmit}
 						onBack={prevStep}
-						submitting={submitting}
 						availableCredits={availableCredits}
-						selectedEnrichmentOptions={selectedEnrichmentOptions}
-						leadCount={leadCount}
-						userInput={userInput}
 					/>
 				);
 			default:

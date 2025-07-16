@@ -177,33 +177,14 @@ const SingleTraceFlow: React.FC<SingleTraceFlowProps> = ({
 				);
 			case 1:
 				return (
-					<EnrichmentStep
-						onNext={handleEnrichmentNext}
-						onBack={prevStep}
-						leadCount={1} // Single trace is always 1 lead
-						userInput={{
-							firstName,
-							lastName,
-							address,
-							email,
-							phone,
-							socialTag,
-							domain,
-						}}
-					/>
+					<EnrichmentStep onNext={handleEnrichmentNext} onBack={prevStep} />
 				);
 			case 2:
 				return (
 					<ReviewAndSubmitStep
-						listName={`${firstName} ${lastName}`.trim() || address}
-						uploadedFile={null}
-						selectedHeaders={[]}
 						onSubmit={handleFinalSubmit}
 						onBack={prevStep}
-						submitting={submitting}
 						availableCredits={availableCredits}
-						selectedEnrichmentOptions={selectedEnrichmentOptions}
-						leadCount={1}
 					/>
 				);
 			default:
