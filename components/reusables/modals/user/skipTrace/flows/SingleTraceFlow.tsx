@@ -2,6 +2,7 @@
 
 import type { InputField } from "@/types/skip-trace/enrichment";
 import { useUserProfileStore } from "@/lib/stores/user/userProfile";
+import { useSkipTraceStore } from "@/lib/stores/user/skipTraceStore";
 import type React from "react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,7 @@ const SingleTraceFlow: React.FC<SingleTraceFlowProps> = ({
 	const [submitting, setSubmitting] = useState(false);
 
 	const { userProfile } = useUserProfileStore();
+	const { setUserInput } = useSkipTraceStore();
 
 	useEffect(() => {
 		if (initialData.firstName) setFirstName(initialData.firstName);
@@ -71,6 +73,21 @@ const SingleTraceFlow: React.FC<SingleTraceFlowProps> = ({
 			return;
 		}
 		setError("");
+		const userInput: Partial<Record<InputField, string>> = {
+			firstName,
+			lastName,
+			address,
+			email,
+			phone,
+			socialTag,
+		};
+		// ? Remove any empty fields so we don't overwrite existing data with blanks
+		for (const key of Object.keys(userInput)) {
+			if (!userInput[key as InputField]) {
+				delete userInput[key as InputField];
+			}
+		}
+		setUserInput(userInput);
 		nextStep();
 	};
 

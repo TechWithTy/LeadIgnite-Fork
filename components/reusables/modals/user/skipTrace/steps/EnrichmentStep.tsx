@@ -57,8 +57,6 @@ export function EnrichmentStep({ onNext, onBack }: EnrichmentStepProps) {
 		setSelectedEnrichmentOptions(newSelectedOptions);
 	};
 
-	console.log("[Debug EnrichmentStep] User Input State:", userInput);
-
 	const creditCost = selectedOptions.reduce((total, optionId) => {
 		const option = enrichmentOptions.find((opt) => opt.id === optionId);
 		if (option && !option.isFree) {
