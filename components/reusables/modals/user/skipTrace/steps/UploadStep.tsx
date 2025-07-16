@@ -5,7 +5,12 @@ import { useState } from "react";
 import Papa from "papaparse";
 
 interface UploadStepProps {
-	onFileSelect: (file: File, headers: string[], name: string) => void;
+	onFileSelect: (
+		file: File,
+		headers: string[],
+		name: string,
+		data: Record<string, unknown>[],
+	) => void;
 	onBack: () => void;
 }
 
@@ -34,7 +39,7 @@ const UploadStep: React.FC<UploadStepProps> = ({ onFileSelect, onBack }) => {
 				preview: 1,
 				complete: (results) => {
 					if (results.meta.fields) {
-						onFileSelect(file, results.meta.fields, listName);
+						onFileSelect(file, results.meta.fields, listName, results.data);
 					} else {
 						setError("Could not parse headers from the CSV file.");
 					}

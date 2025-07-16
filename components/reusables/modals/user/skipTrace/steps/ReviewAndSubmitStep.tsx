@@ -1,5 +1,6 @@
 "use client";
 
+import { enrichmentOptions } from "@/constants/skip-trace/enrichmentOptions";
 import type { Header } from "@/types/skip-trace";
 import type React from "react";
 
@@ -11,6 +12,8 @@ interface ReviewAndSubmitStepProps {
 	onBack: () => void;
 	submitting: boolean;
 	availableCredits: number;
+	selectedEnrichmentOptions: string[];
+	leadCount: number;
 }
 
 const ReviewAndSubmitStep: React.FC<ReviewAndSubmitStepProps> = ({
@@ -21,16 +24,44 @@ const ReviewAndSubmitStep: React.FC<ReviewAndSubmitStepProps> = ({
 	onBack,
 	submitting,
 	availableCredits,
+	selectedEnrichmentOptions,
+	leadCount,
 }) => {
+	const selectedOptionsDetails = enrichmentOptions.filter((opt) =>
+		selectedEnrichmentOptions.includes(opt.id),
+	);
+
+	const premiumEnrichments = selectedOptionsDetails.filter(
+		(opt) => !opt.isFree,
+	);
+	const costPerLead = premiumEnrichments.length;
+	const totalCost = leadCount * costPerLead;
+
+	const remainingCredits = availableCredits - totalCost;
 	return (
 		<div className="space-y-4 p-4">
-			<h3 className="text-lg font-medium">Review and Submit</h3>
-			<div className="rounded-md border border-blue-200 bg-blue-50 p-3 text-center dark:border-blue-800 dark:bg-blue-900/50">
-				<p className="text-sm text-blue-800 dark:text-blue-200">
-					You have{" "}
-					<span className="font-bold">{availableCredits.toLocaleString()}</span>{" "}
-					available credits.
-				</p>
+			<h3 className="font-medium text-lg">Review and Submit</h3>
+			<div className="space-y-2 rounded-md border border-blue-200 bg-blue-50 p-4 text-center dark:border-blue-800 dark:bg-blue-900/50">
+				<div className="grid grid-cols-3 gap-4 text-sm">
+					<div>
+						<p className="text-gray-600 dark:text-gray-400">Available</p>
+						<p className="font-bold text-blue-800 dark:text-blue-200">
+							{availableCredits.toLocaleString()}
+						</p>
+					</div>
+					<div>
+						<p className="text-gray-600 dark:text-gray-400">Cost</p>
+						<p className="font-bold text-red-600 dark:text-red-400">
+							- {totalCost.toLocaleString()}
+						</p>
+					</div>
+					<div>
+						<p className="text-gray-600 dark:text-gray-400">Remaining</p>
+						<p className="font-bold text-green-600 dark:text-green-400">
+							{remainingCredits.toLocaleString()}
+						</p>
+					</div>
+				</div>
 			</div>
 			<div className="space-y-2 rounded-md border p-4 dark:border-gray-700">
 				<div>
@@ -39,6 +70,16 @@ const ReviewAndSubmitStep: React.FC<ReviewAndSubmitStepProps> = ({
 				<div>
 					<span className="font-semibold">File:</span> {uploadedFile?.name}
 				</div>
+				{selectedOptionsDetails.length > 0 && (
+					<div>
+						<h4 className="font-semibold">Selected Enrichments:</h4>
+						<ul className="list-inside list-disc pl-4">
+							{selectedOptionsDetails.map((opt) => (
+								<li key={opt.id}>{opt.title}</li>
+							))}
+						</ul>
+					</div>
+				)}
 				<div>
 					<h4 className="font-semibold">Mapped Headers:</h4>
 					<ul className="list-inside list-disc pl-4">

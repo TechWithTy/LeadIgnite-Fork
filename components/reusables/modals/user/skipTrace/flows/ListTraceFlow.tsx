@@ -7,6 +7,8 @@ import Papa from "papaparse";
 import MapHeadersStep from "../steps/MapHeadersStep";
 import ReviewAndSubmitStep from "../steps/ReviewAndSubmitStep";
 import UploadStep from "../steps/UploadStep";
+import EnrichmentStep from "../steps/EnrichmentStep";
+import { useUserProfileStore } from "@/lib/stores/user/userProfile";
 
 interface ListTraceFlowProps {
 	onClose: () => void;
@@ -25,8 +27,17 @@ const ListTraceFlow: React.FC<ListTraceFlowProps> = ({
 	const [parsedHeaders, setParsedHeaders] = useState<string[]>([]);
 	const [selectedHeaders, setSelectedHeaders] = useState<Header[]>([]);
 	const [submitting, setSubmitting] = useState(false);
-	// ! todo: Replace with actual API call to fetch user credits
-	const [availableCredits] = useState(10000);
+	const [selectedEnrichmentOptions, setSelectedEnrichmentOptions] = useState<
+		string[]
+	>([]);
+	const [leadCount, setLeadCount] = useState(100); // ? todo: Hardcoded for now
+
+	const { userProfile } = useUserProfileStore();
+
+	const availableCredits = userProfile?.subscription?.aiCredits
+		? userProfile.subscription.aiCredits.allotted -
+			userProfile.subscription.aiCredits.used
+		: 0;
 
 	useEffect(() => {
 		if (initialFile) {
@@ -34,10 +45,11 @@ const ListTraceFlow: React.FC<ListTraceFlowProps> = ({
 			setListName(initialFile.name.replace(/\.csv$/, ""));
 			Papa.parse(initialFile, {
 				header: true,
-				preview: 1,
+				skipEmptyLines: true,
 				complete: (results) => {
 					if (results.meta.fields) {
 						setParsedHeaders(results.meta.fields);
+						setLeadCount(results.data.length);
 						setStep(1); // * Skip to Map Headers step
 					}
 				},
@@ -48,10 +60,16 @@ const ListTraceFlow: React.FC<ListTraceFlowProps> = ({
 	const nextStep = () => setStep((prev) => prev + 1);
 	const prevStep = () => setStep((prev) => prev - 1);
 
-	const handleFileSelect = (file: File, headers: string[], name: string) => {
+	const handleFileSelect = (
+		file: File,
+		headers: string[],
+		name: string,
+		data: Record<string, unknown>[],
+	) => {
 		setUploadedFile(file);
 		setParsedHeaders(headers);
 		setListName(name);
+		setLeadCount(data.length);
 		nextStep();
 	};
 
@@ -76,7 +94,19 @@ const ListTraceFlow: React.FC<ListTraceFlowProps> = ({
 	const renderStep = () => {
 		switch (step) {
 			case 0:
-				return <UploadStep onFileSelect={handleFileSelect} onBack={onBack} />;
+				return (
+					<UploadStep
+						onFileSelect={(file, headers, name, data) =>
+							handleFileSelect(
+								file,
+								headers,
+								name,
+								data as Record<string, unknown>[],
+							)
+						}
+						onBack={onBack}
+					/>
+				);
 			case 1:
 				return (
 					<MapHeadersStep
@@ -87,6 +117,17 @@ const ListTraceFlow: React.FC<ListTraceFlowProps> = ({
 				);
 			case 2:
 				return (
+					<EnrichmentStep
+						onNext={nextStep}
+						onBack={prevStep}
+						selectedOptions={selectedEnrichmentOptions}
+						setSelectedOptions={setSelectedEnrichmentOptions}
+						availableCredits={availableCredits}
+						leadCount={leadCount}
+					/>
+				);
+			case 3:
+				return (
 					<ReviewAndSubmitStep
 						listName={listName}
 						uploadedFile={uploadedFile}
@@ -95,6 +136,8 @@ const ListTraceFlow: React.FC<ListTraceFlowProps> = ({
 						onBack={prevStep}
 						submitting={submitting}
 						availableCredits={availableCredits}
+						selectedEnrichmentOptions={selectedEnrichmentOptions}
+						leadCount={leadCount}
 					/>
 				);
 			default:
