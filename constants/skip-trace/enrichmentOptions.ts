@@ -1,6 +1,8 @@
 import type { EnrichmentOption } from "@/types/skip-trace/enrichment";
 
 export const enrichmentOptions: EnrichmentOption[] = [
+	// ! Phone Hunter: Requires a phone number to find owner details.
+	// * Example: Input a phone number, get back the owner's name and line type.
 	{
 		id: "phone_hunter",
 		title: "Phone Number Hunter",
@@ -12,13 +14,15 @@ export const enrichmentOptions: EnrichmentOption[] = [
 			"Carrier and Location Data",
 			"Spam & Reputation Score",
 		],
+		cost: 0,
 		isFree: true,
 		badge: {
 			text: "Pilot Tester Perk",
 			bgColor: "bg-green-100",
 			textColor: "text-green-800",
 		},
-		footer: "Free & Unlimited for Early Subscribers",
+		requiredFields: [["phone"]],
+		optionalFields: [],
 	},
 	{
 		id: "email_intelligence",
@@ -30,13 +34,15 @@ export const enrichmentOptions: EnrichmentOption[] = [
 			"Likely Email Address Generation",
 			"Digital Footprint Verification",
 		],
+		cost: 0,
 		isFree: true,
 		badge: {
 			text: "Pilot Tester Perk",
 			bgColor: "bg-green-100",
 			textColor: "text-green-800",
 		},
-		footer: "Free & Unlimited for Subscribers",
+		requiredFields: [["email"]],
+		optionalFields: [],
 	},
 	{
 		id: "domain_recon",
@@ -56,7 +62,8 @@ export const enrichmentOptions: EnrichmentOption[] = [
 			bgColor: "bg-blue-100",
 			textColor: "text-blue-800",
 		},
-		footer: "Premium Deep-Dive (Credit-Based)",
+		requiredFields: [["domain"]],
+		optionalFields: ["email"],
 	},
 	{
 		id: "social_profile_hunter",
@@ -75,8 +82,12 @@ export const enrichmentOptions: EnrichmentOption[] = [
 			bgColor: "bg-green-100",
 			textColor: "text-green-800",
 		},
-		footer: "Free & Unlimited for Subscribers",
+		cost: 0,
+		requiredFields: [["email"], ["socialTag"]],
+		optionalFields: ["firstName", "lastName"],
 	},
+	// ! Lead Dossier Generator: Requires a social media handle (username) to start a deep recursive search.
+	// * Example: Input a username, uncover a whole network of related accounts and information.
 	{
 		id: "lead_dossier_generator",
 		title: "Lead Dossier Generator",
@@ -94,8 +105,12 @@ export const enrichmentOptions: EnrichmentOption[] = [
 			bgColor: "bg-green-100",
 			textColor: "text-green-800",
 		},
-		footer: "Free & Unlimited (No API Keys Needed)",
+		cost: 1,
+		requiredFields: [["socialTag"]],
+		optionalFields: ["email", "phone", "firstName", "lastName"],
 	},
+	// ! Data Enrichment Suite: A versatile suite that can use a name, address, or phone number.
+	// * Example: Input a name and city to find an address, or reverse-lookup a phone number.
 	{
 		id: "data_enrichment_suite",
 		title: "Data Enrichment Suite",
@@ -114,6 +129,7 @@ export const enrichmentOptions: EnrichmentOption[] = [
 			bgColor: "bg-blue-100",
 			textColor: "text-blue-800",
 		},
-		footer: "Uses Skip Tracing Credits",
+		requiredFields: [["phone"], ["address"], ["firstName", "lastName"]],
+		optionalFields: [],
 	},
 ];

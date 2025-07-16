@@ -12,12 +12,14 @@ interface EnrichmentCardProps {
 	enrichment: EnrichmentOption;
 	isSelected: boolean;
 	onToggle: (id: string) => void;
+	isDisabled: boolean;
 }
 
 export function EnrichmentCard({
 	enrichment,
 	isSelected,
 	onToggle,
+	isDisabled,
 }: EnrichmentCardProps) {
 	const { id, title, description, cost, features, isFree, badge } = enrichment;
 
@@ -30,10 +32,11 @@ export function EnrichmentCard({
 		<label
 			htmlFor={id}
 			className={cn(
-				"relative flex h-40 w-full shrink-0 cursor-pointer flex-col justify-between rounded-lg border p-4 transition-all duration-200",
+				"relative flex h-40 w-full shrink-0 flex-col justify-between rounded-lg border p-4 transition-all duration-200",
 				isSelected
 					? "border-blue-500 bg-blue-50 ring-2 ring-blue-500 dark:bg-blue-900/50"
 					: "border-gray-200 bg-white hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600",
+				isDisabled ? "cursor-not-allowed opacity-50" : "cursor-pointer",
 			)}
 		>
 			<input
@@ -42,6 +45,7 @@ export function EnrichmentCard({
 				className="sr-only"
 				checked={isSelected}
 				onChange={() => onToggle(id)}
+				disabled={isDisabled}
 			/>
 			{badge && (
 				<div

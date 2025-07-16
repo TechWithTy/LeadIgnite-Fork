@@ -2,20 +2,38 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import type {
+	EnrichmentOption,
+	InputField,
+} from "@/types/skip-trace/enrichment";
 import { enrichmentOptions } from "@/constants/skip-trace/enrichmentOptions";
 import { useUserProfileStore } from "@/lib/stores/user/userProfile";
 import { EnrichmentCard } from "./enrichment/EnrichmentCard";
+
+// * Helper function to check if an enrichment option should be disabled
+const isEnrichmentDisabled = (
+	option: EnrichmentOption,
+	userInput: Record<InputField, string>,
+) => {
+	// * An option is disabled if none of its required field groups are met
+	return !option.requiredFields.some((fieldGroup) =>
+		// * A field group is met if all of its fields have a value
+		fieldGroup.every((field) => userInput[field]),
+	);
+};
 
 interface EnrichmentStepProps {
 	leadCount: number;
 	onNext: (selectedOptions: string[]) => void;
 	onBack: () => void;
+	userInput: Record<InputField, string>;
 }
 
 export function EnrichmentStep({
 	leadCount,
 	onNext,
 	onBack,
+	userInput,
 }: EnrichmentStepProps) {
 	const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 	const { userProfile } = useUserProfileStore();
@@ -54,14 +72,18 @@ export function EnrichmentStep({
 			<TooltipProvider>
 				<ScrollArea className="h-72 flex-grow pr-4">
 					<div className="grid grid-cols-2 gap-4 p-2">
-						{enrichmentOptions.map((option) => (
-							<EnrichmentCard
-								key={option.id}
-								enrichment={option}
-								isSelected={selectedOptions.includes(option.id)}
-								onToggle={() => handleSelectOption(option.id)}
-							/>
-						))}
+						{enrichmentOptions.map((option) => {
+							const isDisabled = isEnrichmentDisabled(option, userInput);
+							return (
+								<EnrichmentCard
+									key={option.id}
+									enrichment={option}
+									isSelected={selectedOptions.includes(option.id)}
+									onToggle={() => handleSelectOption(option.id)}
+									isDisabled={isDisabled}
+								/>
+							);
+						})}
 					</div>
 				</ScrollArea>
 			</TooltipProvider>

@@ -25,6 +25,9 @@ const SingleTraceFlow: React.FC<SingleTraceFlowProps> = ({
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
 	const [address, setAddress] = useState("");
+	const [email, setEmail] = useState("");
+	const [phone, setPhone] = useState("");
+	const [socialMedia, setSocialMedia] = useState("");
 	const [error, setError] = useState("");
 	const [step, setStep] = useState(0);
 	const [selectedEnrichmentOptions, setSelectedEnrichmentOptions] = useState<
@@ -53,8 +56,17 @@ const SingleTraceFlow: React.FC<SingleTraceFlowProps> = ({
 	const prevStep = () => setStep((prev) => prev - 1);
 
 	const handleNextFromInput = () => {
-		if (!firstName && !lastName && !address) {
-			setError("Please fill in either a name or an address.");
+		if (
+			!firstName &&
+			!lastName &&
+			!address &&
+			!email &&
+			!phone &&
+			!socialMedia
+		) {
+			setError(
+				"Please fill in at least one field: Name, Address, Email, Phone, or Social Media.",
+			);
 			return;
 		}
 		setError("");
@@ -62,8 +74,17 @@ const SingleTraceFlow: React.FC<SingleTraceFlowProps> = ({
 	};
 
 	const handleFinalSubmit = () => {
-		if (!firstName && !lastName && !address) {
-			setError("Please fill in either a name or an address.");
+		if (
+			!firstName &&
+			!lastName &&
+			!address &&
+			!email &&
+			!phone &&
+			!socialMedia
+		) {
+			setError(
+				"Please fill in at least one field: Name, Address, Email, Phone, or Social Media.",
+			);
 			return;
 		}
 		setError("");
@@ -74,6 +95,9 @@ const SingleTraceFlow: React.FC<SingleTraceFlowProps> = ({
 			firstName,
 			lastName,
 			address,
+			email,
+			phone,
+			socialMedia,
 			enrichments: selectedEnrichmentOptions,
 		});
 		console.log("Final submission with options:", selectedEnrichmentOptions);
@@ -136,6 +160,52 @@ const SingleTraceFlow: React.FC<SingleTraceFlowProps> = ({
 									className="mt-1 block w-full rounded-md border-gray-300 shadow-sm dark:border-gray-600 dark:bg-gray-700"
 								/>
 							</div>
+							<div className="text-center text-gray-500 text-sm">OR</div>
+							<div>
+								<label
+									htmlFor="email"
+									className="block font-medium text-gray-700 text-sm dark:text-gray-300"
+								>
+									Email
+								</label>
+								<input
+									type="email"
+									id="email"
+									value={email}
+									onChange={(e) => setEmail(e.target.value)}
+									className="mt-1 block w-full rounded-md border-gray-300 shadow-sm dark:border-gray-600 dark:bg-gray-700"
+								/>
+							</div>
+							<div>
+								<label
+									htmlFor="phone"
+									className="block font-medium text-gray-700 text-sm dark:text-gray-300"
+								>
+									Phone Number
+								</label>
+								<input
+									type="tel"
+									id="phone"
+									value={phone}
+									onChange={(e) => setPhone(e.target.value)}
+									className="mt-1 block w-full rounded-md border-gray-300 shadow-sm dark:border-gray-600 dark:bg-gray-700"
+								/>
+							</div>
+							<div>
+								<label
+									htmlFor="socialMedia"
+									className="block font-medium text-gray-700 text-sm dark:text-gray-300"
+								>
+									Social Media Handle
+								</label>
+								<input
+									type="text"
+									id="socialMedia"
+									value={socialMedia}
+									onChange={(e) => setSocialMedia(e.target.value)}
+									className="mt-1 block w-full rounded-md border-gray-300 shadow-sm dark:border-gray-600 dark:bg-gray-700"
+								/>
+							</div>
 						</div>
 						{error && <p className="text-red-600 text-sm">{error}</p>}
 						<div className="flex justify-between pt-4">
@@ -165,6 +235,14 @@ const SingleTraceFlow: React.FC<SingleTraceFlowProps> = ({
 						setSelectedOptions={setSelectedEnrichmentOptions}
 						availableCredits={availableCredits}
 						leadCount={1} // Single trace is always 1 lead
+						userInput={{
+							firstName,
+							lastName,
+							address,
+							email,
+							phone,
+							socialMedia,
+						}}
 					/>
 				);
 			case 2:
