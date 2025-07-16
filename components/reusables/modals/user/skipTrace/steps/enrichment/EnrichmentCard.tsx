@@ -21,39 +21,32 @@ export function EnrichmentCard({
 }: EnrichmentCardProps) {
 	const { id, title, description, cost, features, isFree, badge } = enrichment;
 
-	const handleCardClick = () => {
-		onToggle(id);
-	};
-
 	const handleInfoClick = (e: React.MouseEvent) => {
+		e.preventDefault();
 		e.stopPropagation();
 	};
 
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-		if (e.key === " " || e.key === "Enter") {
-			e.preventDefault();
-			onToggle(id);
-		}
-	};
-
 	return (
-		<div
+		<label
+			htmlFor={id}
 			className={cn(
-				"relative h-full cursor-pointer rounded-lg border bg-white p-4 transition-all duration-200 flex flex-col justify-between hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600",
+				"relative flex h-40 w-full shrink-0 cursor-pointer flex-col justify-between rounded-lg border p-4 transition-all duration-200",
 				isSelected
 					? "border-blue-500 bg-blue-50 ring-2 ring-blue-500 dark:bg-blue-900/50"
 					: "border-gray-200 bg-white hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600",
 			)}
-			onClick={handleCardClick}
-			onKeyDown={handleKeyDown}
-			role="checkbox"
-			aria-checked={isSelected}
-			tabIndex={0}
 		>
+			<input
+				id={id}
+				type="checkbox"
+				className="sr-only"
+				checked={isSelected}
+				onChange={() => onToggle(id)}
+			/>
 			{badge && (
 				<div
 					className={cn(
-						"absolute -top-3 left-1/2 -translate-x-1/2 transform rounded-full px-3 py-1 text-xs font-semibold",
+						"-top-3 -translate-x-1/2 absolute left-1/2 transform rounded-full px-3 py-1 font-semibold text-xs",
 						badge.bgColor,
 						badge.textColor,
 					)}
@@ -74,16 +67,17 @@ export function EnrichmentCard({
 					</span>
 				)}
 			</div>
-			<div className="flex items-center justify-between">
+			<div className="mt-auto flex items-center justify-between">
 				<p className="text-gray-500 text-sm dark:text-gray-400">
 					{isFree ? "Included" : `+${cost} credit`}
 				</p>
 				<TooltipProvider>
 					<Tooltip>
-						<TooltipTrigger asChild onClick={handleInfoClick}>
+						<TooltipTrigger asChild>
 							<button
 								type="button"
 								className="shrink-0 rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-700"
+								onClick={handleInfoClick}
 							>
 								<Info className="h-4 w-4 text-gray-500" />
 							</button>
@@ -101,6 +95,6 @@ export function EnrichmentCard({
 					</Tooltip>
 				</TooltipProvider>
 			</div>
-		</div>
+		</label>
 	);
 }

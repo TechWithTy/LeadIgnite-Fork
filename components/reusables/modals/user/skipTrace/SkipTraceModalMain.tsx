@@ -43,7 +43,7 @@ const SkipTraceModalMain: React.FC<SkipTraceModalMainProps> = ({
 
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
-			<div className="relative flex w-full max-w-4xl flex-col overflow-hidden rounded-lg bg-white p-6 shadow-lg max-h-[90vh] dark:bg-gray-900">
+			<div className="relative flex w-full max-w-2xl flex-col overflow-hidden rounded-lg bg-white p-6 shadow-lg max-h-[90vh] dark:bg-gray-900">
 				<button
 					type="button"
 					className="absolute right-2 top-2 text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100"
