@@ -5,7 +5,9 @@
 # https://developers.google.com/maps/documentation/javascript/reference/3d-map
 
 
-
+💾 Dashboard > Property > Lead Activity, add CRUD For Lead Activity for a lead
+💾 Dashboard > Property > Add Fetching of on market and on amrket proeprty Data
+💾 Dashboard > Property > 
 
 #🖥️ Dashboard > Lead Search > Implement  save search use to update the current search state
 #🖥️ Dashboard > Lead Search > Update Property Card to link to property overview page

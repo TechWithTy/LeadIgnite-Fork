@@ -1,126 +1,140 @@
+"use client";
+
 import type { LeadTypeGlobal } from "@/types/_dashboard/leads";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, X } from "lucide-react";
 import type React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 interface ActivitySidebarProps {
-	onClose: () => void; // Prop to close the sidebar
 	leadData: LeadTypeGlobal;
+	onClose: () => void;
+}
+
+interface ActivityNote {
+	id: number;
+	text: string;
+	timestamp: string;
 }
 
 const ActivitySidebar: React.FC<ActivitySidebarProps> = ({
-	onClose,
 	leadData,
+	onClose,
 }) => {
-	const [currentState, setCurrentState] = useState<
-		"initial" | "writing" | "sent"
-	>("initial");
-	const [message, setMessage] = useState<string>(""); // Store the user's message
-	const [postedMessage, setPostedMessage] = useState<string>(""); // Store the posted message
+	const [message, setMessage] = useState("");
+	const [notes, setNotes] = useState<ActivityNote[]>([]);
+	const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
+	const [isMounted, setIsMounted] = useState(false);
 
-	// Handle post action
+	useEffect(() => {
+		setIsMounted(true);
+	}, []);
+
 	const handlePost = () => {
 		if (message.trim()) {
-			setPostedMessage(message); // Save the posted message
-			setMessage(""); // Clear the message field
-			setCurrentState("sent"); // Move to the sent state
+			if (editingNoteId !== null) {
+				setNotes(
+					notes.map((note) =>
+						note.id === editingNoteId ? { ...note, text: message } : note,
+					),
+				);
+				setEditingNoteId(null);
+			} else {
+				const newNote: ActivityNote = {
+					id: Date.now(),
+					text: message,
+					timestamp: new Date().toLocaleString(),
+				};
+				setNotes([newNote, ...notes]);
+			}
+			setMessage("");
 		}
 	};
 
-	// Handle edit action
-	const handleEdit = () => {
-		setMessage(postedMessage); // Prepopulate the textarea with the current message
-		setCurrentState("writing"); // Switch to writing state
+	const handleEdit = (note: ActivityNote) => {
+		setMessage(note.text);
+		setEditingNoteId(note.id);
 	};
 
-	// Handle delete action
-	const handleDelete = () => {
-		setPostedMessage(""); // Clear the message
-		setCurrentState("initial"); // Reset to initial state
+	const handleDelete = (noteId: number) => {
+		setNotes(notes.filter((note) => note.id !== noteId));
 	};
 
-	return (
-		<div className="fixed top-0 right-0 z-50 h-screen w-80 border-gray-200 border-l bg-white p-4 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+	const sidebarContent = (
+		<div className="fixed top-0 right-0 z-50 flex h-screen w-80 flex-col border-l border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
 			{/* Header */}
-			<div className="mb-4 flex items-center justify-between">
-				<h2 className="font-semibold text-lg dark:text-white">
-					{" "}
+			<div className="flex shrink-0 items-center justify-between border-b border-gray-200 p-4 dark:border-gray-700">
+				<h2 className="text-lg font-semibold dark:text-white">
 					{leadData.firstName} Activity
 				</h2>
 				<button
 					type="button"
-					className="text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-100"
-					onClick={onClose} // Close sidebar
+					className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+					onClick={onClose}
 				>
-					&times;
+					<X className="h-6 w-6" />
 				</button>
 			</div>
 
-			{/* Initial State */}
-			{currentState === "initial" && (
-				<div>
-					<input
-						type="text"
-						placeholder="Write an update..."
-						className="w-full rounded border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
-						onFocus={() => setCurrentState("writing")} // Transition to writing state
-					/>
-				</div>
-			)}
+			{/* Notes List */}
+			<div className="flex-grow overflow-y-auto p-4">
+				{notes.map((note) => (
+					<div key={note.id} className="group relative mb-4">
+						<div className="mb-2 flex items-center justify-between">
+							<span className="font-bold dark:text-gray-100">You</span>
+							<span className="text-sm text-gray-500 dark:text-gray-400">
+								{note.timestamp}
+							</span>
+						</div>
+						<div className="rounded-lg bg-blue-600 p-3 text-white">
+							{note.text}
+						</div>
+						<div className="mt-2 flex justify-end space-x-2 opacity-0 transition-opacity group-hover:opacity-100">
+							<button
+								type="button"
+								className="flex items-center rounded-full bg-gray-200 p-1 text-gray-600 hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500"
+								onClick={() => handleEdit(note)}
+							>
+								<Pencil className="h-4 w-4" />
+							</button>
+							<button
+								type="button"
+								className="flex items-center rounded-full bg-gray-200 p-1 text-gray-600 hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500"
+								onClick={() => handleDelete(note.id)}
+							>
+								<Trash2 className="h-4 w-4" />
+							</button>
+						</div>
+					</div>
+				))}
+			</div>
 
-			{/* Writing State */}
-			{currentState === "writing" && (
-				<div>
-					<textarea
-						className="h-32 w-full resize-none rounded border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
-						placeholder="Write your message here..."
-						value={message}
-						onChange={(e) => setMessage(e.target.value)}
-					/>
+			{/* Input Area */}
+			<div className="border-t border-gray-200 p-4 dark:border-gray-700">
+				<textarea
+					className="h-24 w-full resize-none rounded border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+					placeholder="Write an update..."
+					value={message}
+					onChange={(e) => setMessage(e.target.value)}
+				/>
+				<div className="mt-2 flex justify-end">
 					<button
 						type="button"
+						className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
 						onClick={handlePost}
-						className="mt-2 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
 					>
-						Post
+						{editingNoteId !== null ? "Update" : "Post"}
 					</button>
 				</div>
-			)}
-
-			{/* Message Sent State */}
-			{currentState === "sent" && (
-				<div>
-					<div className="mb-2 flex items-center justify-between">
-						<span className="font-bold dark:text-gray-100">You</span>
-						<span className="text-gray-500 text-sm dark:text-gray-400">
-							{new Date().toLocaleString()}
-						</span>
-					</div>
-					<div className="mb-4 rounded-lg bg-blue-600 p-2 text-white">
-						{postedMessage}
-					</div>
-					<div className="flex justify-end space-x-4">
-						<button
-							type="button"
-							className="flex items-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-							onClick={handleEdit} // Edit the message
-						>
-							<Pencil className="mr-1 h-5 w-5" />
-							Edit
-						</button>
-						<button
-							type="button"
-							className="flex items-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-							onClick={handleDelete} // Delete the message
-						>
-							<Trash2 className="mr-1 h-5 w-5" />
-							Delete
-						</button>
-					</div>
-				</div>
-			)}
+			</div>
 		</div>
 	);
+
+	if (!isMounted) {
+		return null;
+	}
+
+	return createPortal(sidebarContent, document.body);
 };
 
 export default ActivitySidebar;
