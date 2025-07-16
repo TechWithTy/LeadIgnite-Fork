@@ -182,9 +182,6 @@ const PropertyMap: React.FC<PropertyMapProps> = ({
 							</div>
 						</InfoWindow>
 					)}
-					{!isStreetView && (
-						<Marker position={center} onClick={() => setSelected(center)} />
-					)}
 				</GoogleMap>
 
 				{/* Custom Controls */}
