@@ -64,11 +64,14 @@ const PropertyMap: React.FC<PropertyMapProps> = ({
 			streetViewService.getPanorama(
 				{ location: center, radius: 50 },
 				(data, status) => {
+					console.log("Street View status:", status);
 					if (
 						status === google.maps.StreetViewStatus.OK &&
 						data?.location?.pano
 					) {
 						setPanoId(data.location.pano);
+					} else {
+						console.error("Street View panorama not found for this location.");
 					}
 				},
 			);
@@ -165,7 +168,7 @@ const PropertyMap: React.FC<PropertyMapProps> = ({
 					<button
 						type="button"
 						onClick={handleStreetViewToggle}
-						className="rounded-lg bg-white bg-opacity-80 px-3 py-2 text-sm font-semibold text-gray-800 shadow-md hover:bg-opacity-100 disabled:cursor-not-allowed disabled:opacity-50"
+						className="rounded-lg bg-white bg-opacity-80 px-3 py-2 font-semibold text-gray-800 text-sm shadow-md hover:bg-opacity-100 disabled:cursor-not-allowed disabled:opacity-50"
 						disabled={!panoId}
 					>
 						{isStreetView ? "Exit Street View" : "Street View"}
@@ -175,7 +178,7 @@ const PropertyMap: React.FC<PropertyMapProps> = ({
 						onClick={() =>
 							setMapTypeId(mapTypeId === "satellite" ? "roadmap" : "satellite")
 						}
-						className="rounded-lg bg-white bg-opacity-80 px-3 py-2 text-sm font-semibold text-gray-800 shadow-md hover:bg-opacity-100"
+						className="rounded-lg bg-white bg-opacity-80 px-3 py-2 font-semibold text-gray-800 text-sm shadow-md hover:bg-opacity-100"
 					>
 						{mapTypeId === "satellite" ? "Map View" : "Satellite View"}
 					</button>
