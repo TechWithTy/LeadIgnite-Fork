@@ -3,7 +3,7 @@
 import { useUserProfileStore } from "@/lib/stores/user/userProfile";
 import type React from "react";
 import { useState, useEffect } from "react";
-import EnrichmentStep from "../steps/EnrichmentStep";
+import { EnrichmentStep } from "../steps/EnrichmentStep";
 import ReviewAndSubmitStep from "../steps/ReviewAndSubmitStep";
 
 // ? Define the shape of the initial data for a single trace
@@ -93,7 +93,7 @@ const SingleTraceFlow: React.FC<SingleTraceFlowProps> = ({
 							<div>
 								<label
 									htmlFor="firstName"
-									className="block font-medium text-sm text-gray-700 dark:text-gray-300"
+									className="block font-medium text-gray-700 text-sm dark:text-gray-300"
 								>
 									First Name
 								</label>
@@ -108,7 +108,7 @@ const SingleTraceFlow: React.FC<SingleTraceFlowProps> = ({
 							<div>
 								<label
 									htmlFor="lastName"
-									className="block font-medium text-sm text-gray-700 dark:text-gray-300"
+									className="block font-medium text-gray-700 text-sm dark:text-gray-300"
 								>
 									Last Name
 								</label>
@@ -120,11 +120,11 @@ const SingleTraceFlow: React.FC<SingleTraceFlowProps> = ({
 									className="mt-1 block w-full rounded-md border-gray-300 shadow-sm dark:border-gray-600 dark:bg-gray-700"
 								/>
 							</div>
-							<div className="text-center text-sm text-gray-500">OR</div>
+							<div className="text-center text-gray-500 text-sm">OR</div>
 							<div>
 								<label
 									htmlFor="address"
-									className="block font-medium text-sm text-gray-700 dark:text-gray-300"
+									className="block font-medium text-gray-700 text-sm dark:text-gray-300"
 								>
 									Full Address
 								</label>
@@ -137,7 +137,7 @@ const SingleTraceFlow: React.FC<SingleTraceFlowProps> = ({
 								/>
 							</div>
 						</div>
-						{error && <p className="text-sm text-red-600">{error}</p>}
+						{error && <p className="text-red-600 text-sm">{error}</p>}
 						<div className="flex justify-between pt-4">
 							<button
 								type="button"

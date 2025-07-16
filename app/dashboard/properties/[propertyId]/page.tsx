@@ -24,7 +24,10 @@ import {
 	getPrimaryImage,
 } from "@/lib/utils/propertyUtils";
 import PropertyMap from "@/components/maps/properties/propertyMap";
-import PageContainer from "@/components/layout/page-container";
+const PageContainer = dynamic(
+	() => import("@/components/layout/page-container"),
+	{ ssr: false },
+);
 import { Skeleton } from "@/components/ui/skeleton";
 import AmortizationCalculator from "@/components/property/page/calculations/amortizationCalculator";
 import WholesaleCalculator from "@/components/property/page/calculations/wholesale";

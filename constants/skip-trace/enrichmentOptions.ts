@@ -50,6 +50,7 @@ export const enrichmentOptions: EnrichmentOption[] = [
 			"Free Public Search Tier",
 		],
 		isFree: false,
+		cost: 1,
 		badge: {
 			text: "Premium",
 			bgColor: "bg-blue-100",
@@ -107,6 +108,7 @@ export const enrichmentOptions: EnrichmentOption[] = [
 			"Real-Time Caller Identification",
 		],
 		isFree: false,
+		cost: 1,
 		badge: {
 			text: "Premium Data Tools",
 			bgColor: "bg-blue-100",

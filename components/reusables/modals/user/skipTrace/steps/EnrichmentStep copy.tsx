@@ -53,13 +53,13 @@ export function EnrichmentStep({
 
 			<TooltipProvider>
 				<ScrollArea className="flex-grow pr-4">
-					<div className="grid grid-cols-2 gap-4">
+					<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 						{enrichmentOptions.map((option) => (
 							<EnrichmentCard
 								key={option.id}
-								enrichment={option}
+								option={option}
 								isSelected={selectedOptions.includes(option.id)}
-								onToggle={() => handleSelectOption(option.id)}
+								onSelect={() => handleSelectOption(option.id)}
 							/>
 						))}
 					</div>

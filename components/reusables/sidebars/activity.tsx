@@ -63,15 +63,15 @@ const ActivitySidebar: React.FC<ActivitySidebarProps> = ({
 	};
 
 	const sidebarContent = (
-		<div className="fixed top-0 right-0 z-50 flex h-screen w-80 flex-col border-l border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
+		<div className="bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 fixed top-0 right-0 z-50 flex h-screen w-80 flex-col shadow-lg">
 			{/* Header */}
-			<div className="flex shrink-0 items-center justify-between border-b border-gray-200 p-4 dark:border-gray-700">
-				<h2 className="text-lg font-semibold dark:text-white">
+			<div className="border-b border-gray-200 dark:border-gray-700 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700 p-4">
+				<h2 className="dark:text-white text-lg font-semibold">
 					{leadData.firstName} Activity
 				</h2>
 				<button
 					type="button"
-					className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+					className="dark:text-gray-200 dark:hover:text-gray-100 hover:text-gray-700 text-gray-500"
 					onClick={onClose}
 				>
 					<X className="h-6 w-6" />
