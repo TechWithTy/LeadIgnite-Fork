@@ -13,8 +13,18 @@ interface SkipTraceModalMainProps {
 	onClose: () => void;
 	initialData?:
 		| { type: "list"; file: File }
-		| { type: "single"; address: string }
-		| { type: "single"; name: { firstName: string; lastName: string } };
+		| ({ type: "single" } & Partial<
+				Record<
+					| "firstName"
+					| "lastName"
+					| "address"
+					| "email"
+					| "phone"
+					| "socialMedia"
+					| "domain",
+					string
+				>
+		  >);
 }
 
 const SkipTraceModalMain: React.FC<SkipTraceModalMainProps> = ({

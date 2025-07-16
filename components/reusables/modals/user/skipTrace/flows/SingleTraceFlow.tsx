@@ -1,33 +1,33 @@
 "use client";
 
+import type { InputField } from "@/types/skip-trace/enrichment";
 import { useUserProfileStore } from "@/lib/stores/user/userProfile";
 import type React from "react";
 import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { EnrichmentStep } from "../steps/EnrichmentStep";
 import ReviewAndSubmitStep from "../steps/ReviewAndSubmitStep";
-
-// ? Define the shape of the initial data for a single trace
-type SingleTraceData =
-	| { type: "single"; address: string }
-	| { type: "single"; name: { firstName: string; lastName: string } };
 
 interface SingleTraceFlowProps {
 	onClose: () => void;
 	onBack: () => void;
-	initialData?: SingleTraceData;
+	initialData?: Partial<Record<InputField | "domain", string>>;
 }
 
 const SingleTraceFlow: React.FC<SingleTraceFlowProps> = ({
 	onBack,
 	onClose,
-	initialData,
+	initialData = {},
 }) => {
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
 	const [address, setAddress] = useState("");
 	const [email, setEmail] = useState("");
 	const [phone, setPhone] = useState("");
-	const [socialMedia, setSocialMedia] = useState("");
+	const [socialTag, setSocialTag] = useState("");
+	const [domain, setDomain] = useState("");
 	const [error, setError] = useState("");
 	const [step, setStep] = useState(0);
 	const [selectedEnrichmentOptions, setSelectedEnrichmentOptions] = useState<
@@ -36,21 +36,21 @@ const SingleTraceFlow: React.FC<SingleTraceFlowProps> = ({
 	const [submitting, setSubmitting] = useState(false);
 
 	const { userProfile } = useUserProfileStore();
+
+	useEffect(() => {
+		if (initialData.firstName) setFirstName(initialData.firstName);
+		if (initialData.lastName) setLastName(initialData.lastName);
+		if (initialData.address) setAddress(initialData.address);
+		if (initialData.email) setEmail(initialData.email);
+		if (initialData.phone) setPhone(initialData.phone);
+		if (initialData.socialTag) setSocialTag(initialData.socialTag);
+		if (initialData.domain) setDomain(initialData.domain);
+	}, [initialData]);
+
 	const availableCredits = userProfile?.subscription?.aiCredits
 		? userProfile.subscription.aiCredits.allotted -
 			userProfile.subscription.aiCredits.used
 		: 0;
-
-	useEffect(() => {
-		if (initialData) {
-			if ("name" in initialData) {
-				setFirstName(initialData.name.firstName);
-				setLastName(initialData.name.lastName);
-			} else if ("address" in initialData) {
-				setAddress(initialData.address);
-			}
-		}
-	}, [initialData]);
 
 	const nextStep = () => setStep((prev) => prev + 1);
 	const prevStep = () => setStep((prev) => prev - 1);
@@ -62,10 +62,11 @@ const SingleTraceFlow: React.FC<SingleTraceFlowProps> = ({
 			!address &&
 			!email &&
 			!phone &&
-			!socialMedia
+			!socialTag &&
+			!domain
 		) {
 			setError(
-				"Please fill in at least one field: Name, Address, Email, Phone, or Social Media.",
+				"Please fill in at least one field: Name, Address, Email, Phone, Social Tag, or Domain.",
 			);
 			return;
 		}
@@ -73,22 +74,12 @@ const SingleTraceFlow: React.FC<SingleTraceFlowProps> = ({
 		nextStep();
 	};
 
+	const handleEnrichmentNext = (options: string[]) => {
+		setSelectedEnrichmentOptions(options);
+		nextStep();
+	};
+
 	const handleFinalSubmit = () => {
-		if (
-			!firstName &&
-			!lastName &&
-			!address &&
-			!email &&
-			!phone &&
-			!socialMedia
-		) {
-			setError(
-				"Please fill in at least one field: Name, Address, Email, Phone, or Social Media.",
-			);
-			return;
-		}
-		setError("");
-		// ! todo: Add submission logic and credit check
 		setSubmitting(true);
 		// ! todo: Add submission logic and credit deduction
 		console.log("Submitting single trace:", {
@@ -97,10 +88,10 @@ const SingleTraceFlow: React.FC<SingleTraceFlowProps> = ({
 			address,
 			email,
 			phone,
-			socialMedia,
+			socialTag,
+			domain,
 			enrichments: selectedEnrichmentOptions,
 		});
-		console.log("Final submission with options:", selectedEnrichmentOptions);
 		setTimeout(() => {
 			setSubmitting(false);
 			onClose(); // Close modal on success
@@ -113,127 +104,82 @@ const SingleTraceFlow: React.FC<SingleTraceFlowProps> = ({
 				return (
 					<div className="space-y-4 p-4">
 						<h3 className="font-medium text-lg">Skip Trace a Single Contact</h3>
-						<div className="space-y-4">
+						<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 							<div>
-								<label
-									htmlFor="firstName"
-									className="block font-medium text-gray-700 text-sm dark:text-gray-300"
-								>
-									First Name
-								</label>
-								<input
-									type="text"
+								<Label htmlFor="firstName">First Name</Label>
+								<Input
 									id="firstName"
 									value={firstName}
 									onChange={(e) => setFirstName(e.target.value)}
-									className="mt-1 block w-full rounded-md border-gray-300 shadow-sm dark:border-gray-600 dark:bg-gray-700"
 								/>
 							</div>
 							<div>
-								<label
-									htmlFor="lastName"
-									className="block font-medium text-gray-700 text-sm dark:text-gray-300"
-								>
-									Last Name
-								</label>
-								<input
-									type="text"
+								<Label htmlFor="lastName">Last Name</Label>
+								<Input
 									id="lastName"
 									value={lastName}
 									onChange={(e) => setLastName(e.target.value)}
-									className="mt-1 block w-full rounded-md border-gray-300 shadow-sm dark:border-gray-600 dark:bg-gray-700"
 								/>
 							</div>
-							<div className="text-center text-gray-500 text-sm">OR</div>
-							<div>
-								<label
-									htmlFor="address"
-									className="block font-medium text-gray-700 text-sm dark:text-gray-300"
-								>
-									Full Address
-								</label>
-								<input
-									type="text"
+							<div className="md:col-span-2">
+								<Label htmlFor="address">Full Address</Label>
+								<Input
 									id="address"
 									value={address}
 									onChange={(e) => setAddress(e.target.value)}
-									className="mt-1 block w-full rounded-md border-gray-300 shadow-sm dark:border-gray-600 dark:bg-gray-700"
 								/>
 							</div>
-							<div className="text-center text-gray-500 text-sm">OR</div>
 							<div>
-								<label
-									htmlFor="email"
-									className="block font-medium text-gray-700 text-sm dark:text-gray-300"
-								>
-									Email
-								</label>
-								<input
+								<Label htmlFor="email">Email</Label>
+								<Input
 									type="email"
 									id="email"
 									value={email}
 									onChange={(e) => setEmail(e.target.value)}
-									className="mt-1 block w-full rounded-md border-gray-300 shadow-sm dark:border-gray-600 dark:bg-gray-700"
 								/>
 							</div>
 							<div>
-								<label
-									htmlFor="phone"
-									className="block font-medium text-gray-700 text-sm dark:text-gray-300"
-								>
-									Phone Number
-								</label>
-								<input
+								<Label htmlFor="phone">Phone Number</Label>
+								<Input
 									type="tel"
 									id="phone"
 									value={phone}
 									onChange={(e) => setPhone(e.target.value)}
-									className="mt-1 block w-full rounded-md border-gray-300 shadow-sm dark:border-gray-600 dark:bg-gray-700"
 								/>
 							</div>
 							<div>
-								<label
-									htmlFor="socialMedia"
-									className="block font-medium text-gray-700 text-sm dark:text-gray-300"
-								>
-									Social Media Handle
-								</label>
-								<input
-									type="text"
-									id="socialMedia"
-									value={socialMedia}
-									onChange={(e) => setSocialMedia(e.target.value)}
-									className="mt-1 block w-full rounded-md border-gray-300 shadow-sm dark:border-gray-600 dark:bg-gray-700"
+								<Label htmlFor="socialTag">Social Tag</Label>
+								<Input
+									id="socialTag"
+									placeholder="e.g., @johndoe or linkedin.com/in/johndoe"
+									value={socialTag}
+									onChange={(e) => setSocialTag(e.target.value)}
+								/>
+							</div>
+							<div>
+								<Label htmlFor="domain">Domain (Optional)</Label>
+								<Input
+									id="domain"
+									placeholder="e.g., example.com"
+									value={domain}
+									onChange={(e) => setDomain(e.target.value)}
 								/>
 							</div>
 						</div>
 						{error && <p className="text-red-600 text-sm">{error}</p>}
 						<div className="flex justify-between pt-4">
-							<button
-								type="button"
-								onClick={onBack}
-								className="rounded-md bg-gray-200 px-4 py-2 text-gray-800 hover:bg-gray-300 dark:bg-gray-600 dark:text-white"
-							>
+							<Button variant="outline" onClick={onBack}>
 								Back
-							</button>
-							<button
-								type="button"
-								onClick={handleNextFromInput}
-								className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-							>
-								Next
-							</button>
+							</Button>
+							<Button onClick={handleNextFromInput}>Next</Button>
 						</div>
 					</div>
 				);
 			case 1:
 				return (
 					<EnrichmentStep
-						onNext={nextStep}
+						onNext={handleEnrichmentNext}
 						onBack={prevStep}
-						selectedOptions={selectedEnrichmentOptions}
-						setSelectedOptions={setSelectedEnrichmentOptions}
-						availableCredits={availableCredits}
 						leadCount={1} // Single trace is always 1 lead
 						userInput={{
 							firstName,
@@ -241,7 +187,8 @@ const SingleTraceFlow: React.FC<SingleTraceFlowProps> = ({
 							address,
 							email,
 							phone,
-							socialMedia,
+							socialTag,
+							domain,
 						}}
 					/>
 				);

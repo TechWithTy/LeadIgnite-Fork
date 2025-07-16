@@ -1,13 +1,15 @@
 "use client";
 
 import type { Header } from "@/types/skip-trace";
+import type { InputField } from "@/types/skip-trace/enrichment";
+import type { Dispatch, SetStateAction } from "react";
 import type React from "react";
 import { useState, useEffect } from "react";
 import Papa from "papaparse";
 import MapHeadersStep from "../steps/MapHeadersStep";
 import ReviewAndSubmitStep from "../steps/ReviewAndSubmitStep";
 import UploadStep from "../steps/UploadStep";
-import EnrichmentStep from "../steps/EnrichmentStep";
+import { EnrichmentStep } from "../steps/EnrichmentStep";
 import { useUserProfileStore } from "@/lib/stores/user/userProfile";
 
 interface ListTraceFlowProps {
@@ -78,6 +80,21 @@ const ListTraceFlow: React.FC<ListTraceFlowProps> = ({
 		nextStep();
 	};
 
+	const handleEnrichmentNext = (options: string[]) => {
+		setSelectedEnrichmentOptions(options);
+		nextStep();
+	};
+
+	const mappedUserInput = selectedHeaders.reduce(
+		(acc, header) => {
+			if (header.mappedTo) {
+				acc[header.mappedTo as InputField] = "mapped"; // The value doesn't matter, just its presence
+			}
+			return acc;
+		},
+		{} as Record<InputField, string>,
+	);
+
 	const handleSubmit = async () => {
 		setSubmitting(true);
 		console.log("Submitting List:", {
@@ -118,12 +135,10 @@ const ListTraceFlow: React.FC<ListTraceFlowProps> = ({
 			case 2:
 				return (
 					<EnrichmentStep
-						onNext={nextStep}
+						onNext={handleEnrichmentNext}
 						onBack={prevStep}
-						selectedOptions={selectedEnrichmentOptions}
-						setSelectedOptions={setSelectedEnrichmentOptions}
-						availableCredits={availableCredits}
 						leadCount={leadCount}
+						userInput={mappedUserInput}
 					/>
 				);
 			case 3:
