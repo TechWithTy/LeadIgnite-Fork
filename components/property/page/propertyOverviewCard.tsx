@@ -231,7 +231,6 @@ const PropertyOverviewCard: React.FC<PropertyOverviewCardProps> = ({
 								</span>
 							)}
 						</div>
-						<Progress value={equityInfo.percentage} className="mt-2 h-2" />
 					</div>
 
 					{/* Occupancy */}
