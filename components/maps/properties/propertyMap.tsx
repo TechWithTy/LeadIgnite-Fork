@@ -59,17 +59,42 @@ const PropertyMap: React.FC<PropertyMapProps> = ({
 		(map: google.maps.Map) => {
 			mapRef.current = map;
 			const streetViewService = new google.maps.StreetViewService();
+
+			// First attempt with a tight radius
 			streetViewService.getPanorama(
 				{ location: center, radius: 50 },
 				(data, status) => {
-					console.log("Street View status:", status);
 					if (
 						status === google.maps.StreetViewStatus.OK &&
 						data?.location?.pano
 					) {
+						console.log("Street View found at 50m radius.");
 						setPanoId(data.location.pano);
 					} else {
-						console.error("Street View panorama not found for this location.");
+						console.log(
+							"Street View not found at 50m, trying a wider search (1000m)...",
+						);
+						// Second attempt with a wider radius
+						streetViewService.getPanorama(
+							{
+								location: center,
+								radius: 1000,
+								source: google.maps.StreetViewSource.OUTDOOR,
+							},
+							(data, status) => {
+								if (
+									status === google.maps.StreetViewStatus.OK &&
+									data?.location?.pano
+								) {
+									console.log("Street View found at 1000m radius.");
+									setPanoId(data.location.pano);
+								} else {
+									console.error(
+										"Street View panorama not found even within a 1000m radius.",
+									);
+								}
+							},
+						);
 					}
 				},
 			);
