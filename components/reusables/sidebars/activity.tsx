@@ -67,7 +67,7 @@ const ActivitySidebar: React.FC<ActivitySidebarProps> = ({
 			{/* Header */}
 			<div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-gray-200 border-b bg-slate-100 p-4 dark:border-gray-700 dark:bg-slate-700">
 				<h2 className="font-semibold text-lg dark:text-white">
-					{leadData.firstName} Activity
+					{leadData.contactInfo.firstName} Activity
 				</h2>
 				<button
 					type="button"

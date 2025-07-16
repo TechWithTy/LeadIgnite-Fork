@@ -48,7 +48,7 @@ export const useUserProfileStore = create<UserProfileState>()(
 							}
 						}),
 					);
-					return newListId;
+					return newList.id;
 				},
 
 				addLeadToList: (listId: string, lead: LeadTypeGlobal) => {

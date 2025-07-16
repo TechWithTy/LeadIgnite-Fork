@@ -59,7 +59,7 @@ export const leadListColumns: ColumnDef<LeadTypeGlobal>[] = [
 		accessorKey: "phone",
 		header: "Phone",
 		cell: ({ row }: { row: Row<LeadTypeGlobal> }) => (
-			<span>{row.original.phone}</span>
+			<span>{row.original.contactInfo.phone}</span>
 		),
 	},
 	{

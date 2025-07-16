@@ -22,12 +22,12 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { useUserProfileStore } from "@/lib/stores/user/userProfile";
 import type { LeadTypeGlobal } from "@/types/_dashboard/leads";
-import type { LeadList } from "@/types/_dashboard/leadList";
 import type {
 	Property,
 	RealtorProperty,
 	RentCastProperty,
 } from "@/types/_dashboard/property";
+import type { LeadList } from "@/types/_dashboard/leadList";
 
 // * Correct Type Guards for Property union type
 const isRealtorProperty = (p: Property): p is RealtorProperty =>
@@ -49,24 +49,29 @@ function propertyToLead(property: Property): LeadTypeGlobal {
 		id = property.id;
 		summary = `Property at ${property.address.fullStreetLine}`;
 	} else {
-		// This case should not be reached with proper type guards
-		throw new Error("Unknown property type");
+		// This should be unreachable if all property types are handled
+		throw new Error("Unknown property type encountered.");
 	}
 
 	return {
 		id,
-		firstName: "", // Placeholder
-		lastName: "", // Placeholder
-		email: "", // Placeholder
-		phone: "", // Placeholder
+		contactInfo: {
+			firstName: "",
+			lastName: "",
+			email: "",
+			phone: "",
+			address: property.address.fullStreetLine,
+			domain: "",
+			social: "",
+		},
 		summary,
 		bed: details.beds ?? 0,
 		bath: details.fullBaths ?? 0,
 		sqft: details.sqft ?? 0,
-		status: "New Lead", // Default status
+		status: "New Lead",
 		followUp: null,
 		lastUpdate: new Date().toISOString(),
-		address1: property.address.fullStreetLine,
+		address1: property.address,
 		// campaignID and socials are optional
 	};
 }
@@ -113,8 +118,8 @@ export function SaveToListModal({
 				socials: {},
 				emails: 0,
 			};
-			addLeadList(newList);
-			setSelectedListId(newList.id); // * Set the new list as selected
+			const newListId = addLeadList(newList);
+			setSelectedListId(newListId);
 			setNewListName("");
 			toast({
 				title: "Success",
