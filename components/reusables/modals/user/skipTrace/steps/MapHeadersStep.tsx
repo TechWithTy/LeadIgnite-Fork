@@ -30,6 +30,7 @@ const MapHeadersStep: React.FC<MapHeadersStepProps> = ({
 		const newSelection: Header = {
 			csvHeader,
 			type: selectedType as Header["type"],
+			mappedTo: selectedType as Header["mappedTo"],
 		};
 		setSelectedHeaders((prev) => [
 			...prev.filter((h) => h.csvHeader !== csvHeader),
@@ -39,8 +40,8 @@ const MapHeadersStep: React.FC<MapHeadersStepProps> = ({
 
 	return (
 		<div className="space-y-4 p-4">
-			<h3 className="text-lg font-medium">Map Your Headers</h3>
-			<p className="text-sm text-gray-500">
+			<h3 className="font-medium text-lg">Map Your Headers</h3>
+			<p className="text-gray-500 text-sm">
 				Match the columns from your file to the corresponding fields.
 			</p>
 			<div className="space-y-3">

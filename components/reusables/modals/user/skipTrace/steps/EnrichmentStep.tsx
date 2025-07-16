@@ -72,14 +72,14 @@ export function EnrichmentStep({
 			<TooltipProvider>
 				<ScrollArea className="h-72 flex-grow pr-4">
 					<div className="grid grid-cols-2 gap-4 p-2">
-						{enrichmentOptions.map((option) => {
-							const isDisabled = isEnrichmentDisabled(option, userInput);
+						{enrichmentOptions.map((enrichment) => {
+							const isDisabled = isEnrichmentDisabled(enrichment, userInput);
 							return (
 								<EnrichmentCard
-									key={option.id}
-									enrichment={option}
-									isSelected={selectedOptions.includes(option.id)}
-									onToggle={() => handleSelectOption(option.id)}
+									key={enrichment.id}
+									enrichment={enrichment}
+									isSelected={selectedOptions.includes(enrichment.id)}
+									onToggle={() => handleSelectOption(enrichment.id)}
 									isDisabled={isDisabled}
 								/>
 							);
