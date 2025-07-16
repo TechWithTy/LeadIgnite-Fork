@@ -4,15 +4,12 @@ import {
 	InfoWindow,
 	LoadScript,
 	Marker,
-	StreetViewPanorama,
 } from "@react-google-maps/api";
 import Lottie from "lottie-react";
 import type React from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-// Define a more specific type for Lottie animation data
 interface LottieAnimationData {
-	// Using unknown is better than any for type safety
 	[key: string]: unknown;
 }
 
@@ -25,7 +22,7 @@ type PropertyMapProps = {
 
 const mapContainerStyle = {
 	width: "100%",
-	height: "400px", // Increased height for better view
+	height: "400px",
 	borderRadius: "15px",
 	overflow: "hidden",
 	position: "relative" as const,
@@ -46,9 +43,8 @@ const PropertyMap: React.FC<PropertyMapProps> = ({
 	const [mapTypeId, setMapTypeId] = useState<"satellite" | "roadmap">(
 		"satellite",
 	);
-	const [pano, setPano] = useState<string | null>(null);
+	const [panoId, setPanoId] = useState<string | null>(null);
 	const mapRef = useRef<google.maps.Map | null>(null);
-	const streetViewRef = useRef<google.maps.StreetViewPanorama | null>(null);
 
 	const center = useMemo(
 		() => ({ lat: latitude, lng: longitude }),
@@ -72,11 +68,7 @@ const PropertyMap: React.FC<PropertyMapProps> = ({
 						status === google.maps.StreetViewStatus.OK &&
 						data?.location?.pano
 					) {
-						setPano(data.location.pano);
-						const panorama = map.getStreetView();
-						panorama.setPosition(center);
-						panorama.setOptions({ enableCloseButton: false });
-						streetViewRef.current = panorama;
+						setPanoId(data.location.pano);
 					}
 				},
 			);
@@ -89,16 +81,24 @@ const PropertyMap: React.FC<PropertyMapProps> = ({
 		disableDefaultUI: true,
 		zoomControl: true,
 		mapTypeControl: false,
-		streetViewControl: false,
+		streetViewControl: false, // Correctly disable the default control
 		fullscreenControl: true,
 	};
 
 	const handleStreetViewToggle = () => {
+		if (!mapRef.current || !panoId) return;
+
+		const panorama = mapRef.current.getStreetView();
 		const nextIsStreetView = !isStreetView;
-		setIsStreetView(nextIsStreetView);
-		if (streetViewRef.current) {
-			streetViewRef.current.setVisible(nextIsStreetView);
+
+		if (nextIsStreetView) {
+			panorama.setPano(panoId);
+			panorama.setVisible(true);
+		} else {
+			panorama.setVisible(false);
 		}
+
+		setIsStreetView(nextIsStreetView);
 	};
 
 	return (
@@ -154,8 +154,9 @@ const PropertyMap: React.FC<PropertyMapProps> = ({
 				<div
 					style={{
 						position: "absolute",
-						top: "20px",
-						right: "20px",
+						bottom: "20px",
+						left: "50%",
+						transform: "translateX(-50%)",
 						zIndex: 1,
 						display: "flex",
 						gap: "8px",
@@ -164,8 +165,8 @@ const PropertyMap: React.FC<PropertyMapProps> = ({
 					<button
 						type="button"
 						onClick={handleStreetViewToggle}
-						className="px-3 py-2 bg-white bg-opacity-80 text-sm font-semibold text-gray-800 rounded-lg shadow-md hover:bg-opacity-100 disabled:cursor-not-allowed disabled:opacity-50"
-						disabled={!pano}
+						className="rounded-lg bg-white bg-opacity-80 px-3 py-2 text-sm font-semibold text-gray-800 shadow-md hover:bg-opacity-100 disabled:cursor-not-allowed disabled:opacity-50"
+						disabled={!panoId}
 					>
 						{isStreetView ? "Exit Street View" : "Street View"}
 					</button>
@@ -174,7 +175,7 @@ const PropertyMap: React.FC<PropertyMapProps> = ({
 						onClick={() =>
 							setMapTypeId(mapTypeId === "satellite" ? "roadmap" : "satellite")
 						}
-						className="px-3 py-2 bg-white bg-opacity-80 text-sm font-semibold text-gray-800 rounded-lg shadow-md hover:bg-opacity-100"
+						className="rounded-lg bg-white bg-opacity-80 px-3 py-2 text-sm font-semibold text-gray-800 shadow-md hover:bg-opacity-100"
 					>
 						{mapTypeId === "satellite" ? "Map View" : "Satellite View"}
 					</button>
