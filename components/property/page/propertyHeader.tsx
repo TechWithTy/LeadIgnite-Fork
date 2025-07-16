@@ -26,6 +26,8 @@ import {
 	HelpCircle,
 	InfoIcon,
 } from "lucide-react";
+import { Bookmark } from "lucide-react";
+import SaveToListModal from "@/components/property/modals/SaveToListModal";
 import { useState } from "react";
 
 interface PropertyHeaderProps {
@@ -179,6 +181,17 @@ export default function PropertyHeader({
 							</DropdownMenuContent>
 						</DropdownMenu>
 
+						{/* Save Property Button */}
+						<Button
+							variant="outline"
+							className="flex items-center gap-2 border-blue-400 text-blue-600 hover:bg-blue-50 dark:border-blue-600 dark:text-blue-300 dark:hover:bg-blue-900"
+							onClick={() => setIsModalOpen(true)}
+							aria-label="Save property to lead list"
+						>
+							<Bookmark className="h-5 w-5" />
+							<span className="hidden sm:inline">Save</span>
+						</Button>
+
 						{/* Lead Activity Button */}
 						<Button
 							className="bg-blue-600 text-white hover:bg-blue-700"
@@ -200,6 +213,13 @@ export default function PropertyHeader({
 				isTourOpen={isTourOpen} // Boolean to track if the tour is currently open
 				onStartTour={handleStartTour} // Function to start the tour (triggered by button)
 				onCloseTour={handleCloseTour} // Function to close the tour
+			/>
+
+			{/* Save To List Modal */}
+			<SaveToListModal
+				isOpen={isModalOpen}
+				onClose={() => setIsModalOpen(false)}
+				property={property}
 			/>
 			{/* Sidebar */}
 			{isSidebarOpen && (
