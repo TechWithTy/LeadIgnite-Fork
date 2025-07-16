@@ -53,7 +53,7 @@ export function EnrichmentStep({
 
 			<TooltipProvider>
 				<ScrollArea className="h-72 flex-grow pr-4">
-					<div className="grid grid-cols-2 gap-4 py-2">
+					<div className="grid grid-cols-2 gap-4 p-2">
 						{enrichmentOptions.map((option) => (
 							<EnrichmentCard
 								key={option.id}

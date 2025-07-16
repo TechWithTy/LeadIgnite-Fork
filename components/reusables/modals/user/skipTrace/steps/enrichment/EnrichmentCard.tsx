@@ -71,29 +71,27 @@ export function EnrichmentCard({
 				<p className="text-gray-500 text-sm dark:text-gray-400">
 					{isFree ? "Included" : `+${cost} credit`}
 				</p>
-				<TooltipProvider>
-					<Tooltip>
-						<TooltipTrigger asChild>
-							<button
-								type="button"
-								className="shrink-0 rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-700"
-								onClick={handleInfoClick}
-							>
-								<Info className="h-4 w-4 text-gray-500" />
-							</button>
-						</TooltipTrigger>
-						<TooltipContent side="top" align="center">
-							<div className="max-w-xs p-2 text-sm">
-								<p className="font-bold">{description}</p>
-								<ul className="mt-2 list-inside list-disc space-y-1">
-									{features.map((feature: string) => (
-										<li key={feature}>{feature}</li>
-									))}
-								</ul>
-							</div>
-						</TooltipContent>
-					</Tooltip>
-				</TooltipProvider>
+				<Tooltip>
+					<TooltipTrigger asChild>
+						<button
+							type="button"
+							className="shrink-0 rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-700"
+							onClick={handleInfoClick}
+						>
+							<Info className="h-4 w-4 text-gray-500" />
+						</button>
+					</TooltipTrigger>
+					<TooltipContent side="top" align="center">
+						<div className="max-w-xs p-2 text-sm">
+							<p className="font-bold">{description}</p>
+							<ul className="mt-2 list-inside list-disc space-y-1">
+								{features.map((feature: string) => (
+									<li key={feature}>{feature}</li>
+								))}
+							</ul>
+						</div>
+					</TooltipContent>
+				</Tooltip>
 			</div>
 		</label>
 	);
