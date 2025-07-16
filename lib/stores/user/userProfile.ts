@@ -13,7 +13,7 @@ interface UserProfileState {
 	setUserProfile: (profile: UserProfile) => void;
 	updateUserProfile: (updatedData: Partial<UserProfile>) => void;
 	resetUserProfile: () => void;
-	addLeadList: (listName: string) => string; // Returns the new list's ID
+	addLeadList: (newList: LeadList) => string; // Returns the new list's ID
 	addLeadToList: (listId: string, lead: LeadTypeGlobal) => void;
 }
 
@@ -37,19 +37,7 @@ export const useUserProfileStore = create<UserProfileState>()(
 
 				resetUserProfile: () => set({ userProfile: null, error: null }),
 
-				addLeadList: (listName: string) => {
-					const newListId = uuidv4();
-					const newList: LeadList = {
-						id: newListId,
-						listName,
-						uploadDate: new Date().toISOString(),
-						leads: [],
-						records: 0,
-						phone: 0,
-						dataLink: "",
-						socials: {},
-						emails: 0,
-					};
+				addLeadList: (newList: LeadList) => {
 					set(
 						produce((state: UserProfileState) => {
 							if (state.userProfile?.companyInfo) {

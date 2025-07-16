@@ -118,6 +118,7 @@ export type PropertyMetadata =
 	| PropertyRentCastMetadata;
 
 export interface RealtorProperty extends Omit<BaseProperty, "source"> {
+	property_id: string;
 	source: "realtor";
 	metadata: PropertyRealtorMetadata;
 

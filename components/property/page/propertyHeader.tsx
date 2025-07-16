@@ -4,6 +4,7 @@ import { campaignSteps } from "@/_tests/tours/campaignTour";
 import ActivitySidebar from "@/components/reusables/sidebars/activity";
 import WalkThroughModal from "@/components/reusables/tutorials/walkthroughModal";
 import { Button } from "@/components/ui/button";
+import { useUserProfileStore } from "@/lib/stores/user/userProfile";
 import { Calendar } from "@/components/ui/calendar";
 import {
 	DropdownMenu,
@@ -27,8 +28,8 @@ import {
 	InfoIcon,
 } from "lucide-react";
 import { Bookmark, BookmarkCheck } from "lucide-react";
-import SaveToListModal from "@/components/property/modals/SaveToListModal";
-import { useState } from "react";
+import { SaveToListModal } from "@/components/property/modals/SaveToListModal";
+import { useState, useEffect } from "react";
 
 interface PropertyHeaderProps {
 	property: Property;
@@ -57,8 +58,21 @@ export default function PropertyHeader({
 	const [isTourOpen, setIsTourOpen] = useState(false);
 
 	const [isHelpModalOpen, setHelpModalOpen] = useState(false);
-	const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+	const [isSaveToListModalOpen, setSaveToListModalOpen] = useState(false);
 	const [isSaved, setIsSaved] = useState(false);
+
+	const { userProfile } = useUserProfileStore();
+
+	useEffect(() => {
+		const propertyId = "propertyId" in property ? property.propertyId : null;
+		if (!propertyId || !userProfile?.companyInfo?.leadLists) return;
+
+		const isAlreadySaved = userProfile.companyInfo.leadLists.some((list) =>
+			list.leads.some((lead) => lead.id === propertyId),
+		);
+
+		setIsSaved(isAlreadySaved);
+	}, [property, userProfile]);
 
 	const handleStartTour = () => setIsTourOpen(true);
 	const handleCloseTour = () => setIsTourOpen(false);
@@ -66,11 +80,9 @@ export default function PropertyHeader({
 	const openHelpModal = () => setHelpModalOpen(true);
 	const closeHelpModal = () => setHelpModalOpen(false);
 
-	const openSaveModal = () => setIsSaveModalOpen(true);
-	const closeSaveModal = () => setIsSaveModalOpen(false);
-
-	const handleSave = () => {
+	const handleSaveSuccess = () => {
 		setIsSaved(true);
+		setSaveToListModalOpen(false);
 	};
 
 	const handleDateChange = (selectedDate: Date | undefined) => {
@@ -194,13 +206,12 @@ export default function PropertyHeader({
 						{/* Save Property Button */}
 						<Button
 							variant="outline"
-							className={`flex items-center gap-2 ${isSaved ? "border-green-400 text-green-600" : "border-blue-400 text-blue-600"}`}
-							onClick={openSaveModal}
-							aria-label="Save property to lead list"
+							className="flex items-center gap-2"
+							onClick={() => setSaveToListModalOpen(true)}
 							disabled={isSaved}
 						>
 							{isSaved ? (
-								<BookmarkCheck className="h-5 w-5" />
+								<BookmarkCheck className="h-5 w-5 text-blue-500" />
 							) : (
 								<Bookmark className="h-5 w-5" />
 							)}
@@ -234,11 +245,12 @@ export default function PropertyHeader({
 
 			{/* Save To List Modal */}
 			<SaveToListModal
-				isOpen={isSaveModalOpen}
-				onClose={closeSaveModal}
+				isOpen={isSaveToListModalOpen}
+				onClose={() => setSaveToListModalOpen(false)}
 				property={property}
-				onSave={handleSave}
+				onSave={handleSaveSuccess}
 			/>
+
 			{/* Sidebar */}
 			{isSidebarOpen && (
 				<ActivitySidebar

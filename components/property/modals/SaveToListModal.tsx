@@ -1,76 +1,125 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogContent,
 	DialogDescription,
-	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { useUserProfileStore } from "@/lib/stores/user/userProfile";
-import type { LeadList } from "@/types/_dashboard/leadList";
 import type { LeadTypeGlobal } from "@/types/_dashboard/leads";
-import type { Property } from "@/types/_dashboard/property";
-import { useState } from "react";
+import type { LeadList } from "@/types/_dashboard/leadList";
+import type {
+	Property,
+	RealtorProperty,
+	RentCastProperty,
+} from "@/types/_dashboard/property";
 
-// * Helper to convert a Property to a LeadTypeGlobal
+// * Correct Type Guards for Property union type
+const isRealtorProperty = (p: Property): p is RealtorProperty =>
+	"property_id" in p;
+const isRentCastProperty = (p: Property): p is RentCastProperty =>
+	"id" in p && !("property_id" in p);
+
 function propertyToLead(property: Property): LeadTypeGlobal {
+	const details = property.details;
+
+	let id: string;
+	let summary: string;
+
+	if (isRealtorProperty(property)) {
+		id = property.property_id;
+		summary =
+			property.description ?? `Property at ${property.address.fullStreetLine}`;
+	} else if (isRentCastProperty(property)) {
+		id = property.id;
+		summary = `Property at ${property.address.fullStreetLine}`;
+	} else {
+		// This case should not be reached with proper type guards
+		throw new Error("Unknown property type");
+	}
+
 	return {
-		id: property.id,
-		firstName: "", // No name on Property, use empty or "N/A"
-		lastName: "",
-		email: "",
-		phone: "",
-		summary: "", // You could use property.description if available
-		bed: property.details.beds,
-		bath: property.details.fullBaths,
-		sqft: property.details.sqft ?? 0,
-		status: "New Lead",
+		id,
+		firstName: "", // Placeholder
+		lastName: "", // Placeholder
+		email: "", // Placeholder
+		phone: "", // Placeholder
+		summary,
+		bed: details.beds ?? 0,
+		bath: details.fullBaths ?? 0,
+		sqft: details.sqft ?? 0,
+		status: "New Lead", // Default status
 		followUp: null,
-		lastUpdate: property.lastUpdated ?? new Date().toISOString(),
+		lastUpdate: new Date().toISOString(),
 		address1: property.address.fullStreetLine,
-		// campaignID and socials are optional, can be omitted or set as needed
+		// campaignID and socials are optional
 	};
 }
+
 interface SaveToListModalProps {
 	isOpen: boolean;
 	onClose: () => void;
 	property: Property;
-	onSave: (listId: string) => void;
+	onSave: () => void;
 }
 
-export default function SaveToListModal({
+export function SaveToListModal({
 	isOpen,
 	onClose,
 	property,
 	onSave,
 }: SaveToListModalProps) {
-	const { userProfile, addLeadList, addLeadToList } = useUserProfileStore();
 	const { toast } = useToast();
+	const { addLeadList, addLeadToList } = useUserProfileStore();
+	const leadLists = useUserProfileStore(
+		(state) => state.userProfile?.companyInfo?.leadLists || [],
+	);
 
 	const [newListName, setNewListName] = useState("");
 	const [selectedListId, setSelectedListId] = useState<string | null>(null);
 
+	// * This effect ensures the dropdown is populated and a default is selected
+	useEffect(() => {
+		if (isOpen && leadLists.length > 0 && !selectedListId) {
+			setSelectedListId(leadLists[0].id);
+		}
+	}, [isOpen, leadLists, selectedListId]);
+
 	const handleCreateList = () => {
 		if (newListName.trim() !== "") {
-			const newId = addLeadList(newListName.trim());
-			if (newId) {
-				setSelectedListId(newId);
-				try {
-					toast({
-						title: "Success",
-						description: `List "${newListName}" created.`,
-					});
-				} catch (error) {
-					console.error(error);
-				}
-			}
+			const newList: LeadList = {
+				id: uuidv4(),
+				listName: newListName.trim(),
+				uploadDate: new Date().toISOString(),
+				leads: [],
+				records: 0,
+				phone: 0,
+				dataLink: "",
+				socials: {},
+				emails: 0,
+			};
+			addLeadList(newList);
+			setSelectedListId(newList.id); // * Set the new list as selected
 			setNewListName("");
+			toast({
+				title: "Success",
+				description: `List "${newList.listName}" created.`,
+			});
 		}
 	};
 
@@ -78,28 +127,27 @@ export default function SaveToListModal({
 		if (selectedListId) {
 			const lead = propertyToLead(property);
 			addLeadToList(selectedListId, lead);
-			const listName = userProfile?.companyInfo?.leadLists.find(
-				(list: LeadList) => list.id === selectedListId,
+			const listName = leadLists.find(
+				(list) => list.id === selectedListId,
 			)?.listName;
-			try {
-				toast({
-					title: "Success",
-					description: `Property saved to "${listName || "list"}`,
-				});
-			} catch (error) {
-				console.error(error);
-			}
-
-			onSave(selectedListId);
+			toast({
+				title: "Success",
+				description: `Property saved to "${listName || "list"}"`,
+			});
+			onSave(); // Notify parent
 			onClose();
+		} else {
+			toast({
+				title: "Error",
+				description: "Please select a list first.",
+				variant: "destructive",
+			});
 		}
 	};
 
-	const leadLists = userProfile?.companyInfo?.leadLists || [];
-
 	return (
 		<Dialog open={isOpen} onOpenChange={onClose}>
-			<DialogContent className="sm:max-w-[425px]">
+			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>Save to List</DialogTitle>
 					<DialogDescription>
@@ -107,54 +155,49 @@ export default function SaveToListModal({
 					</DialogDescription>
 				</DialogHeader>
 				<div className="grid gap-4 py-4">
-					{/* Create New List */}
-					<div className="space-y-2">
-						<Label htmlFor="new-list-name">Create a New List</Label>
+					<div>
+						<h3 className="mb-2 font-medium text-sm">Create a New List</h3>
 						<div className="flex gap-2">
 							<Input
-								id="new-list-name"
+								placeholder="e.g., 'Hot Leads'"
 								value={newListName}
 								onChange={(e) => setNewListName(e.target.value)}
-								placeholder="e.g., 'Hot Leads'"
 							/>
-							<Button type="button" onClick={handleCreateList}>
-								Create
-							</Button>
+							<Button onClick={handleCreateList}>Create</Button>
 						</div>
 					</div>
-
-					{/* Select Existing List */}
-					<div className="space-y-2">
-						<Label>Or Add to an Existing List</Label>
-						<div className="max-h-40 space-y-2 overflow-y-auto rounded-md border p-2">
-							{leadLists.length > 0 ? (
-								leadLists.map((list: LeadList) => (
-									<button
-										type="button"
-										key={list.id}
-										className={`w-full rounded-md p-2 text-left ${
-											selectedListId === list.id
-												? "bg-blue-100 dark:bg-blue-900"
-												: "hover:bg-gray-100 dark:hover:bg-gray-800"
-										}`}
-										onClick={() => setSelectedListId(list.id)}
-									>
-										{list.listName}
-									</button>
-								))
-							) : (
-								<p className="text-center text-gray-500 text-sm">
-									No lists found. Create one above.
-								</p>
-							)}
-						</div>
+					<div>
+						<h3 className="mb-2 font-medium text-sm">
+							Or Add to an Existing List
+						</h3>
+						<Select
+							value={selectedListId ?? ""}
+							onValueChange={(value) => setSelectedListId(value)}
+						>
+							<SelectTrigger>
+								<SelectValue placeholder="Select a list" />
+							</SelectTrigger>
+							<SelectContent>
+								{leadLists.length > 0 ? (
+									leadLists.map((list) => (
+										<SelectItem key={list.id} value={list.id}>
+											{list.listName}
+										</SelectItem>
+									))
+								) : (
+									<div className="px-2 py-1.5 text-muted-foreground text-sm">
+										No lists found. Create one above.
+									</div>
+								)}
+							</SelectContent>
+						</Select>
 					</div>
 				</div>
-				<DialogFooter>
-					<Button type="button" onClick={handleSave} disabled={!selectedListId}>
+				<div className="mt-4 flex justify-end">
+					<Button onClick={handleSave} disabled={!selectedListId}>
 						Save
 					</Button>
-				</DialogFooter>
+				</div>
 			</DialogContent>
 		</Dialog>
 	);
