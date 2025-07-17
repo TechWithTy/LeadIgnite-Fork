@@ -228,7 +228,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
 										(l) => l.id === task.leadId,
 									);
 									return lead ? (
-										`${lead.firstName} ${lead.lastName}`
+										`${lead.contactInfo.firstName} ${lead.contactInfo.lastName}`
 									) : (
 										<span className="text-gray-400 italic">Lead not found</span>
 									);
