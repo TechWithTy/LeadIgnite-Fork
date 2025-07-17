@@ -1,0 +1,84 @@
+"use client";
+
+import type { UseFormReturn } from "react-hook-form";
+
+import {
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
+import Image from "next/image";
+
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+import type { Agent } from "./utils/schema";
+
+interface AgentSocialFormProps {
+	form: UseFormReturn<Agent>;
+	avatars: { id: string; name: string; image: string }[];
+}
+
+export function AgentSocialForm({ form, avatars }: AgentSocialFormProps) {
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>Social Presence</CardTitle>
+			</CardHeader>
+			<CardContent className="space-y-4">
+				<FormField
+					control={form.control}
+					name="avatarImage"
+					render={({ field }) => (
+						<FormItem className="space-y-3">
+							<FormLabel>Select Avatar</FormLabel>
+							<FormControl>
+								<RadioGroup
+									onValueChange={field.onChange}
+									defaultValue={field.value}
+									className="grid grid-cols-3 gap-4"
+								>
+									{avatars.map((avatar) => (
+										<FormItem
+											key={avatar.id}
+											className="flex flex-col items-center space-y-2"
+										>
+											<FormControl>
+												<RadioGroupItem
+													value={avatar.image}
+													className="sr-only"
+												/>
+											</FormControl>
+											<FormLabel className="cursor-pointer">
+												<Image
+													src={avatar.image}
+													alt={avatar.name}
+													width={100}
+													height={100}
+													className={`rounded-full border-2 ${
+														field.value === avatar.image
+															? "border-primary"
+															: "border-transparent"
+													}`}
+												/>
+												<span className="block text-center text-sm">
+													{avatar.name}
+												</span>
+											</FormLabel>
+										</FormItem>
+									))}
+								</RadioGroup>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				{/* !TODO: Implement Background Image Upload */}
+				{/* !TODO: Implement Social Assets Multi-Upload */}
+			</CardContent>
+		</Card>
+	);
+}

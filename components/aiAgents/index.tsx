@@ -29,7 +29,7 @@ export function AiAgentsManager() {
 	}, []);
 
 	const handleFormSubmit = async (data: Agent) => {
-		if (view === "edit" && selectedAgent?.id) {
+		if (view === "edit" && typeof selectedAgent?.id === "string") {
 			await updateAgent(selectedAgent.id, data);
 		} else {
 			await createAgent(data);

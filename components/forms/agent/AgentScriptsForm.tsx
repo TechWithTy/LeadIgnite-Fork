@@ -22,6 +22,22 @@ export function AgentScriptsForm({ form }: AgentScriptsFormProps) {
 		<>
 			<FormField
 				control={form.control}
+				name="description"
+				render={({ field }) => (
+					<FormItem>
+						<FormLabel>Description</FormLabel>
+						<FormControl>
+							<Textarea
+								placeholder="e.g., A brief summary of the agent's purpose."
+								{...field}
+							/>
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				)}
+			/>
+			<FormField
+				control={form.control}
 				name="campaignGoal"
 				render={({ field }) => (
 					<FormItem>

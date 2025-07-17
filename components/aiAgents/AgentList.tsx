@@ -53,21 +53,21 @@ export function AgentList({ onEdit, agents, setAgents }: AgentListProps) {
 			</TableHeader>
 			<TableBody>
 				{agents.map((agent) => (
-					<TableRow key={agent.id}>
+					<TableRow key={agent.id ?? ""}>
 						<TableCell className="flex items-center space-x-4">
 							{agent.image && (
 								<Image
 									src={agent.image}
-									alt={agent.name}
+									alt={agent.name ?? "Agent"}
 									width={40}
 									height={40}
 									className="rounded-full"
 								/>
 							)}
-							<span>{agent.name}</span>
+							<span>{agent.name ?? "Unnamed Agent"}</span>
 						</TableCell>
-						<TableCell>{agent.persona}</TableCell>
-						<TableCell>{agent.campaignGoal}</TableCell>
+						<TableCell>{agent.persona ?? "N/A"}</TableCell>
+						<TableCell>{agent.campaignGoal ?? "N/A"}</TableCell>
 						<TableCell className="space-x-2 text-right">
 							<Button variant="outline" size="sm" onClick={() => onEdit(agent)}>
 								Edit
@@ -83,7 +83,7 @@ export function AgentList({ onEdit, agents, setAgents }: AgentListProps) {
 										<AlertDialogTitle>Are you sure?</AlertDialogTitle>
 										<AlertDialogDescription>
 											This action cannot be undone. This will permanently delete
-											the agent "{agent.name}".
+											the agent "{agent.name ?? "Unnamed Agent"}".
 										</AlertDialogDescription>
 									</AlertDialogHeader>
 									<AlertDialogFooter>

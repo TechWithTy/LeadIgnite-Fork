@@ -6,9 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { agentSchema, type Agent } from "./utils/schema";
 import {
-	fetchVoices,
-	fetchVoicemails,
 	fetchBackgroundNoises,
+	fetchAvatars,
+	fetchVoicemails,
+	fetchVoices,
 } from "./utils/api";
 
 export function useAgentForm(defaultValues?: Partial<Agent>) {
@@ -29,36 +30,39 @@ export function useAgentForm(defaultValues?: Partial<Agent>) {
 	const [backgroundNoises, setBackgroundNoises] = useState<
 		{ id: string; name: string }[]
 	>([]);
+	const [avatars, setAvatars] = useState<
+		{ id: string; name: string; image: string }[]
+	>([]);
 
 	useEffect(() => {
-		const getVoices = async () => {
-			const fetchedVoices = await fetchVoices();
-			setVoices(fetchedVoices);
+		const loadInitialData = async () => {
+			const [voicesData, voicemailsData, backgroundNoisesData, avatarsData] =
+				await Promise.all([
+					fetchVoices(),
+					fetchVoicemails(),
+					fetchBackgroundNoises(),
+					fetchAvatars(),
+				]);
+			setVoices(voicesData);
+			setVoicemails(voicemailsData);
+			setBackgroundNoises(backgroundNoisesData);
+			setAvatars(avatarsData);
 		};
-		const getVoicemails = async () => {
-			const fetchedVoicemails = await fetchVoicemails();
-			setVoicemails(fetchedVoicemails);
-		};
-		const getBackgroundNoises = async () => {
-			const fetchedNoises = await fetchBackgroundNoises();
-			setBackgroundNoises(fetchedNoises);
-		};
-		getVoices();
-		getVoicemails();
-		getBackgroundNoises();
+
+		loadInitialData();
 	}, []);
 
 	const handleVoicemailAudio = async (audioBlob: Blob) => {
-		console.log("Voicemail audio received:", audioBlob);
-		const fakeFileName = `voicemail-${Date.now()}.wav`;
-		form.setValue("voicemailScript", fakeFileName);
+		// Simulate upload and generate a fake ID for testing
+		const fakeRecordingId = `test-voicemail-${Date.now()}`;
+		form.setValue("voicemailScript", fakeRecordingId);
 		setShowVoicemailModal(false);
 	};
 
 	const handleCloneVoiceAudio = async (audioBlob: Blob) => {
-		console.log("Cloned voice audio received:", audioBlob);
-		const fakeFileName = `cloned-voice-${Date.now()}.wav`;
-		form.setValue("voice", fakeFileName);
+		// Simulate upload and generate a fake ID for testing
+		const fakeRecordingId = `test-clone-${Date.now()}`;
+		form.setValue("voice", fakeRecordingId);
 		setShowCloneModal(false);
 	};
 
@@ -85,6 +89,7 @@ export function useAgentForm(defaultValues?: Partial<Agent>) {
 		voices,
 		voicemails,
 		backgroundNoises,
+		avatars,
 		handleVoicemailAudio,
 		handleCloneVoiceAudio,
 	};

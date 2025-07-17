@@ -3,13 +3,37 @@
 
 import type { Agent } from "./schema";
 
+// --- Mock Data ---
+const voices = [
+	{ id: "voice-1", name: "Standard Male Voice" },
+	{ id: "voice-2", name: "Standard Female Voice" },
+	{ id: "cloned-voice-john", name: "Cloned Voice - John D." },
+];
+
+const voicemails = [
+	{ id: "voicemail-1", name: "Standard Voicemail" },
+	{ id: "voicemail-2", name: "Follow-up Voicemail" },
+];
+
+const backgroundNoises = [
+	{ id: "noise-1", name: "Coffee Shop Ambience" },
+	{ id: "noise-2", name: "Quiet Office Hum" },
+];
+
+const avatars = [
+	{ id: "avatar-1", name: "Avatar 1", image: "/placeholder-avatar-1.png" },
+	{ id: "avatar-2", name: "Avatar 2", image: "/placeholder-avatar-2.png" },
+	{ id: "avatar-3", name: "Avatar 3", image: "/placeholder-avatar-3.png" },
+];
+
 let agents: Agent[] = [
 	{
 		isPublic: true,
 		id: "1",
-		image: "/placeholder-agent.png", // * Placeholder image
+		image: "/placeholder-agent.png",
 		name: "Q3 Top Performer",
 		type: "phone",
+		description: "This is a high-performing agent for phone campaigns.",
 		voice: "Cloned Voice - John D.",
 		campaignGoal: "Book 100 Demos",
 		salesScript: "Introductory Pitch v2",
@@ -20,6 +44,8 @@ let agents: Agent[] = [
 ];
 
 const simulateDelay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
+// --- API Functions ---
 
 export const fetchAgents = async (): Promise<Agent[]> => {
 	await simulateDelay(500);
@@ -33,47 +59,25 @@ export const fetchAgentById = async (
 	return agents.find((agent) => agent.id === id);
 };
 
-// * Mock function to fetch available voices
-export async function fetchBackgroundNoises(): Promise<
-	{ id: string; name: string }[]
-> {
-	console.log("Fetching available background noises...");
-	return new Promise((resolve) => {
-		setTimeout(() => {
-			resolve([
-				{ id: "noise-1", name: "Coffee Shop Ambience" },
-				{ id: "noise-2", name: "Quiet Office Hum" },
-			]);
-		}, 500);
-	});
-}
+export const fetchVoices = async () => {
+	await simulateDelay(50);
+	return voices;
+};
 
-export async function fetchVoicemails(): Promise<
-	{ id: string; name: string }[]
-> {
-	console.log("Fetching available voicemails...");
-	return new Promise((resolve) => {
-		setTimeout(() => {
-			resolve([
-				{ id: "voicemail-1", name: "Standard Voicemail" },
-				{ id: "voicemail-2", name: "Follow-up Voicemail" },
-			]);
-		}, 500);
-	});
-}
+export const fetchVoicemails = async () => {
+	await simulateDelay(50);
+	return voicemails;
+};
 
-export async function fetchVoices(): Promise<{ id: string; name: string }[]> {
-	console.log("Fetching available voices...");
-	return new Promise((resolve) => {
-		setTimeout(() => {
-			resolve([
-				{ id: "voice-1", name: "Standard Male Voice" },
-				{ id: "voice-2", name: "Standard Female Voice" },
-				{ id: "cloned-voice-john", name: "Cloned Voice - John D." },
-			]);
-		}, 500);
-	});
-}
+export const fetchBackgroundNoises = async () => {
+	await simulateDelay(50);
+	return backgroundNoises;
+};
+
+export const fetchAvatars = async () => {
+	await simulateDelay(50);
+	return avatars;
+};
 
 export const createAgent = async (data: Omit<Agent, "id">): Promise<Agent> => {
 	await simulateDelay(500);
