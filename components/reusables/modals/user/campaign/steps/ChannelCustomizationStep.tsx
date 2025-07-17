@@ -1,4 +1,3 @@
-import { useLeadListStore } from "@/lib/stores/leadList";
 import { mockUserProfile } from "@/constants/_faker/profile/userProfile"; // * Using mock user profile for phone number
 import type { FC } from "react";
 import { useEffect } from "react";
@@ -57,7 +56,6 @@ const ChannelCustomizationStep: FC<ChannelCustomizationStepProps> = ({
 		setSelectedLeadListId,
 		setLeadCount,
 	} = useCampaignCreationStore();
-	const leadLists = useLeadListStore((state) => state.leadLists);
 
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
@@ -69,30 +67,19 @@ const ChannelCustomizationStep: FC<ChannelCustomizationStepProps> = ({
 	});
 
 	const watchedAreaMode = form.watch("areaMode");
-	const watchedLeadListId = form.watch("selectedLeadListId");
 
 	useEffect(() => {
 		setAreaMode(watchedAreaMode);
 	}, [watchedAreaMode, setAreaMode]);
 
 	useEffect(() => {
-		if (watchedAreaMode === "leadList") {
-			const selected = leadLists.find(
-				(list) => String(list.id) === String(watchedLeadListId),
-			);
-			setLeadCount(selected?.records || 0);
-			setSelectedLeadListId(watchedLeadListId || "");
-		} else {
+		if (watchedAreaMode !== "leadList") {
 			setLeadCount(0);
 			setSelectedLeadListId("");
+			// * Reset the form field as well to avoid lingering values
+			form.setValue("selectedLeadListId", "");
 		}
-	}, [
-		watchedLeadListId,
-		watchedAreaMode,
-		leadLists,
-		setLeadCount,
-		setSelectedLeadListId,
-	]);
+	}, [watchedAreaMode, setLeadCount, setSelectedLeadListId, form]);
 
 	const onSubmit = (data: z.infer<typeof FormSchema>) => {
 		console.log("ChannelCustomizationStep valid:", data);
@@ -106,7 +93,7 @@ const ChannelCustomizationStep: FC<ChannelCustomizationStepProps> = ({
 	return (
 		<Form form={form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-				<h2 className="font-semibold text-lg">Channel Customization</h2>
+				<h2 className="font-semibold text-lg">Channel sadsa Customization</h2>
 				<p className="text-gray-500 text-sm">
 					Customize settings for your {primaryChannel} campaign.
 				</p>
@@ -148,9 +135,12 @@ const ChannelCustomizationStep: FC<ChannelCustomizationStepProps> = ({
 							<FormItem>
 								<FormControl>
 									<LeadListSelector
-										leadLists={leadLists}
-										value={field.value}
-										onChange={field.onChange}
+										value={field.value || ""}
+										onChange={(selectedValue, recordCount) => {
+											field.onChange(selectedValue);
+											setSelectedLeadListId(selectedValue);
+											setLeadCount(recordCount);
+										}}
 									/>
 								</FormControl>
 								<FormMessage />

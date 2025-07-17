@@ -31,14 +31,14 @@ export async function exportLeadsToExcel(
 			string | number | boolean | null | undefined
 		> = {
 			id: lead.id,
-			firstName: lead.firstName,
-			lastName: lead.lastName,
-			phone: lead.phone,
-			email: lead.email,
+			firstName: lead.contactInfo.firstName,
+			lastName: lead.contactInfo.lastName,
+			phone: lead.contactInfo.phone,
+			email: lead.contactInfo.email,
 			status: lead.status,
 			followUp: lead.followUp,
 			campaignID: lead.campaignID,
-			address1: lead.address1,
+			address1: lead.contactInfo.address,
 			socials:
 				[
 					lead.socials?.facebook ? `Facebook: ${lead.socials.facebook}` : "",
@@ -103,10 +103,10 @@ export async function exportLeadListsToExcel(
 		for (const lead of leadList.leads) {
 			worksheet.addRow({
 				id: lead.id,
-				firstName: lead.firstName,
-				lastName: lead.lastName,
-				email: lead.email,
-				phone: lead.phone,
+				firstName: lead.contactInfo.firstName,
+				lastName: lead.contactInfo.lastName,
+				email: lead.contactInfo.email,
+				phone: lead.contactInfo.phone,
 				summary: lead.summary,
 				bed: lead.bed,
 				bath: lead.bath,
@@ -176,10 +176,10 @@ export async function exportLeadListsToZip(
 		for (const lead of leadList.leads) {
 			worksheet.addRow({
 				id: lead.id,
-				firstName: lead.firstName,
-				lastName: lead.lastName,
-				email: lead.email,
-				phone: lead.phone,
+				firstName: lead.contactInfo.firstName,
+				lastName: lead.contactInfo.lastName,
+				email: lead.contactInfo.email,
+				phone: lead.contactInfo.phone,
 				summary: lead.summary,
 				bed: lead.bed,
 				bath: lead.bath,
