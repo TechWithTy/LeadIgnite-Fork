@@ -30,7 +30,11 @@ const LeadListSelector: FC<LeadListSelectorProps> = ({
 	onChange,
 	disabled = false,
 }) => {
-	const { ref, inView } = useInView();
+	const { ref, inView } = useInView({
+		threshold: 0,
+		// * Trigger loading when the user is 200px away from the bottom
+		rootMargin: "200px 0px",
+	});
 
 	const [items, setItems] = useState<LeadList[]>([]);
 	const [page, setPage] = useState(0);
