@@ -19,7 +19,7 @@ import {
 } from "@/constants/_faker/profile/userProfile";
 
 import { campaignSteps } from "@/_tests/tours/campaignTour";
-import WalkThroughModal from "@/components/reusables/tutorials/walkthroughModal";
+import WalkThroughModal from "../../leadsSearch/search/WalkthroughModal";
 import { Heading } from "@/components/ui/heading";
 import { HelpCircle } from "lucide-react";
 const creditsRemaining =

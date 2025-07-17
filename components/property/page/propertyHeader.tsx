@@ -2,7 +2,7 @@
 
 import { campaignSteps } from "@/_tests/tours/campaignTour";
 import ActivitySidebar from "@/components/reusables/sidebars/activity";
-import WalkThroughModal from "@/components/reusables/tutorials/walkthroughModal";
+import WalkThroughModal from "../../leadsSearch/search/WalkthroughModal";
 import { Button } from "@/components/ui/button";
 import { useUserProfileStore } from "@/lib/stores/user/userProfile";
 import { Calendar } from "@/components/ui/calendar";

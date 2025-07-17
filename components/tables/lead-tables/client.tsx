@@ -1,7 +1,7 @@
 "use client";
 import { campaignSteps } from "@/_tests/tours/campaignTour";
 import LeadMainModal from "@/components/reusables/modals/user/lead/LeadModalMain";
-import WalkThroughModal from "@/components/reusables/tutorials/walkthroughModal";
+import WalkThroughModal from "../../leadsSearch/search/WalkthroughModal";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";

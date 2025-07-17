@@ -3,7 +3,7 @@
 import { campaignSteps } from "@/_tests/tours/campaignTour";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import PageContainer from "@/components/layout/page-container";
-import WalkThroughModal from "@/components/reusables/tutorials/walkthroughModal";
+import WalkThroughModal from "../../../components/leadsSearch/search/WalkthroughModal";
 import { EmployeeTable } from "@/components/tables/employee-tables/EmployeeTables";
 import { columns } from "@/components/tables/employee-tables/columns";
 import { buttonVariants } from "@/components/ui/button";
