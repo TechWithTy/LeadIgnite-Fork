@@ -10,11 +10,11 @@
 💾 Dashboard > Property > Add CRUD Lead Functionality   
 💾 Dashboard > Property > Add Skip Trace Logic 
 
-#🖥️ Dashboard > Lead Search > Implement  save search use to update the current search state
-#🖥️ Dashboard > Lead Search > Update Property Card to link to property overview page
-#🖥️ Login > Implement Demo User Login and site acces restriction
 #🖥️ Dashboard > Lead Search > Create Your list > Fix Dropdown usage top use new dropdown in ui usining regular jsx not shad cn && Make the creatye list button false if no list is selected or name is empty
-#🖥️ Dashboard > Lead Search > Property List > Update maps and enable 3D / Street View
+# 🖥️ Dashboard > Kanban  > Add new todo button > Fix dropdown usage top use new dropdown in ui usining regular jsx not shad cn
+#🖥️ Dashboard > Lead Search > Implement  save search use to update the current search state
+#🖥️ Login > Implement Demo User Login and site acces restriction
+
 #🖥️ Set up user onbaording with https://www.npmjs.com/package/@frigade/react
 #🖥️ Set up user feedback with https://www.npmjs.com/package/@frigade/react
 
@@ -24,6 +24,13 @@
 #🖥️ Dashboard > Property > Overview Implemtn offmarket cards
 
 # ⁉️ optimize load speeds
+
+#🖥️ ✅ Dashboard > Lead Search > Update Property Card to link to property overview page
+
+
+#🖥️ ✅ Dashboard > Lead Search > Update Property Card to link to property overview page
+
+#🖥️ ✅ Dashboard > Lead Search > Property List > Update maps and enable 3D / Street View
 
 # 💾 ✅ Add Check for multiple emails / ips to prevent trial misuse
 
