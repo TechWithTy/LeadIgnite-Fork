@@ -16,7 +16,6 @@
 
 # 🖥️ Dashboard > Lead Search > Create Your list > Fix Dropdown usage top use new dropdown in ui usining regular jsx not shad cn && Make the creatye list button false if no list is selected or name is empty
 # 🖥️ Dashboard > Kanban  > Add new todo button > Fix dropdown usage top use new dropdown in ui usining regular jsx not shad cn
-# 🖥️ Login > Implement Demo User Login and site acces restriction
 
 # 🖥️ Set up user onbaording with https://www.npmjs.com/package/@frigade/react
 # 🖥️ Set up user feedback with https://www.npmjs.com/package/@frigade/react
@@ -26,6 +25,8 @@
 # 🖥️ Dashboard > Property > Overview Implemtn offmarket cards
 
 # ⁉️ optimize load speeds
+
+# ✅ 🖥️ Login > Implement Demo User Login and site acces restriction
 
 # ✅  🖥️ Dashboard > Map Component >  Edit the map componnet to take in area and pass to fetch data with drawing
 
