@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
@@ -15,12 +15,21 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 // * Import the advanced modal components
 import VoicemailModal from "@/components/forms/steppers/profile-form/steps/knowledge/voice/VoicemailModal";
 import CloneModal from "@/components/forms/steppers/profile-form/steps/knowledge/voice/CloneModal";
+import { fetchVoices } from "./utils/api";
 
 interface AgentFormProps {
 	onSubmit: (data: Agent) => void;
@@ -45,6 +54,15 @@ export function AgentForm({
 	const [imagePreview, setImagePreview] = useState<string | null>(
 		defaultValues?.image || null,
 	);
+	const [voices, setVoices] = useState<{ id: string; name: string }[]>([]);
+
+	useEffect(() => {
+		const getVoices = async () => {
+			const fetchedVoices = await fetchVoices();
+			setVoices(fetchedVoices);
+		};
+		getVoices();
+	}, []);
 
 	const handleVoicemailAudio = async (audioBlob: Blob) => {
 		console.log("Voicemail audio received:", audioBlob);
@@ -124,22 +142,42 @@ export function AgentForm({
 									</FormItem>
 								)}
 							/>
-							<div className="space-y-2">
-								<FormLabel>Voice</FormLabel>
-								<Button
-									type="button"
-									variant="outline"
-									className="w-full"
-									onClick={() => setShowCloneModal(true)}
-								>
-									+ Clone Voice
-								</Button>
-								{form.watch("voice") && (
-									<p className="text-muted-foreground text-sm">
-										Voice file: {form.watch("voice")}
-									</p>
+							<FormField
+								control={form.control}
+								name="voice"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Voice</FormLabel>
+										<div className="flex items-center space-x-2">
+											<Select
+												onValueChange={field.onChange}
+												defaultValue={field.value}
+											>
+												<FormControl>
+													<SelectTrigger>
+														<SelectValue placeholder="Select a voice" />
+													</SelectTrigger>
+												</FormControl>
+												<SelectContent>
+													{voices.map((voice) => (
+														<SelectItem key={voice.id} value={voice.id}>
+															{voice.name}
+														</SelectItem>
+													))}
+												</SelectContent>
+											</Select>
+											<Button
+												type="button"
+												variant="outline"
+												onClick={() => setShowCloneModal(true)}
+											>
+												Clone
+											</Button>
+										</div>
+										<FormMessage />
+									</FormItem>
 								)}
-							</div>
+							/>
 							<FormField
 								control={form.control}
 								name="campaignGoal"
@@ -223,6 +261,25 @@ export function AgentForm({
 									</p>
 								)}
 							</div>
+							<FormField
+								control={form.control}
+								name="isPublic"
+								render={({ field }) => (
+									<FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+										<div className="space-y-0.5">
+											<FormLabel className="text-base">
+												Make Agent Public
+											</FormLabel>
+										</div>
+										<FormControl>
+											<Switch
+												checked={field.value}
+												onCheckedChange={field.onChange}
+											/>
+										</FormControl>
+									</FormItem>
+								)}
+							/>
 							<Button type="submit">
 								{isEditing ? "Update Agent" : "Save Agent"}
 							</Button>

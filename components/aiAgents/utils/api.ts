@@ -5,6 +5,7 @@ import type { Agent } from "./schema";
 
 let agents: Agent[] = [
 	{
+		isPublic: true,
 		id: "1",
 		image: "/placeholder-agent.png", // * Placeholder image
 		name: "Q3 Top Performer",
@@ -30,6 +31,20 @@ export const fetchAgentById = async (
 	await simulateDelay(300);
 	return agents.find((agent) => agent.id === id);
 };
+
+// * Mock function to fetch available voices
+export async function fetchVoices(): Promise<{ id: string; name: string }[]> {
+	console.log("Fetching available voices...");
+	return new Promise((resolve) => {
+		setTimeout(() => {
+			resolve([
+				{ id: "voice-1", name: "Standard Male Voice" },
+				{ id: "voice-2", name: "Standard Female Voice" },
+				{ id: "cloned-voice-john", name: "Cloned Voice - John D." },
+			]);
+		}, 500);
+	});
+}
 
 export const createAgent = async (data: Omit<Agent, "id">): Promise<Agent> => {
 	await simulateDelay(500);

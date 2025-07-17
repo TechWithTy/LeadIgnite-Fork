@@ -4,6 +4,7 @@ import { z } from "zod";
 // ! This schema is crucial for maintaining data integrity.
 
 export const agentSchema = z.object({
+	isPublic: z.boolean().default(false),
 	id: z.string().optional(), // * Optional for creation, required for updates
 	image: z.string().optional(),
 	name: z.string().min(1, { message: "Agent Name is required." }),
