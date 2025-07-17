@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import type { Agent } from "./utils/schema";
 import { fetchAgents, deleteAgent } from "./utils/api";
@@ -44,7 +45,7 @@ export function AgentList({ onEdit, agents, setAgents }: AgentListProps) {
 		<Table>
 			<TableHeader>
 				<TableRow>
-					<TableHead>Name</TableHead>
+					<TableHead>Agent</TableHead>
 					<TableHead>Persona</TableHead>
 					<TableHead>Campaign Goal</TableHead>
 					<TableHead className="text-right">Actions</TableHead>
@@ -53,7 +54,18 @@ export function AgentList({ onEdit, agents, setAgents }: AgentListProps) {
 			<TableBody>
 				{agents.map((agent) => (
 					<TableRow key={agent.id}>
-						<TableCell>{agent.name}</TableCell>
+						<TableCell className="flex items-center space-x-4">
+							{agent.image && (
+								<Image
+									src={agent.image}
+									alt={agent.name}
+									width={40}
+									height={40}
+									className="rounded-full"
+								/>
+							)}
+							<span>{agent.name}</span>
+						</TableCell>
 						<TableCell>{agent.persona}</TableCell>
 						<TableCell>{agent.campaignGoal}</TableCell>
 						<TableCell className="space-x-2 text-right">

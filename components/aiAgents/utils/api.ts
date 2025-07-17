@@ -6,6 +6,7 @@ import type { Agent } from "./schema";
 let agents: Agent[] = [
 	{
 		id: "1",
+		image: "/placeholder-agent.png", // * Placeholder image
 		name: "Q3 Top Performer",
 		voice: "Cloned Voice - John D.",
 		campaignGoal: "Book 100 Demos",

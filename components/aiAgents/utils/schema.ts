@@ -5,6 +5,7 @@ import { z } from "zod";
 
 export const agentSchema = z.object({
 	id: z.string().optional(), // * Optional for creation, required for updates
+	image: z.string().optional(),
 	name: z.string().min(1, { message: "Agent Name is required." }),
 	voice: z.string().min(1, { message: "Voice is required." }),
 	campaignGoal: z.string().min(1, { message: "Campaign Goal is required." }),
