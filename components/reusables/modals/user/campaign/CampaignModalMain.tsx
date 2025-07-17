@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import ChannelCustomizationStep from "./steps/ChannelCustomizationStep";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type * as z from "zod";
+import { mockUserProfile } from "@/constants/_faker/profile/userProfile";
+import ChannelCustomizationStep, {
+	FormSchema,
+} from "./steps/ChannelCustomizationStep";
 import ChannelSelectionStep from "./steps/ChannelSelectionStep";
 import FinalizeCampaignStep from "./steps/FinalizeCampaignStep";
 import { TimingPreferencesStep } from "./steps/TimingPreferencesStep";
@@ -89,8 +95,31 @@ const CampaignModalMain = () => {
 	const [open, setOpen] = useState(true);
 	const [step, setStep] = useState(0);
 
+	// * Form for ChannelCustomizationStep
+	const customizationForm = useForm<z.infer<typeof FormSchema>>({
+		resolver: zodResolver(FormSchema),
+		defaultValues: {
+			primaryPhoneNumber: mockUserProfile.personalNum || "",
+			areaMode: areaMode || "leadList",
+			selectedLeadListId: selectedLeadListId || "",
+		},
+	});
+
 	// * Step navigation handlers
-	const nextStep = () => setStep((s) => s + 1);
+	const nextStep = async () => {
+		if (step === 1) {
+			console.log("Validating form data:", customizationForm.getValues());
+			const isValid = await customizationForm.trigger();
+			if (!isValid) {
+				console.error(
+					"Validation failed. Errors:",
+					customizationForm.formState.errors,
+				);
+				return; // * Don't advance if validation fails
+			}
+		}
+		setStep((s) => s + 1);
+	};
 	const prevStep = () => setStep((s) => Math.max(0, s - 1));
 	const closeModal = () => setOpen(false);
 	const launchCampaign = () => {
@@ -123,7 +152,11 @@ const CampaignModalMain = () => {
 						/>
 					)}
 					{step === 1 && (
-						<ChannelCustomizationStep onNext={nextStep} onBack={prevStep} />
+						<ChannelCustomizationStep
+							onNext={nextStep}
+							onBack={prevStep}
+							form={customizationForm}
+						/>
 					)}
 					{step === 2 && (
 						<TimingPreferencesStep onBack={prevStep} onNext={nextStep} />

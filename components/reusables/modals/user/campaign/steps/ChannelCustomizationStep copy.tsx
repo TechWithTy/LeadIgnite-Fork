@@ -19,28 +19,16 @@ import LeadListSelector from "./channelCustomization/LeadListSelector";
 import CampaignNavigation from "./channelCustomization/CampaignNavigation";
 
 // * Step 2: Channel Customization
-import type { UseFormReturn } from "react-hook-form";
-
 interface ChannelCustomizationStepProps {
 	onNext: () => void;
 	onBack: () => void;
-	form: UseFormReturn<z.infer<typeof FormSchema>>;
 }
 
-export const FormSchema = z
+const FormSchema = z
 	.object({
-		primaryPhoneNumber: z
-			.string()
-			.transform((val) => {
-				let digits = val.replace(/\D/g, "");
-				if (digits.startsWith("1")) {
-					digits = digits.substring(1);
-				}
-				return `+1${digits}`;
-			})
-			.refine((val) => /^\+1\d{10}$/.test(val), {
-				message: "Phone number must be 10 digits after the +1 country code.",
-			}),
+		primaryPhoneNumber: z.string().refine((val) => val.length === 12, {
+			message: "Phone number must be 10 digits after +1.",
+		}),
 		areaMode: z.enum(["zip", "leadList"], {
 			required_error: "You must select an area mode.",
 		}),
@@ -59,7 +47,6 @@ export const FormSchema = z
 const ChannelCustomizationStep: FC<ChannelCustomizationStepProps> = ({
 	onNext,
 	onBack,
-	form,
 }) => {
 	const {
 		primaryChannel,
@@ -69,6 +56,15 @@ const ChannelCustomizationStep: FC<ChannelCustomizationStepProps> = ({
 		setSelectedLeadListId,
 		setLeadCount,
 	} = useCampaignCreationStore();
+
+	const form = useForm<z.infer<typeof FormSchema>>({
+		resolver: zodResolver(FormSchema),
+		defaultValues: {
+			primaryPhoneNumber: mockUserProfile.personalNum || "",
+			areaMode: areaMode || "leadList",
+			selectedLeadListId: selectedLeadListId || "",
+		},
+	});
 
 	const watchedAreaMode = form.watch("areaMode");
 
@@ -85,13 +81,25 @@ const ChannelCustomizationStep: FC<ChannelCustomizationStepProps> = ({
 		}
 	}, [watchedAreaMode, setLeadCount, setSelectedLeadListId, form]);
 
+	const onSubmit = (data: z.infer<typeof FormSchema>) => {
+		console.log("ChannelCustomizationStep valid:", data);
+		// * We call onNext here to advance to the next step in the modal flow.
+		onNext();
+	};
+
 	if (!primaryChannel) {
 		return <div className="text-red-500">Please select a channel first.</div>;
 	}
 
 	return (
 		<Form form={form}>
-			<div className="space-y-6">
+			<form
+				onSubmit={(e: React.FormEvent) => {
+					e.preventDefault();
+					form.handleSubmit(onSubmit)(e);
+				}}
+				className="space-y-6"
+			>
 				<h2 className="font-semibold text-lg">Channel Customization</h2>
 				<p className="text-gray-500 text-sm">
 					Customize settings for your {primaryChannel} campaign.
@@ -148,8 +156,8 @@ const ChannelCustomizationStep: FC<ChannelCustomizationStepProps> = ({
 					/>
 				)}
 
-				<CampaignNavigation onBack={onBack} onNext={onNext} />
-			</div>
+				<CampaignNavigation onNext={onNext} onBack={onBack} />
+			</form>
 		</Form>
 	);
 };

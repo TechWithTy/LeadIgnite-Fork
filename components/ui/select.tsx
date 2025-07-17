@@ -45,7 +45,6 @@ const SelectContent = React.forwardRef<
 					"h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]",
 				className,
 			)}
-			s
 			position={position}
 			{...props}
 		>
