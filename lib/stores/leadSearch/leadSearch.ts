@@ -85,7 +85,7 @@ export const useLeadSearchStore = create<LeadSearchState>((set, get) => ({
 						advancedFilters[advancedKeyTyped] = value;
 				}
 			} else if (keyTyped in initialFilters) {
-				(urlFilters as any)[keyTyped] = value;
+				urlFilters[keyTyped as keyof MapFormSchemaType] = value;
 			}
 		}
 

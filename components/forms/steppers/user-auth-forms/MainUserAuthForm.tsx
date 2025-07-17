@@ -1,7 +1,9 @@
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm, FormProvider } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import * as z from "zod";
 import { UserAuthEmailField } from "./steps/UserAuthEmailField";
 import { UserAuthErrorMessage } from "./steps/UserAuthErrorMessage";
@@ -30,6 +32,7 @@ export default function MainUserAuthForm() {
 	const [error, setError] = useState<string | null>(null);
 	const [isSignUp, setIsSignUp] = useState(false);
 	const [qrCodeUrl, setQrCodeUrl] = useState<string | undefined>(undefined);
+	const router = useRouter();
 
 	const form = useForm<UserFormValue>({
 		resolver: zodResolver(formSchema),
@@ -73,11 +76,27 @@ export default function MainUserAuthForm() {
 	const onSubmit = async (data: UserFormValue) => {
 		setLoading(true);
 		setError(null);
+
+		if (isSignUp) {
+			// TODO: Implement sign-up logic
+			console.log("Sign up with:", data);
+			setAuthState("verify"); // Move to verification step after sign-up
+			setLoading(false);
+			return;
+		}
+
 		try {
-			// TODO: API call for login/signup
-			console.log("Form submitted:", data);
-			if (isSignUp) setAuthState("verify");
-			// else redirect to dashboard
+			const result = await signIn("credentials", {
+				redirect: false,
+				email: data.email,
+				password: data.password,
+			});
+
+			if (result?.error) {
+				setError("Invalid email or password");
+			} else {
+				router.push("/dashboard");
+			}
 		} catch (err) {
 			setError(err instanceof Error ? err.message : "An error occurred");
 		} finally {

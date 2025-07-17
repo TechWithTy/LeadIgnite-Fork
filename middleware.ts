@@ -1,17 +1,25 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+import NextAuth from "next-auth";
+import authConfig from "./auth.config";
 
-export async function middleware(request: NextRequest) {
-	return NextResponse.next();
-}
+const { auth } = NextAuth(authConfig);
 
+export default auth((req) => {
+	const { nextUrl } = req;
+	const isLoggedIn = !!req.auth;
+
+	// * Note: Protect the dashboard route
+	if (nextUrl.pathname.startsWith("/dashboard")) {
+		if (isLoggedIn) {
+			return; // * Note: Allow access to the dashboard
+		}
+		// * Note: Redirect unauthenticated users to the login page
+		return Response.redirect(new URL("/", nextUrl));
+	}
+
+	// * Note: Allow all other requests to pass
+});
+
+// * Note: Optionally, don't invoke Middleware on some paths
 export const config = {
-	matcher: [
-		// Match all request paths except for the ones starting with:
-		// - _next/static (static files)
-		// - _next/image (image optimization files)
-		// - favicon.ico (favicon file)
-		// Feel free to modify this pattern to include more paths.
-		"/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
-	],
+	matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
 };

@@ -1,6 +1,10 @@
-# @Tools https://docs.vapi.ai/examples/outbound-sales | https://gist.github.com/officialrobert/156a1cb6bdf42512f531df711ca36ef0
-# @Tools https://docs.vapi.ai/examples/inbound-supportB
-# Tools https://docs.vapi.ai/examples/pizza-website
+| Icon | Key | Description |
+|------|-----|-------------|
+| 🖥️   | Front End | Anything related to UI, React, Next.js, user interactions, or browser logic |
+| 💾   | Backend | Node.js, API, database, server logic, authentication, or cloud functions |
+| 🧑‍💻 | Person | User-facing features, onboarding, personalization, or account/profile management |
+| 🏢   | Business Logic | Features or fixes that pertain to business rules, workflows, or domain-specific logic |
+| 🎏   | Stretch Goal | Nice-to-have features, experiments, or tasks that are not critical to the MVP but are valuable |
 
 # https://developers.google.com/maps/documentation/javascript/reference/3d-map
 
@@ -10,22 +14,23 @@
 💾 Dashboard > Property > Add CRUD Lead Functionality   
 💾 Dashboard > Property > Add Skip Trace Logic 
 
-#🖥️ Dashboard > Lead Search > Create Your list > Fix Dropdown usage top use new dropdown in ui usining regular jsx not shad cn && Make the creatye list button false if no list is selected or name is empty
+# 🖥️ Dashboard > Lead Search > Create Your list > Fix Dropdown usage top use new dropdown in ui usining regular jsx not shad cn && Make the creatye list button false if no list is selected or name is empty
 # 🖥️ Dashboard > Kanban  > Add new todo button > Fix dropdown usage top use new dropdown in ui usining regular jsx not shad cn
-#🖥️ Dashboard > Lead Search > Implement  save search use to update the current search state
-#🖥️ Login > Implement Demo User Login and site acces restriction
+# 🖥️ Login > Implement Demo User Login and site acces restriction
 
-#🖥️ Set up user onbaording with https://www.npmjs.com/package/@frigade/react
-#🖥️ Set up user feedback with https://www.npmjs.com/package/@frigade/react
+# 🖥️ Set up user onbaording with https://www.npmjs.com/package/@frigade/react
+# 🖥️ Set up user feedback with https://www.npmjs.com/package/@frigade/react
 
-#🖥️ Dashboard > Map Component >  Edit the map componnet to take in area and pass to fetch data with drawing
-#🖥️ Dashboard > Profile > Ai Context > Implement Background Noise Uploader
+# 🖥️ 🎏 Dashboard > Profile > Ai Context > Create agents | Voice | Campaign Goal | Sales Script | Persona | Background Noise | VoiceMail | 
 
-#🖥️ Dashboard > Property > Overview Implemtn offmarket cards
+# 🖥️ Dashboard > Property > Overview Implemtn offmarket cards
 
 # ⁉️ optimize load speeds
 
+# ✅  🖥️ Dashboard > Map Component >  Edit the map componnet to take in area and pass to fetch data with drawing
+
 #🖥️ ✅ Dashboard > Lead Search > Update Property Card to link to property overview page
+# ✅ 🖥️ Dashboard > Lead Search > Implement  save search use to update the current search state
 
 
 #🖥️ ✅ Dashboard > Lead Search > Update Property Card to link to property overview page
@@ -55,7 +60,7 @@
 # 💾 ✅ Integrate fetching campaigns and cron job to update them High-Risk Fields:
 
 
-<!-- # 🪳 ✅ Fix Selects not able to be updated hydration error components\ui\select.tsx
+# 🪳 ✅ Fix Selects not able to be updated hydration error components\ui\select.tsx
 
 # 🪳 ✅ Fix dropdowns not able to be for campaing page  components\ui\dropdown-menu.tsx
 
@@ -160,4 +165,4 @@ index.mjs:247 --> -->
 # ✅Add Data sets for Vapi Create,Get,List,Update,Delete | Assistant.Create,Get,List,Update,Delete |,Create,Get,List,Update,Delete | Phone Numbers ,Create,Get,List,Update,Delete | Squads, Create,Get,List,Update,Delete | Files, ? Create,Get,List,Update,Delete | Tools, -->
 
 <!-- #✅ Update campaigns to show secondary contact method -->
-<!-- # Fix Create lead Filter auto closing when clicking an option -->
+<!-- # Fix Create lead Filter auto closing when clicking an option
