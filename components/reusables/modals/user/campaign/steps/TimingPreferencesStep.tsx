@@ -124,7 +124,7 @@ export function TimingPreferencesStep({
 			>
 				Select Start Date And End Date
 			</label>
-			<div className="mb-4 w-full max-w-lg overflow-auto">
+			<div className="mb-4 flex justify-center">
 				<Calendar
 					mode="range"
 					selected={{
@@ -134,6 +134,7 @@ export function TimingPreferencesStep({
 					onSelect={handleDateSelection}
 					numberOfMonths={2}
 					fromDate={new Date()}
+					orientation="horizontal"
 					// ! Disable weekends if not reaching out on weekends
 					disabled={
 						!reachOnWeekend

@@ -1,5 +1,35 @@
 import { create } from "zustand";
 
+// Types for agent selection
+export interface Agent {
+	id: string;
+	name: string;
+	email: string;
+	status: "active" | "inactive" | "away";
+}
+
+// Mock data for available agents
+const MOCK_AGENTS: Agent[] = [
+	{
+		id: "1",
+		name: "John Doe",
+		email: "john@example.com",
+		status: "active",
+	},
+	{
+		id: "2",
+		name: "Jane Smith",
+		email: "jane@example.com",
+		status: "active",
+	},
+	{
+		id: "3",
+		name: "Mike Johnson",
+		email: "mike@example.com",
+		status: "away",
+	},
+];
+
 // * Campaign Creation Store for multi-step modal context
 export interface CampaignCreationState {
 	// Step 1: Channel Selection
@@ -9,6 +39,12 @@ export interface CampaignCreationState {
 	// Campaign Name
 	campaignName: string;
 	setCampaignName: (name: string) => void;
+
+	// Agent Selection
+	selectedAgentId: string | null;
+	setSelectedAgentId: (id: string | null) => void;
+	availableAgents: Agent[];
+	setAvailableAgents: (agents: Agent[]) => void;
 
 	// Step 2: Area & Lead List
 	areaMode: "zip" | "leadList";
@@ -43,10 +79,21 @@ export interface CampaignCreationState {
 
 export const useCampaignCreationStore = create<CampaignCreationState>(
 	(set) => ({
+		// Step 1: Channel Selection
 		primaryChannel: null,
 		setPrimaryChannel: (primaryChannel) => set({ primaryChannel }),
+
+		// Campaign Name
 		campaignName: "",
 		setCampaignName: (campaignName) => set({ campaignName }),
+
+		// Agent selection
+		selectedAgentId: null,
+		setSelectedAgentId: (selectedAgentId) => set({ selectedAgentId }),
+		availableAgents: MOCK_AGENTS,
+		setAvailableAgents: (availableAgents) => set({ availableAgents }),
+
+		// Step 2: Area & Lead List
 		areaMode: "leadList",
 		setAreaMode: (areaMode) => set({ areaMode }),
 		selectedLeadListId: "",
@@ -57,9 +104,10 @@ export const useCampaignCreationStore = create<CampaignCreationState>(
 		setLeadCount: (leadCount) => set({ leadCount }),
 		includeWeekends: false,
 		setIncludeWeekends: (includeWeekends) => set({ includeWeekends }),
+
+		// Step 3: Timing Preferences
 		daysSelected: 7,
 		setDaysSelected: (daysSelected) => set({ daysSelected }),
-
 		startDate: new Date(),
 		setStartDate: (startDate) => set({ startDate }),
 		endDate: null,
@@ -71,16 +119,27 @@ export const useCampaignCreationStore = create<CampaignCreationState>(
 		setReachAfterBusiness: (reachAfterBusiness) => set({ reachAfterBusiness }),
 		reachOnWeekend: false,
 		setReachOnWeekend: (reachOnWeekend) => set({ reachOnWeekend }),
+
+		// Reset function
 		reset: () =>
 			set({
+				// Step 1
 				primaryChannel: null,
 				campaignName: "",
+
+				// Agent Selection
+				selectedAgentId: null,
+				availableAgents: MOCK_AGENTS,
+
+				// Step 2
 				areaMode: "leadList",
 				selectedLeadListId: "",
 				campaignArea: "",
 				leadCount: 0,
-				daysSelected: 7,
+				includeWeekends: false,
 
+				// Step 3
+				daysSelected: 7,
 				startDate: new Date(),
 				endDate: null,
 				reachBeforeBusiness: false,

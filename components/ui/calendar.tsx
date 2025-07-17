@@ -7,12 +7,15 @@ import { DayPicker } from "react-day-picker";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/_utils";
 
-export type CalendarProps = React.ComponentProps<typeof DayPicker>;
+export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
+	orientation?: "vertical" | "horizontal";
+};
 
 function Calendar({
 	className,
 	classNames,
 	showOutsideDays = true,
+	orientation = "vertical", // Default to vertical stacking
 	...props
 }: CalendarProps) {
 	return (
@@ -20,7 +23,10 @@ function Calendar({
 			showOutsideDays={showOutsideDays}
 			className={cn("p-3", className)}
 			classNames={{
-				months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
+				months: cn("flex", {
+					"flex-col space-y-4": orientation === "vertical",
+					"flex-row space-x-4 space-y-0": orientation === "horizontal",
+				}),
 				month: "space-y-4",
 				caption: "flex justify-center pt-1 relative items-center",
 				caption_label: "text-sm font-medium",

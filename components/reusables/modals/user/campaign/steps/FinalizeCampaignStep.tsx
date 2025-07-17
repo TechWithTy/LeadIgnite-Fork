@@ -1,20 +1,41 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Calendar } from "@/components/ui/calendar";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import {
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
+import { InfoCircledIcon } from "@radix-ui/react-icons";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { FC } from "react";
-import { useState } from "react";
-import { format } from "date-fns";
-import type { DateRange } from "react-day-picker";
+import { FormProvider, useForm, type UseFormReturn } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useCampaignCreationStore } from "@/lib/stores/campaignCreation";
+import {
+	finalizeCampaignSchema,
+	type FinalizeCampaignForm,
+} from "@/types/zod/campaign-finalize-schema";
 
-// * Step 3: Finalize Campaign
 interface FinalizeCampaignStepProps {
 	estimatedCredits: number;
 	onLaunch: () => void;
 	onBack: () => void;
 }
-
-import { useCampaignCreationStore } from "@/lib/stores/campaignCreation";
 
 const FinalizeCampaignStep: FC<FinalizeCampaignStepProps> = ({
 	estimatedCredits,
@@ -24,130 +45,142 @@ const FinalizeCampaignStep: FC<FinalizeCampaignStepProps> = ({
 	const {
 		campaignName,
 		setCampaignName,
-		startDate,
-		setStartDate,
-		endDate,
-		setEndDate,
+		selectedAgentId,
+		setSelectedAgentId,
+		availableAgents,
 	} = useCampaignCreationStore();
-	const [campaignGoal, setCampaignGoal] = useState("");
-	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-	const [goalError, setGoalError] = useState<string | null>(null);
-	const [dateError, setDateError] = useState<string | null>(null);
-	const [dateRange, setDateRange] = useState<DateRange | undefined>({
-		from: startDate ?? undefined,
-		to: endDate ?? undefined,
-	});
 
-	const handleCampaignNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const name = e.target.value;
-		setCampaignName(name);
+	const form: UseFormReturn<FinalizeCampaignForm> =
+		useForm<FinalizeCampaignForm>({
+			resolver: zodResolver(finalizeCampaignSchema),
+			defaultValues: {
+				campaignName: campaignName,
+				selectedAgentId: selectedAgentId || undefined,
+				campaignGoal: "",
+			},
+			mode: "onChange",
+		});
 
-		if (name.length > 0) {
-			if (
-				name.length < 5 ||
-				name.length > 30 ||
-				!/^[A-Za-z0-9. ]+$/.test(name)
-			) {
-				setErrorMessage(
-					"Campaign name must be between 5-30 characters and can only contain letters, numbers, spaces, and dots.",
-				);
-			} else {
-				setErrorMessage(null);
-			}
-		} else {
-			setErrorMessage(null);
-		}
+	const handleLaunch = (data: FinalizeCampaignForm) => {
+		setCampaignName(data.campaignName);
+		setSelectedAgentId(data.selectedAgentId);
+		// campaignGoal is local to this component, but you could add it to the store if needed
+		onLaunch();
 	};
-
-	const handleCampaignGoalChange = (
-		e: React.ChangeEvent<HTMLTextAreaElement>,
-	) => {
-		const goal = e.target.value;
-		setCampaignGoal(goal);
-
-		if (goal.length < 10 || !goal.includes(".")) {
-			setGoalError("Campaign goal must be at least one sentence.");
-		} else if (goal.length > 300) {
-			setGoalError(
-				"Campaign goal cannot exceed two paragraphs (~300 characters).",
-			);
-		} else {
-			setGoalError(null);
-		}
-	};
-
-	const handleDateSelection = (range: DateRange | undefined) => {
-		setDateRange(range);
-		if (range?.from && range.to) {
-			setStartDate(range.from);
-			setEndDate(range.to);
-			setDateError(null);
-		} else {
-			setDateError("Please select both a start and end date.");
-		}
-	};
-
-	const isNextEnabled =
-		campaignName.length >= 5 &&
-		!errorMessage &&
-		!goalError &&
-		!dateError &&
-		startDate &&
-		endDate &&
-		campaignGoal.length > 0;
 
 	return (
-		<div className="mx-auto max-w-lg">
-			<h2 className="mb-4 font-semibold text-lg dark:text-white">
-				Finalize your campaign
-			</h2>
-			<label
-				htmlFor="campaignName"
-				className="mb-1 block text-sm dark:text-white"
+		<FormProvider {...form}>
+			<form
+				onSubmit={form.handleSubmit(handleLaunch)}
+				className="mx-auto max-w-lg space-y-6"
 			>
-				Campaign Name
-			</label>
-			<Input
-				value={campaignName}
-				onChange={handleCampaignNameChange}
-				placeholder="Enter campaign name"
-				className="mb-4 w-full"
-				maxLength={30}
-			/>
-			{errorMessage && <p className="text-red-500">{errorMessage}</p>}
-			<label
-				htmlFor="campaignGoal"
-				className="mb-1 block text-sm dark:text-white"
-			>
-				Campaign Goal
-			</label>
-			<Textarea
-				value={campaignGoal}
-				onChange={handleCampaignGoalChange}
-				placeholder="Enter your campaign goal (1 sentence min, 1-2 paragraphs max)"
-				className="mb-4 w-full"
-				rows={4}
-				maxLength={300}
-			/>
-			{goalError && <p className="text-red-500">{goalError}</p>}
+				<h2 className="font-semibold text-lg dark:text-white">
+					Finalize your campaign
+				</h2>
 
-			<p className="mb-4 text-gray-500 text-sm dark:text-gray-400">
-				This campaign will cost {estimatedCredits} credits.
-			</p>
-			{/* Debug output for state inspection */}
+				<FormField
+					control={form.control}
+					name="campaignName"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Campaign Name</FormLabel>
+							<FormControl>
+								<Input placeholder="Enter campaign name" {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
 
-			<Button
-				onClick={onLaunch}
-				className="w-full"
-				type="button"
-				disabled={!isNextEnabled}
-			>
-				Launch Campaign
-			</Button>
-			<Button onClick={onBack} className="mt-2 w-full" type="button">
-				Back
-			</Button>
-		</div>
+				<FormField
+					control={form.control}
+					name="selectedAgentId"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel className="flex items-center gap-2">
+								Assign AI Agent
+								<TooltipProvider>
+									<Tooltip>
+										<TooltipTrigger asChild>
+											<InfoCircledIcon />
+										</TooltipTrigger>
+										<TooltipContent>
+											<p>Select an AI agent to manage this campaign.</p>
+										</TooltipContent>
+									</Tooltip>
+								</TooltipProvider>
+							</FormLabel>
+							<Select onValueChange={field.onChange} defaultValue={field.value}>
+								<FormControl>
+									<SelectTrigger>
+										<SelectValue placeholder="Select an agent" />
+									</SelectTrigger>
+								</FormControl>
+								<SelectContent>
+									{availableAgents.map((agent) => (
+										<SelectItem key={agent.id} value={agent.id}>
+											<div className="flex items-center gap-2">
+												<span>{agent.name}</span>
+												<span
+													className={`h-2 w-2 rounded-full ${
+														agent.status === "active"
+															? "bg-green-500"
+															: agent.status === "away"
+																? "bg-yellow-500"
+																: "bg-gray-400"
+													}`}
+													title={agent.status}
+												/>
+											</div>
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="campaignGoal"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Campaign Goal</FormLabel>
+							<FormControl>
+								<Textarea
+									placeholder="Enter your campaign goal (1 sentence min, 1-2 paragraphs max)"
+									{...field}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<div className="space-y-4 pt-4">
+					<p className="text-gray-500 text-sm dark:text-gray-400">
+						This campaign will cost {estimatedCredits} credits.
+					</p>
+
+					<Button
+						type="submit"
+						className="w-full"
+						disabled={!form.formState.isValid}
+					>
+						Launch Campaign
+					</Button>
+					<Button
+						onClick={onBack}
+						className="w-full"
+						variant="outline"
+						type="button"
+					>
+						Back
+					</Button>
+				</div>
+			</form>
+		</FormProvider>
 	);
 };
 
