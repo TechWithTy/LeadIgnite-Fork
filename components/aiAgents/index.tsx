@@ -1,8 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { Agent } from "./utils/schema";
-import { fetchAgents, createAgent, updateAgent } from "./utils/api";
+import type { Agent } from "@/components/forms/agent/utils/schema";
+import {
+	fetchAgents,
+	createAgent,
+	updateAgent,
+} from "@/components/forms/agent/utils/api";
 import { AgentList } from "./AgentList";
 import { AgentForm } from "./AgentForm";
 import { Button } from "@/components/ui/button";

@@ -1,0 +1,95 @@
+"use client";
+
+import { FormProvider } from "react-hook-form";
+
+import type { Agent } from "./utils/schema";
+import { useAgentForm } from "./useAgentForm";
+
+import { AgentDetailsForm } from "./AgentDetailsForm";
+import { AgentAudioForm } from "./AgentAudioForm";
+import { AgentScriptsForm } from "./AgentScriptsForm";
+import { AgentPublicationForm } from "./AgentPublicationForm";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import VoicemailModal from "@/components/forms/steppers/profile-form/steps/knowledge/voice/VoicemailModal";
+import CloneModal from "@/components/forms/steppers/profile-form/steps/knowledge/voice/CloneModal";
+
+interface AgentFormProps {
+	onSubmit: (data: Agent) => void;
+	defaultValues?: Partial<Agent>;
+	isEditing?: boolean;
+}
+
+export function AgentForm({
+	onSubmit,
+	defaultValues,
+	isEditing = false,
+}: AgentFormProps) {
+	const {
+		form,
+		showVoicemailModal,
+		setShowVoicemailModal,
+		showCloneModal,
+		setShowCloneModal,
+		imagePreview,
+		handleImageChange,
+		voices,
+		voicemails,
+		backgroundNoises,
+		handleVoicemailAudio,
+		handleCloneVoiceAudio,
+	} = useAgentForm(defaultValues);
+
+	return (
+		<>
+			<Card>
+				<CardHeader>
+					<CardTitle>
+						{isEditing ? "Edit AI Agent" : "Create AI Agent"}
+					</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<FormProvider {...form}>
+						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+							<AgentDetailsForm
+								form={form}
+								imagePreview={imagePreview}
+								handleImageChange={handleImageChange}
+							/>
+							<AgentAudioForm
+								form={form}
+								voices={voices}
+								voicemails={voicemails}
+								backgroundNoises={backgroundNoises}
+								onShowCloneModal={() => setShowCloneModal(true)}
+								onShowVoicemailModal={() => setShowVoicemailModal(true)}
+							/>
+							<AgentScriptsForm form={form} />
+							<AgentPublicationForm form={form} />
+
+							<div className="flex justify-end space-x-2">
+								<Button type="button" variant="outline">
+									Cancel
+								</Button>
+								<Button type="submit">
+									{isEditing ? "Update Agent" : "Save Agent"}
+								</Button>
+							</div>
+						</form>
+					</FormProvider>
+				</CardContent>
+			</Card>
+			<VoicemailModal
+				open={showVoicemailModal}
+				onClose={() => setShowVoicemailModal(false)}
+				onSave={handleVoicemailAudio}
+			/>
+			<CloneModal
+				open={showCloneModal}
+				onClose={() => setShowCloneModal(false)}
+				onSave={handleCloneVoiceAudio}
+			/>
+		</>
+	);
+}

@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import type { Agent } from "./utils/schema";
-import { fetchAgents, deleteAgent } from "./utils/api";
+import type { Agent } from "@/components/forms/agent/utils/schema";
+import { fetchAgents, deleteAgent } from "@/components/forms/agent/utils/api";
 import { Button } from "@/components/ui/button";
 import {
 	Table,

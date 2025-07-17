@@ -8,6 +8,9 @@ export const agentSchema = z.object({
 	id: z.string().optional(), // * Optional for creation, required for updates
 	image: z.string().optional(),
 	name: z.string().min(1, { message: "Agent Name is required." }),
+	type: z.enum(["phone", "direct mail", "email", "social"], {
+		required_error: "Agent type is required.",
+	}),
 	voice: z.string().min(1, { message: "Voice is required." }),
 	campaignGoal: z.string().min(1, { message: "Campaign Goal is required." }),
 	salesScript: z.string().min(1, { message: "Sales Script is required." }),
