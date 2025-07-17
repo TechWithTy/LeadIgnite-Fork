@@ -20,7 +20,7 @@
 # 🖥️ Set up user onbaording with https://www.npmjs.com/package/@frigade/react
 # 🖥️ Set up user feedback with https://www.npmjs.com/package/@frigade/react
 
-# 🖥️ 🎏 Dashboard > Profile > Ai Context > Create agents | Voice | Campaign Goal | Sales Script | Persona | Background Noise | VoiceMail | 
+# 🖥️ 🎏 Dashboard > Profile > Ai Context Clone Voice > Create agents | Voice | Campaign Goal | Sales Script | Persona | Background Noise | VoiceMail | 
 
 # 🖥️ Dashboard > Property > Overview Implemtn offmarket cards
 
