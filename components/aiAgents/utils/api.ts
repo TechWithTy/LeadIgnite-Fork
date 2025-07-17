@@ -33,6 +33,34 @@ export const fetchAgentById = async (
 };
 
 // * Mock function to fetch available voices
+export async function fetchBackgroundNoises(): Promise<
+	{ id: string; name: string }[]
+> {
+	console.log("Fetching available background noises...");
+	return new Promise((resolve) => {
+		setTimeout(() => {
+			resolve([
+				{ id: "noise-1", name: "Coffee Shop Ambience" },
+				{ id: "noise-2", name: "Quiet Office Hum" },
+			]);
+		}, 500);
+	});
+}
+
+export async function fetchVoicemails(): Promise<
+	{ id: string; name: string }[]
+> {
+	console.log("Fetching available voicemails...");
+	return new Promise((resolve) => {
+		setTimeout(() => {
+			resolve([
+				{ id: "voicemail-1", name: "Standard Voicemail" },
+				{ id: "voicemail-2", name: "Follow-up Voicemail" },
+			]);
+		}, 500);
+	});
+}
+
 export async function fetchVoices(): Promise<{ id: string; name: string }[]> {
 	console.log("Fetching available voices...");
 	return new Promise((resolve) => {

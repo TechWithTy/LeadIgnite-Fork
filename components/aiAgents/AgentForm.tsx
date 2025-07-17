@@ -29,7 +29,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 // * Import the advanced modal components
 import VoicemailModal from "@/components/forms/steppers/profile-form/steps/knowledge/voice/VoicemailModal";
 import CloneModal from "@/components/forms/steppers/profile-form/steps/knowledge/voice/CloneModal";
-import { fetchVoices } from "./utils/api";
+import {
+	fetchVoices,
+	fetchVoicemails,
+	fetchBackgroundNoises,
+} from "./utils/api";
 
 interface AgentFormProps {
 	onSubmit: (data: Agent) => void;
@@ -55,13 +59,29 @@ export function AgentForm({
 		defaultValues?.image || null,
 	);
 	const [voices, setVoices] = useState<{ id: string; name: string }[]>([]);
+	const [voicemails, setVoicemails] = useState<{ id: string; name: string }[]>(
+		[],
+	);
+	const [backgroundNoises, setBackgroundNoises] = useState<
+		{ id: string; name: string }[]
+	>([]);
 
 	useEffect(() => {
 		const getVoices = async () => {
 			const fetchedVoices = await fetchVoices();
 			setVoices(fetchedVoices);
 		};
+		const getVoicemails = async () => {
+			const fetchedVoicemails = await fetchVoicemails();
+			setVoicemails(fetchedVoicemails);
+		};
+		const getBackgroundNoises = async () => {
+			const fetchedNoises = await fetchBackgroundNoises();
+			setBackgroundNoises(fetchedNoises);
+		};
 		getVoices();
+		getVoicemails();
+		getBackgroundNoises();
 	}, []);
 
 	const handleVoicemailAudio = async (audioBlob: Blob) => {
@@ -232,35 +252,87 @@ export function AgentForm({
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Background Noise (Optional)</FormLabel>
-										<FormControl>
-											<Input
-												type="file"
-												accept="audio/*"
-												onChange={(e) =>
-													field.onChange(e.target.files?.[0]?.name)
+										<div className="flex items-center space-x-2">
+											<Select
+												onValueChange={field.onChange}
+												defaultValue={field.value}
+											>
+												<FormControl>
+													<SelectTrigger>
+														<SelectValue placeholder="Select a noise" />
+													</SelectTrigger>
+												</FormControl>
+												<SelectContent>
+													{backgroundNoises.map((noise) => (
+														<SelectItem key={noise.id} value={noise.id}>
+															{noise.name}
+														</SelectItem>
+													))}
+												</SelectContent>
+											</Select>
+											<Button
+												type="button"
+												variant="outline"
+												onClick={() =>
+													document
+														.getElementById("background-noise-upload")
+														?.click()
 												}
-											/>
-										</FormControl>
+											>
+												Upload
+											</Button>
+											<FormControl>
+												<Input
+													id="background-noise-upload"
+													type="file"
+													accept="audio/*"
+													className="hidden"
+													onChange={(e) =>
+														field.onChange(e.target.files?.[0]?.name)
+													}
+												/>
+											</FormControl>
+										</div>
 										<FormMessage />
 									</FormItem>
 								)}
 							/>
-							<div className="space-y-2">
-								<FormLabel>Voicemail</FormLabel>
-								<Button
-									type="button"
-									variant="outline"
-									className="w-full"
-									onClick={() => setShowVoicemailModal(true)}
-								>
-									+ Record Voicemail
-								</Button>
-								{form.watch("voicemailScript") && (
-									<p className="text-muted-foreground text-sm">
-										Voicemail file: {form.watch("voicemailScript")}
-									</p>
+							<FormField
+								control={form.control}
+								name="voicemailScript"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Voicemail</FormLabel>
+										<div className="flex items-center space-x-2">
+											<Select
+												onValueChange={field.onChange}
+												defaultValue={field.value}
+											>
+												<FormControl>
+													<SelectTrigger>
+														<SelectValue placeholder="Select a voicemail" />
+													</SelectTrigger>
+												</FormControl>
+												<SelectContent>
+													{voicemails.map((voicemail) => (
+														<SelectItem key={voicemail.id} value={voicemail.id}>
+															{voicemail.name}
+														</SelectItem>
+													))}
+												</SelectContent>
+											</Select>
+											<Button
+												type="button"
+												variant="outline"
+												onClick={() => setShowVoicemailModal(true)}
+											>
+												Record
+											</Button>
+										</div>
+										<FormMessage />
+									</FormItem>
 								)}
-							</div>
+							/>
 							<FormField
 								control={form.control}
 								name="isPublic"
@@ -280,9 +352,14 @@ export function AgentForm({
 									</FormItem>
 								)}
 							/>
-							<Button type="submit">
-								{isEditing ? "Update Agent" : "Save Agent"}
-							</Button>
+							<div className="flex justify-end space-x-2">
+								<Button type="button" variant="outline">
+									Cancel
+								</Button>
+								<Button type="submit">
+									{isEditing ? "Update Agent" : "Save Agent"}
+								</Button>
+							</div>
 						</form>
 					</FormProvider>
 				</CardContent>
