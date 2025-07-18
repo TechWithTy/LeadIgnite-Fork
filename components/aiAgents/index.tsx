@@ -8,7 +8,7 @@ import {
 	updateAgent,
 } from "@/components/forms/agent/utils/api";
 import { AgentList } from "./AgentList";
-import { AgentForm } from "./AgentForm";
+import { AgentForm } from "@/components/forms/agent/AgentForm";
 import { Button } from "@/components/ui/button";
 
 // * The main component for managing AI agents.
@@ -67,16 +67,12 @@ export function AiAgentsManager() {
 			)}
 
 			{(view === "create" || view === "edit") && (
-				<>
-					<AgentForm
-						onSubmit={handleFormSubmit}
-						defaultValues={selectedAgent}
-						isEditing={view === "edit"}
-					/>
-					<Button variant="ghost" className="mt-4" onClick={handleCancel}>
-						Cancel
-					</Button>
-				</>
+				<AgentForm
+					onSubmit={handleFormSubmit}
+					onCancel={handleCancel}
+					defaultValues={selectedAgent}
+					isEditing={view === "edit"}
+				/>
 			)}
 		</div>
 	);

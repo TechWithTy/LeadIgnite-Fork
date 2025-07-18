@@ -18,12 +18,14 @@ import CloneModal from "@/components/forms/steppers/profile-form/steps/knowledge
 
 interface AgentFormProps {
 	onSubmit: (data: Agent) => void;
+	onCancel: () => void;
 	defaultValues?: Partial<Agent>;
 	isEditing?: boolean;
 }
 
 export function AgentForm({
 	onSubmit,
+	onCancel,
 	defaultValues,
 	isEditing = false,
 }: AgentFormProps) {
@@ -79,7 +81,7 @@ export function AgentForm({
 							)}
 
 							<div className="flex justify-end space-x-2">
-								<Button type="button" variant="outline">
+								<Button type="button" variant="outline" onClick={onCancel}>
 									Cancel
 								</Button>
 								<Button type="submit">

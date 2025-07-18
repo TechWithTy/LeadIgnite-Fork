@@ -67,10 +67,10 @@ export function AgentSocialForm({ form, avatars }: AgentSocialFormProps) {
 														alt={avatar.name}
 														width={100}
 														height={100}
-														className={`rounded-full border-2 ${
+														className={`rounded-full transition-all duration-200 ${
 															field.value === avatar.image
-																? "border-primary"
-																: "border-transparent"
+																? "ring-2 ring-primary ring-offset-2 ring-offset-background"
+																: "hover:opacity-80"
 														}`}
 													/>
 													<span className="block text-center text-sm">
