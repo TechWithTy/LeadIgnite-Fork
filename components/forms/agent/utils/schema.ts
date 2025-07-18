@@ -17,8 +17,22 @@ export const agentSchema = z.object({
 	backgroundNoise: z.string().optional(),
 	voicemailScript: z.string().optional(),
 	// Social-specific fields
+	avatar: z.string().optional(),
 	avatarImage: z.string().optional(),
+	backgroundVideo: z.string().optional(),
 	backgroundImage: z.string().optional(),
+	color1: z
+		.string()
+		.regex(/^#[0-9a-fA-F]{6}$/, { message: "Must be a valid hex code" })
+		.optional(),
+	color2: z
+		.string()
+		.regex(/^#[0-9a-fA-F]{6}$/, { message: "Must be a valid hex code" })
+		.optional(),
+	color3: z
+		.string()
+		.regex(/^#[0-9a-fA-F]{6}$/, { message: "Must be a valid hex code" })
+		.optional(),
 	socialAssets: z.array(z.string()).max(8).optional(),
 	// Common fields
 	campaignGoal: z.string().optional(),

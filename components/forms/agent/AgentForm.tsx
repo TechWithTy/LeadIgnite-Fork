@@ -9,6 +9,7 @@ import { AgentDetailsForm } from "./AgentDetailsForm";
 import { AgentAudioForm } from "./AgentAudioForm";
 
 import { AgentPublicationForm } from "./AgentPublicationForm";
+import { AgentSocialForm } from "./AgentSocialForm";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,6 +40,7 @@ export function AgentForm({
 		backgroundNoises,
 		handleVoicemailAudio,
 		handleCloneVoiceAudio,
+		avatars,
 	} = useAgentForm(defaultValues);
 
 	const agentType = form.watch("type");
@@ -70,6 +72,10 @@ export function AgentForm({
 									onShowCloneModal={() => setShowCloneModal(true)}
 									onShowVoicemailModal={() => setShowVoicemailModal(true)}
 								/>
+							)}
+
+							{agentType === "social" && (
+								<AgentSocialForm form={form} avatars={avatars} />
 							)}
 
 							<div className="flex justify-end space-x-2">

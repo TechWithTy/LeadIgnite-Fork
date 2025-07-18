@@ -10,6 +10,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,7 +32,7 @@ export function AgentSocialForm({ form, avatars }: AgentSocialFormProps) {
 			<CardContent className="space-y-4">
 				<FormField
 					control={form.control}
-					name="avatarImage"
+					name="avatar"
 					render={({ field }) => (
 						<FormItem className="space-y-3">
 							<FormLabel>Select Avatar</FormLabel>
@@ -76,8 +77,88 @@ export function AgentSocialForm({ form, avatars }: AgentSocialFormProps) {
 						</FormItem>
 					)}
 				/>
-				{/* !TODO: Implement Background Image Upload */}
-				{/* !TODO: Implement Social Assets Multi-Upload */}
+				<div className="flex items-center space-x-2">
+					<FormField
+						control={form.control}
+						name="avatarImage"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Upload Custom Avatar</FormLabel>
+								<FormControl>
+									<Input
+										type="file"
+										accept="image/*"
+										onChange={(e) => field.onChange(e.target.files?.[0])}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<Button type="button" variant="outline" className="mt-8">
+						Generate Avatar
+					</Button>
+				</div>
+
+				<FormField
+					control={form.control}
+					name="backgroundVideo"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Background Video</FormLabel>
+							<FormControl>
+								<Input
+									type="file"
+									accept="video/*"
+									onChange={(e) => field.onChange(e.target.files?.[0])}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<div className="grid grid-cols-3 gap-4">
+					<FormField
+						control={form.control}
+						name="color1"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Color 1</FormLabel>
+								<FormControl>
+									<Input type="color" {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="color2"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Color 2</FormLabel>
+								<FormControl>
+									<Input type="color" {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="color3"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Color 3</FormLabel>
+								<FormControl>
+									<Input type="color" {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				</div>
 			</CardContent>
 		</Card>
 	);

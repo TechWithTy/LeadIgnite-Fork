@@ -21,9 +21,21 @@ const backgroundNoises = [
 ];
 
 const avatars = [
-	{ id: "avatar-1", name: "Avatar 1", image: "/placeholder-avatar-1.png" },
-	{ id: "avatar-2", name: "Avatar 2", image: "/placeholder-avatar-2.png" },
-	{ id: "avatar-3", name: "Avatar 3", image: "/placeholder-avatar-3.png" },
+	{
+		id: "1",
+		name: "Alex",
+		image: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
+	},
+	{
+		id: "2",
+		name: "Jordan",
+		image: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
+	},
+	{
+		id: "3",
+		name: "Taylor",
+		image: "https://i.pravatar.cc/150?u=a04258114e29026702d",
+	},
 ];
 
 let agents: Agent[] = [
