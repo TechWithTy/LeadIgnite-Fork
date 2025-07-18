@@ -69,16 +69,18 @@ export function AgentDetailsForm({
 								<TooltipProvider>
 									<Tooltip>
 										<TooltipTrigger asChild>
-											<div>
+											<span className="inline-block cursor-not-allowed">
 												<Button
 													type="button"
 													variant="outline"
+													className={`whitespace-nowrap ${
+														isGenerationDisabled ? "pointer-events-none" : ""
+													}`}
 													disabled={isGenerationDisabled}
-													className="whitespace-nowrap"
 												>
 													Generate Image
 												</Button>
-											</div>
+											</span>
 										</TooltipTrigger>
 										<TooltipContent>
 											<p>

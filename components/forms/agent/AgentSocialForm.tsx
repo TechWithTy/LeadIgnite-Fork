@@ -107,17 +107,18 @@ export function AgentSocialForm({ form, avatars }: AgentSocialFormProps) {
 					<TooltipProvider>
 						<Tooltip>
 							<TooltipTrigger asChild>
-								<div className="mt-8">
+								<span className="mt-8 inline-block cursor-not-allowed">
 									<Button
 										type="button"
 										variant="outline"
+										className={!avatarImage ? "pointer-events-none" : ""}
 										disabled={!avatarImage}
 									>
 										Generate Avatar
 									</Button>
-								</div>
+								</span>
 							</TooltipTrigger>
-							<TooltipContent>
+							<TooltipContent id="generate-avatar-tooltip">
 								<p>Upload a custom avatar to enable generation.</p>
 							</TooltipContent>
 						</Tooltip>
