@@ -17,6 +17,7 @@ import {
 	Loader2,
 	LogIn,
 	LogOutIcon,
+	MessageCircle,
 	type LucideIcon,
 	type LucideProps,
 	Moon,
@@ -70,6 +71,7 @@ export const Icons = {
 	sun: SunMedium,
 	moon: Moon,
 	laptop: Laptop,
+	messageCircle: MessageCircle,
 	gitHub: ({ ...props }: LucideProps) => (
 		<svg
 			aria-hidden="true"
