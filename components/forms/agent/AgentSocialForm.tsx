@@ -11,11 +11,11 @@ import {
 } from "@/components/ui/form";
 import Image from "next/image";
 
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import type { Agent } from "./utils/schema";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface AgentSocialFormProps {
 	form: UseFormReturn<Agent>;
