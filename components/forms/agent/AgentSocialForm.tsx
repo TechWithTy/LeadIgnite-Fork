@@ -37,41 +37,43 @@ export function AgentSocialForm({ form, avatars }: AgentSocialFormProps) {
 						<FormItem className="space-y-3">
 							<FormLabel>Select Avatar</FormLabel>
 							<FormControl>
-								<RadioGroup
-									onValueChange={field.onChange}
-									defaultValue={field.value}
-									className="grid grid-cols-3 gap-4"
-								>
-									{avatars.map((avatar) => (
-										<FormItem
-											key={avatar.id}
-											className="flex flex-col items-center space-y-2"
-										>
-											<FormControl>
-												<RadioGroupItem
-													value={avatar.image}
-													className="sr-only"
-												/>
-											</FormControl>
-											<FormLabel className="cursor-pointer">
-												<Image
-													src={avatar.image}
-													alt={avatar.name}
-													width={100}
-													height={100}
-													className={`rounded-full border-2 ${
-														field.value === avatar.image
-															? "border-primary"
-															: "border-transparent"
-													}`}
-												/>
-												<span className="block text-center text-sm">
-													{avatar.name}
-												</span>
-											</FormLabel>
-										</FormItem>
-									))}
-								</RadioGroup>
+								<div className="max-h-60 overflow-y-auto rounded-lg border p-2">
+									<RadioGroup
+										onValueChange={field.onChange}
+										defaultValue={field.value}
+										className="grid grid-cols-3 gap-4"
+									>
+										{avatars.map((avatar) => (
+											<FormItem
+												key={avatar.id}
+												className="flex flex-col items-center space-y-2"
+											>
+												<FormControl>
+													<RadioGroupItem
+														value={avatar.image}
+														className="sr-only"
+													/>
+												</FormControl>
+												<FormLabel className="cursor-pointer">
+													<Image
+														src={avatar.image}
+														alt={avatar.name}
+														width={100}
+														height={100}
+														className={`rounded-full border-2 ${
+															field.value === avatar.image
+																? "border-primary"
+																: "border-transparent"
+														}`}
+													/>
+													<span className="block text-center text-sm">
+														{avatar.name}
+													</span>
+												</FormLabel>
+											</FormItem>
+										))}
+									</RadioGroup>
+								</div>
 							</FormControl>
 							<FormMessage />
 						</FormItem>

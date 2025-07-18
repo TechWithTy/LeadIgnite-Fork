@@ -14,6 +14,7 @@ const nextConfig = {
 			"picsum.photos",
 			"avatars.githubusercontent.com",
 			"placehold.co",
+			"i.pravatar.cc",
 		],
 	},
 };
