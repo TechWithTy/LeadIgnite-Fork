@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { AgentAvatar } from "@/components/aiAgents/AgentAvatar";
 import type { UseFormReturn } from "react-hook-form";
 import type { Agent } from "./utils/schema";
 import {
@@ -49,15 +49,7 @@ export function AgentDetailsForm({
 					<FormItem>
 						<FormLabel>Agent Image</FormLabel>
 						<div className="flex items-center space-x-4">
-							{imagePreview && (
-								<Image
-									src={imagePreview}
-									alt="Agent Preview"
-									width={64}
-									height={64}
-									className="rounded-full"
-								/>
-							)}
+							<AgentAvatar src={imagePreview} alt="Agent Preview" size={64} />
 							<div className="flex w-full items-center space-x-2">
 								<FormControl>
 									<Input

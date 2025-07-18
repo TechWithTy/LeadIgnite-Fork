@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { AgentAvatar } from "./AgentAvatar";
 import { useEffect, useState } from "react";
 import type { Agent } from "@/components/forms/agent/utils/schema";
 import { fetchAgents, deleteAgent } from "@/components/forms/agent/utils/api";
@@ -45,7 +45,7 @@ export function AgentList({ onEdit, agents, setAgents }: AgentListProps) {
 		<Table>
 			<TableHeader>
 				<TableRow>
-					<TableHead>Agent</TableHead>
+					<TableHead className="w-[250px]">Agent</TableHead>
 					<TableHead>Persona</TableHead>
 					<TableHead>Campaign Goal</TableHead>
 					<TableHead className="text-right">Actions</TableHead>
@@ -55,16 +55,8 @@ export function AgentList({ onEdit, agents, setAgents }: AgentListProps) {
 				{agents.map((agent) => (
 					<TableRow key={agent.id ?? ""}>
 						<TableCell className="flex items-center space-x-4">
-							{agent.image && (
-								<Image
-									src={agent.image}
-									alt={agent.name ?? "Agent"}
-									width={40}
-									height={40}
-									className="rounded-full"
-								/>
-							)}
-							<span>{agent.name ?? "Unnamed Agent"}</span>
+							<AgentAvatar src={agent.image} alt={agent.name ?? "Agent"} />
+							<span className="truncate">{agent.name ?? "Unnamed Agent"}</span>
 						</TableCell>
 						<TableCell>{agent.persona ?? "N/A"}</TableCell>
 						<TableCell>{agent.campaignGoal ?? "N/A"}</TableCell>

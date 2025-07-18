@@ -1,8 +1,7 @@
 "use client";
 
-// import { signOut } from "@/actions/auth";
 import { Icons } from "@/components/icons";
-import { useSidebar } from "@/hooks/useSidebar";
+
 import { cn } from "@/lib/_utils";
 import type { NavItem } from "@/types";
 import Link from "next/link";
@@ -19,15 +18,16 @@ interface DashboardNavProps {
 	items: NavItem[];
 	setOpen?: Dispatch<SetStateAction<boolean>>;
 	isMobileNav?: boolean;
+	isMinimized?: boolean;
 }
 
 export function DashboardNav({
 	items,
 	setOpen,
 	isMobileNav = false,
+	isMinimized,
 }: DashboardNavProps) {
 	const path = usePathname();
-	const { isMinimized } = useSidebar();
 	const [loading, setLoading] = useState(false);
 
 	const handleLogout = async (event: React.MouseEvent) => {
@@ -86,14 +86,11 @@ export function DashboardNav({
 									</Link>
 								)}
 							</TooltipTrigger>
-							<TooltipContent
-								align="center"
-								side="right"
-								sideOffset={8}
-								className={!isMinimized ? "hidden" : "inline-block"}
-							>
-								{item.title}
-							</TooltipContent>
+							{isMinimized && (
+								<TooltipContent align="center" side="right" sideOffset={8}>
+									{item.title}
+								</TooltipContent>
+							)}
 						</Tooltip>
 					);
 				})}

@@ -128,6 +128,12 @@ export const navItems: NavItem[] = [
 		label: "searchProperties",
 	},
 	{
+		title: "Assistants",
+		href: "/dashboard/assistants",
+		icon: "bot",
+		label: "assistants",
+	},
+	{
 		title: "Campaign Manager",
 		href: "/dashboard/campaigns",
 		icon: "campaigns",

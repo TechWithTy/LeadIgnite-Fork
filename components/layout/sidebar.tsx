@@ -53,7 +53,7 @@ export default function SidebarClient({ user }: { user: UserProfile | null }) {
 			<div className="space-y-4 py-4">
 				<div className="px-3 py-2">
 					<div className="mt-3 space-y-1">
-						<DashboardNav items={navItems} />
+						<DashboardNav items={navItems} isMinimized={isSidebarMinimized} />
 					</div>
 				</div>
 			</div>

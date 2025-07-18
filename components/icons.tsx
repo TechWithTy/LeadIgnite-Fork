@@ -1,6 +1,7 @@
 import {
 	AlertTriangle,
 	ArrowRight,
+	Bot,
 	Check,
 	ChevronLeft,
 	ChevronRight,
@@ -50,6 +51,7 @@ export const Icons = {
 	kanban: CircuitBoardIcon,
 	chevronLeft: ChevronLeft,
 	chevronRight: ChevronRight,
+	bot: Bot,
 	trash: Trash,
 	employee: UserX2Icon,
 	post: FileText,
