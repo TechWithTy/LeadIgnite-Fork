@@ -11,6 +11,12 @@ import {
 } from "@/components/ui/form";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,6 +30,7 @@ interface AgentSocialFormProps {
 }
 
 export function AgentSocialForm({ form, avatars }: AgentSocialFormProps) {
+	const avatarImage = form.watch("avatarImage");
 	return (
 		<Card>
 			<CardHeader>
@@ -97,9 +104,24 @@ export function AgentSocialForm({ form, avatars }: AgentSocialFormProps) {
 							</FormItem>
 						)}
 					/>
-					<Button type="button" variant="outline" className="mt-8">
-						Generate Avatar
-					</Button>
+					<TooltipProvider>
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<div className="mt-8">
+									<Button
+										type="button"
+										variant="outline"
+										disabled={!avatarImage}
+									>
+										Generate Avatar
+									</Button>
+								</div>
+							</TooltipTrigger>
+							<TooltipContent>
+								<p>Upload a custom avatar to enable generation.</p>
+							</TooltipContent>
+						</Tooltip>
+					</TooltipProvider>
 				</div>
 
 				<FormField

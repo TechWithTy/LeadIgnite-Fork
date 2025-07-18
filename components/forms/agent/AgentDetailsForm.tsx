@@ -10,7 +10,14 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Textarea } from "@/components/ui/textarea";
 import {
 	Select,
@@ -31,6 +38,8 @@ export function AgentDetailsForm({
 	imagePreview,
 	handleImageChange,
 }: AgentDetailsFormProps) {
+	const { name, type, description } = form.watch();
+	const isGenerationDisabled = !name || !type || !description;
 	return (
 		<>
 			<FormField
@@ -49,13 +58,37 @@ export function AgentDetailsForm({
 									className="rounded-full"
 								/>
 							)}
-							<FormControl>
-								<Input
-									type="file"
-									accept="image/*"
-									onChange={handleImageChange}
-								/>
-							</FormControl>
+							<div className="flex w-full items-center space-x-2">
+								<FormControl>
+									<Input
+										type="file"
+										accept="image/*"
+										onChange={handleImageChange}
+									/>
+								</FormControl>
+								<TooltipProvider>
+									<Tooltip>
+										<TooltipTrigger asChild>
+											<div>
+												<Button
+													type="button"
+													variant="outline"
+													disabled={isGenerationDisabled}
+													className="whitespace-nowrap"
+												>
+													Generate Image
+												</Button>
+											</div>
+										</TooltipTrigger>
+										<TooltipContent>
+											<p>
+												Please fill out Name, Agent Type, and Description to
+												-enable image generation.
+											</p>
+										</TooltipContent>
+									</Tooltip>
+								</TooltipProvider>
+							</div>
 						</div>
 						<FormMessage />
 					</FormItem>
