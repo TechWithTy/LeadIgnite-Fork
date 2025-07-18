@@ -7,7 +7,7 @@ import { useAgentForm } from "./useAgentForm";
 
 import { AgentDetailsForm } from "./AgentDetailsForm";
 import { AgentAudioForm } from "./AgentAudioForm";
-import { AgentScriptsForm } from "./AgentScriptsForm";
+
 import { AgentPublicationForm } from "./AgentPublicationForm";
 
 import { Button } from "@/components/ui/button";
@@ -41,6 +41,8 @@ export function AgentForm({
 		handleCloneVoiceAudio,
 	} = useAgentForm(defaultValues);
 
+	const agentType = form.watch("type");
+
 	return (
 		<>
 			<Card>
@@ -57,16 +59,18 @@ export function AgentForm({
 								imagePreview={imagePreview}
 								handleImageChange={handleImageChange}
 							/>
-							<AgentAudioForm
-								form={form}
-								voices={voices}
-								voicemails={voicemails}
-								backgroundNoises={backgroundNoises}
-								onShowCloneModal={() => setShowCloneModal(true)}
-								onShowVoicemailModal={() => setShowVoicemailModal(true)}
-							/>
-							<AgentScriptsForm form={form} />
 							<AgentPublicationForm form={form} />
+
+							{agentType === "phone" && (
+								<AgentAudioForm
+									form={form}
+									voices={voices}
+									voicemails={voicemails}
+									backgroundNoises={backgroundNoises}
+									onShowCloneModal={() => setShowCloneModal(true)}
+									onShowVoicemailModal={() => setShowVoicemailModal(true)}
+								/>
+							)}
 
 							<div className="flex justify-end space-x-2">
 								<Button type="button" variant="outline">
