@@ -8,6 +8,26 @@
 
 # https://developers.google.com/maps/documentation/javascript/reference/3d-map
 
+📆 School Quality Score - Ratings of nearby schools and school districts
+📆 -AI Appreciation Potential - Projected property value increase over time [No direct free/open source API found; can use historical sales + valuation APIs (e.g., Zillow, RentCast) for price trends]
+📆 - RentCastRental Yield - Potential rental income vs. property value
+📆 - Fema API Flood Risk - Likelihood of flooding based on FEMA and historical data
+📆Noise Level - Proximity to airports, highways, or busy streets [No standard free API; can approximate using proximity to airports/highways via geographic data (OpenStreetMap, others)]
+📆[Google Air Quality API] Air Quality - Local pollution and air quality index
+📆 -Transit Api- Walkability - Already included, but consider sub-scores for different amenities
+📆 -Transit Api- Bike Score - Bike-friendly infrastructure and bike lanes
+Development Potential - Zoning and expansion possibilities
+📆 - On Market Days on Market - Average time similar properties stay listed
+Price per Sq Ft - Compared to neighborhood average
+📆 Crime Rate - Already included, but could be broken down by type
+Natural Disaster Risk - Earthquakes, wildfires, hurricanes, etc.
+📆 - Transit Api- Commute Score - Average commute times to major employment centers
+📆 Investment Grade - Overall investment potential rating [Can be derived from aggregated market data (listings, sales velocity) via Zillow, RentCast, RPR APIs]
+📆 Neighborhood Demand - How quickly properties sell in the area [Can be derived from aggregated market data (listings, sales velocity) via Zillow, RentCast, RPR APIs]
+📆 Property Tax Rate - Compared to surrounding areas [https://www.zillowgroup.com/developers/api/public-data/public-records-api/]
+?HOA Quality - If applicable, rating of the homeowners association [https://hoa-usa.com/]
+📆 - Transit Api- Walk Score - Already included, but could be enhanced
+?Future Development - Planned infrastructure or commercial projects nearby
 
 💾 Dashboard > Property > Lead Activity, add CRUD For Lead Activity for a lead
 💾 Dashboard > Property > Add Fetching of on market and on amrket proeprty Data
