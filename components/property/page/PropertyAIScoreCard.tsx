@@ -194,7 +194,11 @@ export const PropertyAIScoreCard: React.FC<AIScoreCardProps> = ({
 								</div>
 								<Progress
 									value={score.value}
-									className={`h-1.5 [&>div]:${getScoreColor(score.value).replace("text-", "bg-")}`}
+									className="h-1.5"
+									indicatorClassName={getScoreColor(score.value).replace(
+										"text-",
+										"bg-",
+									)}
 								/>
 							</div>
 
@@ -252,7 +256,8 @@ export const PropertyAIScoreCard: React.FC<AIScoreCardProps> = ({
 								</div>
 								<Progress
 									value={mockAIScores[2].value}
-									className="h-2 [&>div]:bg-green-500"
+									className="h-2"
+									indicatorClassName="bg-green-500"
 								/>
 							</div>
 
@@ -295,7 +300,8 @@ export const PropertyAIScoreCard: React.FC<AIScoreCardProps> = ({
 								</div>
 								<Progress
 									value={mockAIScores[3].value}
-									className="h-2 [&>div]:bg-blue-500"
+									className="h-2"
+									indicatorClassName="bg-blue-500"
 								/>
 							</div>
 
@@ -340,7 +346,10 @@ export const PropertyAIScoreCard: React.FC<AIScoreCardProps> = ({
 							<div className="relative">
 								<Progress
 									value={mockAIScores[1].value}
-									className={`h-2 [&>div]:${getScoreColor(mockAIScores[1].value).replace("text-", "bg-")}`}
+									className="h-2"
+									indicatorClassName={getScoreColor(
+										mockAIScores[1].value,
+									).replace("text-", "bg-")}
 								/>
 								<div className="absolute inset-0 flex items-center justify-between px-1 text-[10px] text-gray-400">
 									<span>Safer</span>
