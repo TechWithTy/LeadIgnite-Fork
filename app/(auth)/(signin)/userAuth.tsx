@@ -2,6 +2,7 @@ import MainUserAuthForm from "@/components/forms/steppers/user-auth-forms/MainUs
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useState } from "react";
+import { TestUsers } from "./_components/TestUsers";
 
 // Define the props type
 interface AuthFormProps {
@@ -27,6 +28,19 @@ export default function AuthForm({ isSignUp, setIsSignUp }: AuthFormProps) {
 			</div>
 
 			<MainUserAuthForm />
+
+			{process.env.NODE_ENV === "development" && (
+				<>
+					<div className="relative flex items-center py-4">
+						<div className="flex-grow border-border border-t" />
+						<span className="flex-shrink px-4 text-muted-foreground text-sm">
+							Or use test accounts
+						</span>
+						<div className="flex-grow border-border border-t" />
+					</div>
+					<TestUsers />
+				</>
+			)}
 
 			<p className="px-8 text-center text-muted-foreground text-sm">
 				By clicking continue, you agree to our{" "}

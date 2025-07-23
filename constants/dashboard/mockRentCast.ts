@@ -291,7 +291,7 @@ export const generateMockRentCastProperty = (): RentCastProperty => {
 		lastSalePrice,
 		assessorID: `ASR-${faker.string.numeric(8)}`,
 		legalDescription: `Lot ${faker.number.int({ min: 1, max: 100 })} Block ${faker.number.int({ min: 1, max: 20 })}`,
-		subdivision: faker.location.county() + " Estates",
+		subdivision: `${faker.location.county()} Estates`,
 		zoning: faker.helpers.arrayElement(["R1", "R2", "R3", "R4", "R5"]),
 		ownerOccupied: faker.datatype.boolean({ probability: 0.7 }),
 		hoa: faker.datatype.boolean({ probability: 0.5 })
@@ -334,7 +334,7 @@ export const generateMockRentCastProperty = (): RentCastProperty => {
 
 // Generate multiple mock RentCast properties
 export const generateMockRentCastProperties = (
-	count: number = 10,
+	count = 10,
 ): RentCastProperty[] => {
 	return Array.from({ length: count }, generateMockRentCastProperty);
 };
@@ -346,7 +346,7 @@ export const generateMockRentCastPropertyForCreation = (): RentCastProperty => {
 
 // Generate mock RentCast properties for use with createRentCastProperty
 export const generateMockRentCastPropertiesForCreation = (
-	count: number = 10,
+	count = 10,
 ): RentCastProperty[] => {
 	return Array.from({ length: count }, generateMockRentCastPropertyForCreation);
 };

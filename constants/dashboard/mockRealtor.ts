@@ -25,10 +25,10 @@ const generateAddress = () => ({
 	city: faker.location.city(),
 	state: faker.location.state({ abbreviated: true }),
 	zipCode: faker.location.zipCode(),
-	latitude: parseFloat(
+	latitude: Number.parseFloat(
 		faker.location.latitude({ min: 32.7, max: 32.9 }).toFixed(6),
 	),
-	longitude: parseFloat(
+	longitude: Number.parseFloat(
 		faker.location.longitude({ min: -117.3, max: -117.0 }).toFixed(6),
 	),
 });
