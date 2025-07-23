@@ -122,10 +122,12 @@ const PropertySearch: React.FC<PropertySearchProps> = ({
 				: undefined;
 
 			const newMarkers = await fetchFakeMapMarkers({ bounds });
+			const propertyCount = newMarkers.length;
 			setMarkers(newMarkers);
-			setProperties(generateFakeProperties(newMarkers.length));
+			setProperties(generateFakeProperties(propertyCount));
 			setIsSearching(false);
-			toast.success("Search complete!");
+			setHasResults(propertyCount > 0);
+			toast.success(`Search complete! Found ${propertyCount} properties`);
 		}, 1500);
 	};
 
