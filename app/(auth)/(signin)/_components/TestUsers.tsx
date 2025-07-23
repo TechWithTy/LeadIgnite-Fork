@@ -55,11 +55,11 @@ export function TestUsers() {
 	};
 
 	return (
-		<div className="mx-auto mt-8 w-full max-w-4xl">
-			<h2 className="mb-4 text-center font-semibold text-xl">Test Users</h2>
-			<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+		<div className="mx-auto mt-8 w-full max-w-md">
+			<h2 className="mb-6 text-center font-semibold text-xl">Test Users</h2>
+			<div className="flex flex-col gap-6">
 				{testUsers.map((user) => (
-					<Card key={user.id} className="border-border">
+					<Card key={user.id} className="w-full border-border shadow-sm">
 						<CardHeader>
 							<CardTitle className="flex items-center gap-2">
 								<div
@@ -79,12 +79,12 @@ export function TestUsers() {
 										{user.role}
 									</span>
 								</div>
-								<div className="flex flex-wrap gap-1">
+								<div className="flex flex-col gap-2">
 									<span className="font-medium text-sm">Permissions:</span>
 									{user.permissions.map((permission, i) => (
 										<span
 											key={permission + uuid()}
-											className="rounded-full bg-muted px-2 py-0.5 text-xs"
+											className="mr-1 mb-1 inline-block rounded-full bg-muted/80 px-2 py-0.5 text-xs"
 										>
 											{permission}
 										</span>
