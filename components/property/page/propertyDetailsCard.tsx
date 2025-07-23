@@ -11,7 +11,7 @@ import {
 	isRealtorProperty,
 	isRentCastProperty,
 } from "@/types/_dashboard/property";
-
+import { Lens } from "@/components/magicui/lens";
 interface PropertyCardProps {
 	property: Property;
 }
@@ -187,15 +187,24 @@ const PropertyCardDataComponent: React.FC<PropertyCardProps> = ({
 						Photos
 					</span>
 					{primaryPhotoUrl ? (
-						<div className="relative mt-2 aspect-video w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
-							<img
-								alt="Primary property"
-								className="h-full w-full object-cover"
-								height={400}
-								src={primaryPhotoUrl}
-								width={600}
-							/>
-						</div>
+						<button
+							type="button"
+							className="w-full focus:outline-none"
+							onClick={() => {
+								setActivePhoto(primaryPhotoUrl);
+								setLightboxOpen(true);
+							}}
+						>
+							<div className="relative mt-2 aspect-video w-full overflow-hidden rounded-lg bg-gray-100 transition-transform hover:scale-[1.01] dark:bg-gray-800">
+								<img
+									alt="Primary property"
+									className="h-full w-full cursor-pointer object-cover"
+									height={400}
+									src={primaryPhotoUrl}
+									width={600}
+								/>
+							</div>
+						</button>
 					) : (
 						<div className="mt-2 flex aspect-video w-full items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800">
 							<span className="text-gray-500 dark:text-gray-400">
@@ -205,27 +214,48 @@ const PropertyCardDataComponent: React.FC<PropertyCardProps> = ({
 					)}
 					{otherPhotoUrls.length > 0 && (
 						<div className="mt-2 flex max-w-full space-x-2 overflow-x-auto">
-							{otherPhotoUrls.slice(0, 4).map((url, idx) => (
+							{/* Include primary photo first in the thumbnails if it exists */}
+							{primaryPhotoUrl && (
 								<button
-									key={url}
+									key="primary-thumb"
 									type="button"
 									className="focus:outline-none"
 									onClick={() => {
-										setActivePhoto(url);
+										setActivePhoto(primaryPhotoUrl);
 										setLightboxOpen(true);
 									}}
 								>
 									<img
-										src={url}
-										alt={`Property thumbnail ${idx + 1}`}
-										className="h-16 w-24 rounded border object-cover transition-transform hover:scale-105"
+										src={primaryPhotoUrl}
+										alt="Primary property thumbnail"
+										className="h-16 w-24 rounded border-2 border-blue-500 object-cover transition-transform hover:scale-105"
 										loading="lazy"
 									/>
 								</button>
-							))}
-							{otherPhotoUrls.length > 4 && (
+							)}
+							{otherPhotoUrls
+								.slice(0, primaryPhotoUrl ? 3 : 4)
+								.map((url, idx) => (
+									<button
+										key={url}
+										type="button"
+										className="focus:outline-none"
+										onClick={() => {
+											setActivePhoto(url);
+											setLightboxOpen(true);
+										}}
+									>
+										<img
+											src={url}
+											alt={`Property thumbnail ${idx + 1}`}
+											className="h-16 w-24 rounded border border-gray-200 object-cover transition-transform hover:scale-105 dark:border-gray-600"
+											loading="lazy"
+										/>
+									</button>
+								))}
+							{otherPhotoUrls.length > (primaryPhotoUrl ? 3 : 4) && (
 								<span className="self-center text-gray-400 text-xs">
-									+{otherPhotoUrls.length - 4} more
+									+{otherPhotoUrls.length - (primaryPhotoUrl ? 3 : 4)} more
 								</span>
 							)}
 						</div>
