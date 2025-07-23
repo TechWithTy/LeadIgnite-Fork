@@ -188,17 +188,13 @@ export const PropertyAIScoreCard: React.FC<AIScoreCardProps> = ({
 								{score.description}
 							</p>
 							<div className="mt-2">
-								<div className="mb-1 flex justify-between text-gray-500 text-xs">
-									<span>0</span>
-									<span>100</span>
+								<div className="mb-1 flex justify-between text-sm">
+									<span>{score.name}</span>
+									<span className="font-semibold">{score.value}/100</span>
 								</div>
 								<Progress
 									value={score.value}
-									className="h-1.5"
-									indicatorClassName={getScoreColor(score.value).replace(
-										"text-",
-										"bg-",
-									)}
+									className={`h-1.5 ${getScoreColor(score.value).replace("text-", "bg-")}/20`}
 								/>
 							</div>
 
@@ -208,7 +204,10 @@ export const PropertyAIScoreCard: React.FC<AIScoreCardProps> = ({
 									<h5 className="mb-1 font-medium text-xs">Key Factors:</h5>
 									<ul className="space-y-1 text-gray-600 text-xs dark:text-gray-400">
 										{score.features.slice(0, 3).map((feature, i) => (
-											<li key={i} className="flex items-start">
+											<li
+												key={`${score.name}-${feature.substring(0, 10)}-${i}`}
+												className="flex items-start"
+											>
 												<span className="mr-1">•</span> {feature}
 											</li>
 										))}
@@ -236,7 +235,7 @@ export const PropertyAIScoreCard: React.FC<AIScoreCardProps> = ({
 						<div className="flex items-center justify-between">
 							<div className="flex items-center gap-2">
 								<span className="text-xl">🚶</span>
-								<h4 className="font-medium">Walkability</h4>
+								<h4 className="font-medium">Walkability Details</h4>
 							</div>
 							<a
 								href="#walkability-map"
@@ -247,30 +246,26 @@ export const PropertyAIScoreCard: React.FC<AIScoreCardProps> = ({
 						</div>
 
 						<div className="mt-3 space-y-3">
-							<div>
-								<div className="mb-1 flex justify-between text-sm">
-									<span>Walk Score</span>
-									<span className="font-semibold">
-										{mockAIScores[2].value}/100
-									</span>
-								</div>
-								<Progress
-									value={mockAIScores[2].value}
-									className="h-2"
-									indicatorClassName="bg-green-500"
-								/>
-							</div>
-
 							<div className="rounded-lg bg-gray-50 p-3 dark:bg-gray-800">
 								<h5 className="mb-2 font-medium text-sm">Nearby Amenities</h5>
 								<div className="space-y-2">
 									{neighborhoodInsights.walkability.map((item, i) => (
-										<div key={i} className="flex justify-between text-sm">
+										<div
+											key={`walk-${item.amenity}-${i}`}
+											className="flex justify-between text-sm"
+										>
 											<span>{item.amenity}</span>
 											<span className="text-gray-500">{item.distance}</span>
 										</div>
 									))}
 								</div>
+							</div>
+							<div className="text-gray-500 text-xs">
+								<p>
+									Walkability measures how many daily errands can be
+									accomplished on foot. Higher scores indicate more walkable
+									neighborhoods with better access to amenities.
+								</p>
 							</div>
 						</div>
 					</div>
@@ -280,7 +275,7 @@ export const PropertyAIScoreCard: React.FC<AIScoreCardProps> = ({
 						<div className="flex items-center justify-between">
 							<div className="flex items-center gap-2">
 								<span className="text-xl">🚌</span>
-								<h4 className="font-medium">Transit Options</h4>
+								<h4 className="font-medium">Transit Information</h4>
 							</div>
 							<a
 								href="#transit-map"
@@ -291,25 +286,13 @@ export const PropertyAIScoreCard: React.FC<AIScoreCardProps> = ({
 						</div>
 
 						<div className="mt-3 space-y-3">
-							<div>
-								<div className="mb-1 flex justify-between text-sm">
-									<span>Transit Score</span>
-									<span className="font-semibold">
-										{mockAIScores[3].value}/100
-									</span>
-								</div>
-								<Progress
-									value={mockAIScores[3].value}
-									className="h-2"
-									indicatorClassName="bg-blue-500"
-								/>
-							</div>
-
 							<div className="rounded-lg bg-gray-50 p-3 dark:bg-gray-800">
-								<h5 className="mb-2 font-medium text-sm">Nearby Transit</h5>
+								<h5 className="mb-2 font-medium text-sm">
+									Nearby Transit Options
+								</h5>
 								<div className="space-y-2">
 									{neighborhoodInsights.transit.map((item, i) => (
-										<div key={i} className="text-sm">
+										<div key={`transit-${item.line}-${i}`} className="text-sm">
 											<div className="font-medium">{item.line}</div>
 											<div className="flex justify-between text-gray-500">
 												<span>{item.frequency}</span>
@@ -318,6 +301,13 @@ export const PropertyAIScoreCard: React.FC<AIScoreCardProps> = ({
 										</div>
 									))}
 								</div>
+							</div>
+							<div className="text-gray-500 text-xs">
+								<p>
+									Transit score measures access to public transportation. Higher
+									scores indicate better transit options with more frequent
+									service and shorter walking distances.
+								</p>
 							</div>
 						</div>
 					</div>
@@ -328,7 +318,7 @@ export const PropertyAIScoreCard: React.FC<AIScoreCardProps> = ({
 					<div className="flex items-center justify-between">
 						<div className="flex items-center gap-2">
 							<span className="text-xl">🛡️</span>
-							<h4 className="font-medium">Crime & Safety</h4>
+							<h4 className="font-medium">Safety & Security</h4>
 						</div>
 						<span className="text-gray-500 text-xs">
 							Last updated: {new Date().toLocaleDateString()}
@@ -336,48 +326,55 @@ export const PropertyAIScoreCard: React.FC<AIScoreCardProps> = ({
 					</div>
 
 					<div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
-						<div>
-							<div className="mb-1 flex justify-between text-sm">
-								<span>Crime Score</span>
-								<span className="font-semibold">
-									{mockAIScores[1].value}/100
-								</span>
-							</div>
-							<div className="relative">
-								<Progress
-									value={mockAIScores[1].value}
-									className="h-2"
-									indicatorClassName={getScoreColor(
-										mockAIScores[1].value,
-									).replace("text-", "bg-")}
-								/>
-								<div className="absolute inset-0 flex items-center justify-between px-1 text-[10px] text-gray-400">
-									<span>Safer</span>
-									<span>Average</span>
-									<span>Less Safe</span>
+						<div className="space-y-3">
+							<div>
+								<div className="mb-1 flex justify-between text-sm">
+									<span>Safety Assessment</span>
+									<span className="font-semibold">
+										{mockAIScores[1].value}/100
+									</span>
+								</div>
+								<div className="relative">
+									<Progress
+										value={mockAIScores[1].value}
+										className={`h-2 ${getScoreColor(mockAIScores[1].value).replace("text-", "bg-")}/20`}
+									/>
+									<div className="absolute inset-0 flex items-center justify-between px-1 text-[10px] text-gray-400">
+										<span>Safer</span>
+										<span>Average</span>
+										<span>Less Safe</span>
+									</div>
 								</div>
 							</div>
-							<div className="mt-2 text-gray-500 text-xs">
-								{mockAIScores[1].description}
+							<div className="text-gray-500 text-xs">
+								<p>
+									This score is based on local crime statistics, safety trends,
+									and community feedback. Lower scores indicate areas that may
+									require additional safety measures.
+								</p>
 							</div>
 						</div>
 
 						<div className="rounded-lg bg-red-50 p-3 dark:bg-red-900/20">
 							<h5 className="mb-2 font-medium text-red-800 text-sm dark:text-red-200">
-								Safety Tips
+								Safety Recommendations
 							</h5>
 							<ul className="space-y-1 text-red-700 text-xs dark:text-red-300">
 								<li className="flex items-start">
-									<span className="mr-1">•</span> Consider security system
-									installation
+									<span className="mr-1">•</span> Install a monitored security
+									system with cameras
 								</li>
 								<li className="flex items-start">
-									<span className="mr-1">•</span> Neighborhood watch programs
-									available
+									<span className="mr-1">•</span> Join or start a neighborhood
+									watch program
 								</li>
 								<li className="flex items-start">
-									<span className="mr-1">•</span> Check local crime maps for
-									specific incidents
+									<span className="mr-1">•</span> Review local crime maps for
+									recent activity
+								</li>
+								<li className="flex items-start">
+									<span className="mr-1">•</span> Consider additional lighting
+									for property
 								</li>
 							</ul>
 						</div>
