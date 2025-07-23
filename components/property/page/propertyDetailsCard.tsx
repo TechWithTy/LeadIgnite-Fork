@@ -2,6 +2,7 @@
 
 import type React from "react";
 import { useMemo, useState } from "react";
+import { ImageModal } from "@/components/images/ImageModal";
 import type {
 	Property,
 	RealtorProperty,
@@ -214,98 +215,39 @@ const PropertyCardDataComponent: React.FC<PropertyCardProps> = ({
 					)}
 					{otherPhotoUrls.length > 0 && (
 						<div className="mt-2 flex max-w-full space-x-2 overflow-x-auto">
-							{/* Include primary photo first in the thumbnails if it exists */}
-							{primaryPhotoUrl && (
+							{otherPhotoUrls.slice(0, 4).map((url, idx) => (
 								<button
-									key="primary-thumb"
+									key={url}
 									type="button"
 									className="focus:outline-none"
 									onClick={() => {
-										setActivePhoto(primaryPhotoUrl);
+										setActivePhoto(url);
 										setLightboxOpen(true);
 									}}
 								>
 									<img
-										src={primaryPhotoUrl}
-										alt="Primary property thumbnail"
-										className="h-16 w-24 rounded border-2 border-blue-500 object-cover transition-transform hover:scale-105"
+										src={url}
+										alt={`Property thumbnail ${idx + 1}`}
+										className={`h-16 w-24 rounded border-2 object-cover transition-transform hover:scale-105 ${activePhoto === url ? "border-blue-500" : "border-gray-200 dark:border-gray-600"}`}
 										loading="lazy"
 									/>
 								</button>
-							)}
-							{otherPhotoUrls
-								.slice(0, primaryPhotoUrl ? 3 : 4)
-								.map((url, idx) => (
-									<button
-										key={url}
-										type="button"
-										className="focus:outline-none"
-										onClick={() => {
-											setActivePhoto(url);
-											setLightboxOpen(true);
-										}}
-									>
-										<img
-											src={url}
-											alt={`Property thumbnail ${idx + 1}`}
-											className="h-16 w-24 rounded border border-gray-200 object-cover transition-transform hover:scale-105 dark:border-gray-600"
-											loading="lazy"
-										/>
-									</button>
-								))}
-							{otherPhotoUrls.length > (primaryPhotoUrl ? 3 : 4) && (
+							))}
+							{otherPhotoUrls.length > 4 && (
 								<span className="self-center text-gray-400 text-xs">
-									+{otherPhotoUrls.length - (primaryPhotoUrl ? 3 : 4)} more
+									+{otherPhotoUrls.length - 4} more
 								</span>
 							)}
 						</div>
 					)}
 				</div>
 
-				{/* Lightbox modal */}
-				{lightboxOpen && activePhoto && (
-					<dialog
-						open
-						className="fixed inset-0 z-50 flex cursor-zoom-out items-center justify-center bg-black/90 backdrop-blur-sm"
-						onClick={() => setLightboxOpen(false)}
-						onKeyDown={(e) => e.key === "Escape" && setLightboxOpen(false)}
-					>
-						<div
-							className="relative"
-							role="presentation"
-							onClick={(e) => e.stopPropagation()}
-							onKeyDown={(e) => e.stopPropagation()}
-						>
-							<div className="relative">
-								<Lens
-									zoomFactor={2}
-									lensSize={200}
-									isStatic={false}
-									ariaLabel="Zoom in on property image"
-								>
-									<img
-										src={activePhoto}
-										alt="Full property view"
-										style={{
-											maxHeight: "80vh",
-											maxWidth: "90vw",
-											borderRadius: "10px",
-											objectFit: "contain",
-										}}
-									/>
-								</Lens>
-								<button
-									type="button"
-									onClick={() => setLightboxOpen(false)}
-									className="-top-4 -right-4 absolute z-[100] rounded-full bg-white p-2 text-black shadow-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-									aria-label="Close"
-								>
-									✕
-								</button>
-							</div>
-						</div>
-					</dialog>
-				)}
+				<ImageModal
+					isOpen={lightboxOpen}
+					onClose={() => setLightboxOpen(false)}
+					imageUrl={activePhoto || ""}
+					alt="Property image"
+				/>
 
 				{/* Property Details */}
 				{isRentCastProperty(property) &&
