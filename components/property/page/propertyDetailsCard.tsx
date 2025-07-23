@@ -276,31 +276,33 @@ const PropertyCardDataComponent: React.FC<PropertyCardProps> = ({
 							onClick={(e) => e.stopPropagation()}
 							onKeyDown={(e) => e.stopPropagation()}
 						>
-							<Lens
-								zoomFactor={2}
-								lensSize={200}
-								isStatic={false}
-								ariaLabel="Zoom in on property image"
-							>
-								<img
-									src={activePhoto}
-									alt="Full property view"
-									style={{
-										maxHeight: "80vh",
-										maxWidth: "90vw",
-										borderRadius: "10px",
-										objectFit: "contain",
-									}}
-								/>
-							</Lens>
-							<button
-								type="button"
-								onClick={() => setLightboxOpen(false)}
-								className="-top-2 -right-2 absolute z-10 rounded-full bg-white p-2 text-black shadow-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-								aria-label="Close"
-							>
-								✕
-							</button>
+							<div className="relative">
+								<Lens
+									zoomFactor={2}
+									lensSize={200}
+									isStatic={false}
+									ariaLabel="Zoom in on property image"
+								>
+									<img
+										src={activePhoto}
+										alt="Full property view"
+										style={{
+											maxHeight: "80vh",
+											maxWidth: "90vw",
+											borderRadius: "10px",
+											objectFit: "contain",
+										}}
+									/>
+								</Lens>
+								<button
+									type="button"
+									onClick={() => setLightboxOpen(false)}
+									className="-top-4 -right-4 absolute z-[100] rounded-full bg-white p-2 text-black shadow-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+									aria-label="Close"
+								>
+									✕
+								</button>
+							</div>
 						</div>
 					</dialog>
 				)}
