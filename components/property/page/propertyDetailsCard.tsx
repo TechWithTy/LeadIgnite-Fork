@@ -266,7 +266,7 @@ const PropertyCardDataComponent: React.FC<PropertyCardProps> = ({
 				{lightboxOpen && activePhoto && (
 					<dialog
 						open
-						className="fixed inset-0 z-50 flex cursor-pointer items-center justify-center bg-black bg-opacity-70"
+						className="fixed inset-0 z-50 flex cursor-zoom-out items-center justify-center bg-black/90 backdrop-blur-sm"
 						onClick={() => setLightboxOpen(false)}
 						onKeyDown={(e) => e.key === "Escape" && setLightboxOpen(false)}
 					>
@@ -276,15 +276,27 @@ const PropertyCardDataComponent: React.FC<PropertyCardProps> = ({
 							onClick={(e) => e.stopPropagation()}
 							onKeyDown={(e) => e.stopPropagation()}
 						>
-							<img
-								src={activePhoto}
-								alt="Full property view"
-								className="max-h-[80vh] max-w-[90vw] rounded shadow-lg"
-							/>
+							<Lens
+								zoomFactor={2}
+								lensSize={200}
+								isStatic={false}
+								ariaLabel="Zoom in on property image"
+							>
+								<img
+									src={activePhoto}
+									alt="Full property view"
+									style={{
+										maxHeight: "80vh",
+										maxWidth: "90vw",
+										borderRadius: "10px",
+										objectFit: "contain",
+									}}
+								/>
+							</Lens>
 							<button
 								type="button"
 								onClick={() => setLightboxOpen(false)}
-								className="-top-2 -right-2 absolute rounded-full bg-white p-2 text-black shadow-lg"
+								className="-top-2 -right-2 absolute z-10 rounded-full bg-white p-2 text-black shadow-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
 								aria-label="Close"
 							>
 								✕
