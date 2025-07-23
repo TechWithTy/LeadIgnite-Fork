@@ -173,8 +173,8 @@ const PropertyOverviewCard: React.FC<PropertyOverviewCardProps> = ({
 	};
 
 	return (
-		<Card className="mt-10 dark:bg-gray-800 dark:text-white">
-			<CardContent className="p-6 sm:p-10">
+		<Card className="my-16 dark:bg-gray-800 dark:text-white">
+			<CardContent className="p-6 py-16 sm:p-10">
 				<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
 					{/* Owner/Agent Name */}
 					<div className="text-center lg:text-left">
@@ -219,7 +219,7 @@ const PropertyOverviewCard: React.FC<PropertyOverviewCardProps> = ({
 					{/* Equity */}
 					<div className="text-center lg:text-left">
 						<h2 className="mb-2 font-semibgray-500d">
-							sm Equity <span className="text-gray-500 text-sm">(est.)</span>
+							Equity <span className="text-gray-500 text-sm">(est.)</span>
 						</h2>
 						<div className="flex items-center justify-center lg:justify-start">
 							{`${formatCurrency(equityInfo.equity)} | ${equityInfo.percentage.toFixed(0)}%`}

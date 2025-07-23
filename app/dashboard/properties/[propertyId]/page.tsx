@@ -333,14 +333,16 @@ export default async function PropertyPage({
 				{/* Full-width container */}
 				<PropertyHeaderWrapper property={property} />
 
-				{/* Google Maps replacing Placeholder Image */}
-				<div className="relative mb-4 h-64 w-full">
-					<PropertyMap
-						latitude={property.address.latitude}
-						longitude={property.address.longitude}
-						address={formatPropertyAddress(property)}
-						details={formatPropertyDetails(property)}
-					/>
+				{/* Google Maps */}
+				<div className="relative mb-8 w-full" style={{ height: "400px" }}>
+					<div className="absolute inset-0">
+						<PropertyMap
+							latitude={property.address.latitude}
+							longitude={property.address.longitude}
+							address={formatPropertyAddress(property)}
+							details={formatPropertyDetails(property)}
+						/>
+					</div>
 				</div>
 
 				{/* Property Details */}
